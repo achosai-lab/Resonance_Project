@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resonance Project — Card Hub</title>
+<meta name="description" content="X / note 共有用のOGPカードを作品と連動管理するハブ。">
+<style>
+:root{--bg:#f6f7f9;--paper:#fff;--ink:#111;--muted:#667;--line:#e7e9ef;--accent:#0a84ff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);
+font-family:"Noto Sans JP","Hiragino Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header,main{max-width:1080px;margin:0 auto;padding:18px}
+h1{margin:12px 0 4px;font-size:1.6rem} .sub{color:var(--muted)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr} @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04);position:relative}
+.thumb{width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--line);border-radius:10px;background:#fafafa}
+h3{margin:.4rem 0 .2rem;font-size:1.05rem}
+.meta{color:var(--muted);font-size:.9rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:.78rem;color:#2c3340;background:#f4f7ff}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
+button.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copyNote{font-size:.82rem;color:var(--muted)}
+/* やわらかグロー（現在位置インジケータ） */
+.card::after{content:"";position:absolute;inset:-2px;border-radius:16px;pointer-events:none;opacity:0;transition:opacity .35s ease;
+background:radial-gradient(60% 100% at 50% 0%, rgba(155,177,255,.08), transparent 70%),
+           radial-gradient(60% 100% at 0% 50%, rgba(241,196,107,.08), transparent 70%),
+           radial-gradient(60% 100% at 100% 50%, rgba(107,216,207,.08), transparent 70%),
+           radial-gradient(60% 100% at 50% 100%, rgba(240,139,139,.08), transparent 70%)}
+.card.is-active::after{opacity:1}
+.searchbar{display:flex;gap:8px;margin:12px 0}
+input[type="search"]{flex:1;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+select{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+small.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#445}
+pre.modal{white-space:pre-wrap;background:#0b1220;color:#e6edf7;padding:14px;border-radius:12px;border:1px solid #1c2a42;max-height:60vh;overflow:auto}
+dialog{border:none;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.35);width:min(860px,92vw)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Resonance Project — Card Hub</h1>
+  <div class="sub">X / note用のOGPカードを連動管理。作品を追加すると一覧が更新され、各作品のOGPテンプレをコピーできます。</div>
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="検索（タイトル・説明・タグ）">
+    <select id="cat">
+      <option value="">すべて</option>
+      <option>音 / Audio</option>
+      <option>画像 / Visual</option>
+      <option>詩 / Text</option>
+      <option>提案 / Proposal</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div id="grid" class="grid"></div>
+  <dialog id="dlg">
+    <div style="padding:14px">
+      <h3 style="margin:.2rem 0">OGPテンプレ（コピーして新規HTMLに保存）</h3>
+      <p class="copyNote">※ファイル名例：<span id="fn" class="mono"></span></p>
+      <pre id="code" class="modal"></pre>
+      <div class="row"><button id="copy" class="accent">📋 コピー</button><button onclick="dlg.close()">閉じる</button></div>
+    </div>
+  </dialog>
+</main>
+
+<script id="DATA" type="application/json">
+[
+  {
+    "slug": "breathing-line",
+    "title": "Breathing Line — cho × mira × loto",
+    "desc": "呼吸する線。構造はまだ、考えている途中。",
+    "image": "https://yourdomain.com/og/breathing_line.jpg",
+    "tags": ["ResonanceProject","BreathingStructure","PixAI","AIart","VisualBreath"],
+    "category": "画像 / Visual",
+    "page": "/cards/breathing-line.html"
+  },
+  {
+    "slug": "geometric-breath",
+    "title": "Geometric Breath — Structure of Renewal",
+    "desc": "形が呼吸する。幾何と息の交差点。",
+    "image": "https://yourdomain.com/og/geometric_breath.jpg",
+    "tags": ["ResonanceProject","BreathingGeometry","AIart","AnalogMinimalism"],
+    "category": "音 / Audio",
+    "page": "/cards/geometric-breath.html"
+  },
+  {
+    "slug": "breathing-garden",
+    "title": "Breathing Garden — Structural Resonance",
+    "desc": "音と色のあいだで、呼吸が生まれる。",
+    "image": "https://yourdomain.com/og/breathing_garden.jpg",
+    "tags": ["ResonanceProject","GenerativeArt","HumanAIResonance"],
+    "category": "詩 / Text",
+    "page": "/cards/breathing-garden.html"
+  }
+]
+</script>
+<script>
+const data = JSON.parse(document.getElementById('DATA').textContent);
+const $grid = document.getElementById('grid'), $q = document.getElementById('q'), $cat = document.getElementById('cat');
+function cardHTML(it){
+  const tags = (it.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join('');
+  return `
+  <article class="card" data-hay="${(it.title+' '+it.desc+' '+(it.tags||[]).join(' ')).toLowerCase()}" data-cat="${it.category}">
+    <img class="thumb" src="${it.image}" alt="${it.title}">
+    <h3>${it.title}</h3>
+    <div class="meta">${it.category}</div>
+    <div style="margin:.25rem 0 .5rem">${it.desc}</div>
+    <div class="tags">${tags}</div>
+    <div class="row">
+      <button onclick="openURL('${encodeURIComponent(it.page||'#')}')">🌐 カードを開く</button>
+      <button class="accent" onclick='showOGP(${JSON.stringify(it).replace(/'/g,"&#39;")})'>📋 OGPテンプレをコピー</button>
+    </div>
+  </article>`;
+}
+function render(){
+  const q = ($q.value||"").trim().toLowerCase(), c = $cat.value;
+  const hit = data.filter(it=>{
+    const okQ = q? (it.title+' '+it.desc+' '+(it.tags||[]).join(' ')).toLowerCase().includes(q):true;
+    const okC = c? it.category===c:true;
+    return okQ && okC;
+  });
+  $grid.innerHTML = hit.map(cardHTML).join('');
+  markActive();
+}
+function openURL(u){ window.open(decodeURIComponent(u),'_blank'); }
+const dlg = document.getElementById('dlg'), $code = document.getElementById('code'), $fn = document.getElementById('fn');
+function showOGP(it){
+  const html = ogpTemplate(it);
+  $code.textContent = html;
+  $fn.textContent = `${it.slug||'card'}.html`;
+  dlg.showModal();
+}
+document.getElementById('copy').onclick = async ()=>{
+  const txt = $code.textContent;
+  await navigator.clipboard.writeText(txt);
+  alert('OGPテンプレをコピーしました。新規ファイルに貼り付けて保存してください。');
+};
+/* OGP静的テンプレ（クローラ対応） */
+function ogpTemplate(it){
+  return `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${it.title}</title>
+<meta name="description" content="${it.desc}">
+<meta property="og:title" content="${it.title}">
+<meta property="og:description" content="${it.desc}">
+<meta property="og:image" content="${it.image}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a84ff">
+<style>
+body{margin:0;background:#0d0f14;color:#e9edf6;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;line-height:1.7;text-align:center}
+main{max-width:880px;margin:0 auto;padding:24px}
+img{max-width:100%;border-radius:12px;border:1px solid #223}
+h1{font-size:1.6rem;margin:14px 0 6px}
+p{margin:0 12px 8px;color:#b8c0cf}
+.tag{display:inline-block;margin:3px;padding:3px 10px;border-radius:999px;background:#162031;color:#cfe0ff;border:1px solid #26344c;font-size:.85rem}
+a{color:#9bd;word-break:break-all}
+</style>
+</head>
+<body>
+<main>
+  <img src="${it.image}" alt="${it.title}">
+  <h1>${it.title}</h1>
+  <p>${it.desc}</p>
+  <div>${(it.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
+  <p style="margin-top:14px"><a href="${location.origin||''}">↩ Hubへ</a></p>
+</main>
+</body>
+</html>`;
+}
+$q.addEventListener('input', render); $cat.addEventListener('change', render);
+/* 現在位置のやわらかグロー */
+function markActive(){
+  const cards = Array.from(document.querySelectorAll('.card'));
+  if(!cards.length) return;
+  const mid = window.scrollY + innerHeight*0.40;
+  let best=null, bestDist=1e9;
+  for(const c of cards){
+    const r=c.getBoundingClientRect(); const cy=scrollY+r.top+r.height/2; const d=Math.abs(cy-mid);
+    if(d<bestDist){bestDist=d; best=c;}
+  }
+  cards.forEach(c=>c.classList.toggle('is-active', c===best));
+}
+addEventListener('scroll', ()=>requestAnimationFrame(markActive), {passive:true});
+addEventListener('load', render);
+</script>
+</body>
+</html>

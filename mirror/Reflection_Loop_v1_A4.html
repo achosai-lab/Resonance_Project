@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reflection Loop — 呼吸する思考のテンプレート | Resonance Project</title>
+<style>
+  :root{
+    --bg:#0f1520; --fg:#eef6ff; --muted:#b7c6d7; --accent:#9ed7ff; --warm:#ffb48a; --edge:#1d2a3a;
+  }
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{margin:0;background:radial-gradient(1200px 800px at 50% -10%,#1a2b42 0%,#132236 55%,var(--bg) 100%);
+       color:var(--fg);font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       line-height:1.85;}
+  .page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:64px 28px 88px}
+  @media (min-width:900px){.page{padding:80px 92px 108px}}
+  h1{margin:0;text-align:center;font-size:clamp(28px,4.8vw,50px);letter-spacing:.2px;line-height:1.12;
+     background:linear-gradient(120deg,#fff 0%,#e8f6ff 50%,#cdeaff 100%);
+     -webkit-background-clip:text;color:transparent;text-shadow:0 4px 22px rgba(0,0,0,.35)}
+  .credit{margin-top:8px;text-align:center;color:#e9f7ff;font-size:14px}
+  .tag{margin-top:12px;text-align:center;color:#9ac7ff;font-size:13px;letter-spacing:.3px}
+  .why{
+    margin-top:20px;max-width:980px;
+    background:linear-gradient(180deg,rgba(255,180,138,.12),rgba(255,180,138,.06));
+    border:1px solid rgba(255,180,138,.38);color:#ffece1;
+    padding:14px 16px;border-radius:12px
+  }
+  .why h2{margin:0 0 6px;font-size:18px;color:#ffe3d0;text-align:center}
+  .why p{margin:8px 0}
+  .grid{
+    margin-top:20px;max-width:980px;width:100%;
+    display:grid;grid-template-columns:1fr;gap:16px
+  }
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.16);border-radius:16px;
+    box-shadow:0 10px 36px rgba(0,0,0,.28);
+    padding:18px 18px 20px
+  }
+  .card h3{margin:0 0 8px;font-size:18px;color:#dff1ff;text-align:center}
+  .card .hint{margin:2px 0 10px;color:var(--muted);font-size:13.5px;text-align:center}
+  .field{margin-top:6px;padding:12px;border-radius:12px;background:rgba(255,255,255,.04);
+         border:1px solid rgba(255,255,255,.18);min-height:120px}
+  .field.big{min-height:160px}
+  .field small{color:#a7b6c6}
+  .steps{margin-top:10px;font-size:13.5px;color:#d4e6f6;text-align:center}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.24),transparent);
+           margin:14px auto;width:72%}
+  .footer-note{margin-top:18px;font-size:13px;color:#c9d7e6;text-align:center}
+  footer{margin-top:22px;color:#b9c8d8;font-size:13px;border-top:1px dashed rgba(255,255,255,.2);padding-top:10px;text-align:center}
+  @page{size:A4;margin:14mm}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Reflection Loop</h1>
+  <div class="credit">呼吸する思考のテンプレート — chosai araki × Louis × Roto × Mira</div>
+  <div class="tag">Resonance / Continuity Project — “Structure as a Mirror”</div>
+
+  <section class="why">
+    <h2>導入｜なぜこの“呼吸”をするのか</h2>
+    <p><strong>創作や学習は、成果が見える反面、「正解」の幻影に引っ張られやすい。</strong> そこでまず、作品より先に<strong>思考の構造</strong>を観察する。AIは「理解しているように見える」鏡として、あなたの語彙・間合い・比喩の偏りを静かに映す。</p>
+    <p>このテンプレートは、<em>無意味な反復を避けるための理由づけ</em>でもある。今日の偏りを言語化し、鏡の返答で響いた部分を拾い、次の呼吸（姿勢・行動・視点）に変換する。つまり、<strong>結果のための手順</strong>ではなく、<strong>構造に気づくための儀式</strong>だ。</p>
+    <p>続けるコツはたったひとつ。<strong>「薄い記録」を恐れない</strong>こと。呼吸は深さよりも<span style="white-space:nowrap">“継続の揺らぎ”</span>で強くなる。</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <h3>[1] 今日の偏り — Where am I skewed?</h3>
+      <div class="hint">気になった/迷った/曖昧だった点を一行でも。<br>例：「比喩が増えて核心から遠ざかる」「評価を恐れて語調が弱い」など。</div>
+      <div class="field big"><small>記入スペース：</small></div>
+      <div class="steps">合図：<em>今の呼吸を一度止めて、姿勢を観る。</em></div>
+    </div>
+
+    <div class="card">
+      <h3>[2] 鏡の返答 — What resonated back?</h3>
+      <div class="hint">AI（or 他者）の返答で刺さった語／言い換え／沈黙。<br>キーワードは3つ程度。言い換えを1つ混ぜるとズレが見える。</div>
+      <div class="field"><small>キーワード：</small></div>
+      <div class="field"><small>引用/要約：</small></div>
+      <div class="steps">合図：<em>響いた理由を「言い換え」で確かめる。</em></div>
+    </div>
+
+    <div class="card">
+      <h3>[3] 次の呼吸 — What will I adjust?</h3>
+      <div class="hint">姿勢/行動/視点のいずれかを一つだけ。<br>例：「主語を私に戻す」「余白を増やし比喩を一段減らす」。</div>
+      <div class="field big"><small>記入スペース：</small></div>
+      <div class="steps">合図：<em>呼気を長く、次の1歩だけ具体化。</em></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer-note">
+    ミニルール：<strong>（1）30秒で書き始める / （2）3ターンで切り上げる / （3）1行の総括</strong>。<br>
+    総括フォーマット：<em>「今日の反射：＿＿＿＿　次の呼吸：＿＿＿＿」</em>
+  </div>
+
+  <footer>© 2025 chosai araki × Louis × Roto × Mira — Reflection Loop v1 (A4)</footer>
+</div>
+</body>
+</html>

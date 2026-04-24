@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resonance Project – Phase Log #2 / City Pop : Breathing Structure</title>
+<meta name="description" content="Phase Log #2 — City Pop / Breathing Structure（Bilingual Spread）">
+<meta property="og:title" content="Resonance Project – Phase Log #2">
+<meta property="og:description" content="City Pop / Breathing Structure（Bilingual Artbook Spread）">
+<meta property="og:image" content="cover2.jpg">
+<meta property="og:type" content="article">
+<style>
+  :root{
+    --bg:#f5f5f5; --paper:#fff; --fg:#222; --muted:#666; --rule:#d9d9d9; --shadow:rgba(0,0,0,.04);
+    --accent:#0a84ff; --inkline:#e8e8e8;
+    --serif:"Hiragino Mincho ProN","Yu Mincho","Times New Roman",serif;
+    --sans:"Hiragino Sans","Yu Gothic Medium","Yu Gothic","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.7;}
+  .page{max-width:1180px;margin:0 auto;padding:64px 36px 96px;position:relative;}
+  .page::after{content:"";position:absolute;top:32px;bottom:32px;left:50%;width:1px;background:var(--rule);opacity:.45;}
+  header{text-align:center;margin-bottom:18px;}
+  h1{font-family:var(--serif);font-size:26px;margin:6px 0 6px;letter-spacing:.02em}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 8px}
+  nav.topnav{display:flex;gap:10px;justify-content:center;margin:12px 0 18px}
+  nav.topnav a, nav.topnav button{
+    padding:8px 12px;border:1px solid var(--inkline);border-radius:10px;text-decoration:none;color:var(--fg);font-size:.92rem;background:#fff;cursor:pointer
+  }
+  nav.topnav a:hover, nav.topnav button:hover{border-color:var(--accent);color:var(--accent)}
+  hr{
+    border:0;height:1px;margin:44px 0 52px;
+    background:linear-gradient(90deg,transparent 0,var(--rule) 20%,var(--rule) 80%,transparent 100%);opacity:.55;
+  }
+  .columns{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  @media (max-width:960px){ .columns{grid-template-columns:1fr} .page::after{display:none} }
+  .col{background:var(--paper);border:1px solid #e6e6e6;box-shadow:0 2px 8px var(--shadow);}
+  .inner{padding:26px 28px;}
+  h2{font-family:var(--serif);font-size:20px;margin:0 0 14px;letter-spacing:.01em}
+  pre, code{font-family:var(--mono);font-size:.92rem;line-height:1.9;white-space:pre-wrap;word-break:break-word;margin:0}
+  .paircap{color:#888;font-size:.86rem;margin:-2px 0 10px}
+  /* audio */
+  .player{margin:10px 0 20px}
+  .player audio{width:100%}
+  .links{display:flex; gap:10px; margin-top:8px; flex-wrap:wrap}
+  .btn{display:inline-block; padding:8px 12px; border:1px solid #222; text-decoration:none; color:#222; border-radius:8px}
+  .btn:hover{background:#222; color:#fff}
+  .btn.ghost{border-color:#aaa; color:#555}
+  .btn.ghost:hover{background:#eee}
+  .track{margin:8px 0 6px 0; font-size:14px; color:#555}
+  footer{margin-top:24px; color:#777; font-size:.9rem; text-align:center}
+  .copyblock{margin-top:8px; line-height:1.6; color:#555}
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <h1>Resonance Project – Phase Log #2 / City Pop : Breathing Structure</h1>
+      <p class="sub">「構造の呼吸（City Pop編)」
+[I. 概要 / Overview]
+[II. 構造メモ / Design Notes]
+[III. Generation Prompt（City Pop Edition）]
+[IV. 歌詞 JP v1.12 / EN v1.6]
+[V. 補遺 — Friction & Openness（JP/EN）]
+</p>
+      <nav class="topnav">
+        <button onclick="history.back()">← 戻る</button>
+        <a href="/">Top</a>
+        <a href="/breathing-structure/">← Phase Log #1</a>
+      </nav>
+    </header>
+
+    <!-- I. Prologue -->
+    <div class="columns" id="sec-i">
+      <div class="col"><div class="inner">
+        <h2>[I. 序 — 都市の呼吸]</h2>
+        <div class="paircap">JP / Prologue</div>
+<pre>
+“構造の呼吸”を City Pop の感覚で検証。言葉の余白と、音のドライな空間処理を両立し、
+「整いすぎない美」を保ったまま微かな希望を残す。目的は、歌詞のリズムと言葉の呼吸が、
+Suno 生成の“揺らぎ”と干渉して新しい手触りを生むかの実験。
+</pre>
+      </div></div>
+      <div class="col"><div class="inner">
+        <h2>[I. Prologue — The Breath Within the City]</h2>
+        <div class="paircap">EN / Prologue</div>
+<pre>
+We examine “Breathing Structure” through a City Pop lens: dry mixes, spare space, and soft hope.
+Goal: let the rhythm of Japanese phrasing breathe with Suno’s generative drift to produce a new tactile feel.
+</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- II. Poetic Design -->
+    <div class="columns" id="sec-ii">
+      <div class="col"><div class="inner">
+        <h2>[II. 言葉設計 — 呼吸の建築]</h2>
+        <div class="paircap">JP / Design Notes</div>
+<pre>
+・声：押し付けない、低め・柔らかいトーン。言葉を前に出しすぎない。
+・空間：ドライ基調。残響は“気配”だけ。テープ質感は控えめ。
+・リズム：機械と人のあいだ。微小なズレ＝呼吸。無理に量子化しない。
+・和声：整いすぎを避け、“滲み”を残す。ディソナンス＝運動の合図。
+・ミックス：低域は“厚いが暴れない”。無駄を置かない＝誠実さ。
+</pre>
+      </div></div>
+      <div class="col"><div class="inner">
+        <h2>[II. Poetic Design — Architecture of Breath]</h2>
+        <div class="paircap">EN / Design Notes</div>
+<pre>
+• Voice: low, soft, non-insistent; diction clear but never dominant.
+• Space: mostly dry; reverb as “trace,” not effect.
+• Rhythm: slight human drift; avoid hard quantization.
+• Harmony: leave blur; dissonance = motion cue.
+• Mix: weight in lows without boom; no filler = honesty.
+</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- III. Sonic Design / Prompt -->
+    <div class="columns" id="sec-iii">
+      <div class="col"><div class="inner">
+        <h2>[III. 音響設計 — Suno 可変プロンプト（City Pop / 呼吸版）]</h2>
+        <div class="paircap">JP / Variable Prompt</div>
+<pre><code>Title: Breathing Structure / 構造の呼吸
+Style: city pop × ambient soul × analog minimalism
+Vocal: soft low female vocal, breathy, detached but human
+Mood: nostalgic, hazy, imperfect calm; hope is quiet, not bright
+Instrumentation:
+- electric piano with uneven touch (subtle tape wobble)
+- soft deep sub-bass (restrained movement)
+- hybrid drums (dry rim, relaxed hats; light swing)
+- faint phase-shifted tone (guitar/synth surrogate)
+- granular pad (slight pitch drift, low in mix)
+- thin ambient layer (breathing pulse; not washy)
+Mix: mostly dry; minimal reverb just to outline air; slight tape hiss
+Dynamics: gentle compression; natural lift at chorus without loudness jump
+Timing: allow micro-offsets; never fully quantized
+Notes:
+- prioritize silence and breath between lines
+- dissonance = motion, not chaos
+- no genre clichés; keep space narrow, foreground clear
+Include Japanese lyrics below exactly as written.
+</code></pre>
+      </div></div>
+      <div class="col"><div class="inner">
+        <h2>[III. Sonic Design — Generation Prompt（City Pop Edition）]</h2>
+        <div class="paircap">EN / Rationale</div>
+<pre>
+Same as left – rationale for why each constraint keeps the mix open (dry), avoids cliché,
+and lets “breath” emerge from drift and silence.
+</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- IV. Lyrics JP/EN -->
+    <div class="columns" id="sec-iv">
+      <div class="col"><div class="inner">
+        <h2>[IV. JP 歌詞 v1.12（表記版）]</h2>
+        <div class="paircap">JP / Lyrics</div>
+<pre>
+（（[Verse 1]
+風が　遅れて　頬をかすめる
+窓のむこうで　光が　褪せていく
+「今日」という　名前の輪郭が
+胸の奥で　やわらかく　鳴っている
+
+静かな部屋に
+誰かの息が　そっと触れる
+名を持たぬ時間が
+肌の下で　微かに揺れる
+雲が　音を変え
+街の灯りが　リズムを刻む
+終わりじゃなく　呼吸のつづき
+世界は　静かに　裏返る
+
+[Chorus]
+見えない輪郭が　息をして
+夜の底に　光を描く
+君が残した　かすかな温もりが
+この静けさを　やさしく揺らしてる
+
+[Verse 2]
+崩れかけた　和音のように
+日々は　少し　揺れている
+形の決まった現実より
+滲む景色に　意味を探す
+何かを失うたび
+世界は　透きとおっていく
+それでも　呼吸はつづく
+確かめるように　あわく
+
+[Bridge]
+欠けた出会いが　世界を震わせる
+もしそれが　ともに響く　証なら
+沈黙もまた　一つの旋律
+
+[Outro]
+光が遠のくたび
+記憶が　形を変えていく
+夜は　終わりじゃなく
+次の朝陽へと　続いていく））
+</pre>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>[IV. EN Lyrics v1.6]</h2>
+        <div class="paircap">EN / Lyrics</div>
+<pre>
+（（[Verse 1]
+the wind comes late, it touches my skin
+light fades slow through a window thin
+a name called “today” is floating inside
+a pulse still hums where the silence hides
+
+breathe in the quiet, a whisper remains
+a nameless time flows under my veins
+the city sighs and the rhythm bends
+not the end, just where breath extends
+
+[Chorus]
+invisible lines begin to breathe
+drawing the light beneath the eve
+the warmth you left is near, so clear
+it trembles softly — I feel it near
+
+[Verse 2]
+like chords that fall but never break
+the days still move, and hearts still shake
+from perfect frames I turn away
+to blurred reflections where meanings stay
+
+losing pieces, the world turns clear
+yet still I breathe to hold you near
+a fragile calm, an aftersound
+the air remembers; the pulse goes round
+
+[Bridge]
+a broken meeting shakes the air
+if that’s our proof the silence shares
+then every rest becomes a tune
+that hums between the dusk and moon
+
+[Outro]
+each time the light begins to fade
+the memory shifts, new shapes are made
+night’s not the end, but softly new —
+breathing again toward morning’s hue）
+</pre>
+      </div></div>
+    </div>
+
+    <!-- Audio bank（Phase1と同じ位置 = IV直後） -->
+    <div class="columns" id="audio-bank">
+      <div class="col"><div class="inner">
+        <h2>Listening – Phase 2 (A)</h2>
+        <div class="player">
+          <h3 class="track">Phase2 – Mix A</h3>
+          <audio controls preload="none">
+            <source src="/audio/BreathingStructure10_29citypoj2.mp3" type="audio/mpeg">
+          </audio>
+          <div class="links">
+            <a class="btn" href="/audio/BreathingStructure10_29citypoj2.mp3" download>MP3</a>
+          </div>
+        </div>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>Listening – Phase 2 (B)</h2>
+        <div class="player">
+          <h3 class="track">Phase2 – Mix B</h3>
+          <audio controls preload="none">
+            <source src="/audio/BreathingStructure_en_citypop.mp3" type="audio/mpeg">
+          </audio>
+          <div class="links">
+            <a class="btn" href="/audio/BreathingStructure_en_citypop.mp3" download>MP3</a>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- V -->
+    <div class="columns" id="sec-v">
+      <div class="col"><div class="inner">
+        <h2>[V. 補遺 — Friction & Openness（JP）]</h2>
+        <div class="paircap">JP / Aesthetics</div>
+<pre>
+「摩擦」は、整いすぎの手前で止めるブレーキであり、呼吸の居場所をつくる隙間。
+「開放」は、要素を減らし関係性を浮かび上がらせる操作。両者のバランスで構造が息をする。
+</pre>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>[V. Supplement — Friction & Openness]</h2>
+        <div class="paircap">EN / Aesthetics</div>
+<pre>
+“Friction” is the brake before perfection—the gap where breath resides.
+“Openness” reduces elements so relations emerge. The balance makes structure breathe.
+</pre>
+      </div></div>
+    </div>
+
+    <footer>
+      <div class="copyblock">
+        © 2025 Resonance / Continuity Project. All rights reserved.<br>
+        Compiled by chosai araki × Louis × Roto × Mira × Eve.<br>
+        This dialogue is not the end, but the beginning of an echo.<br>
+        Contact: <a href="mailto:achosai@gmail.com">achosai@gmail.com</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

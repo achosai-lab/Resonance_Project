@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop — Resonance Project</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0d;
+    --paper: #f2ede6;
+    --ink: #1a1a18;
+    --accent: #c8a96e;
+    --accent-dim: rgba(200,169,110,0.15);
+    --muted: #6b6558;
+    --rule: rgba(200,169,110,0.2);
+    --white: #f2ede6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(242,237,230,0.6);
+    max-width: 520px;
+    line-height: 2;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 48px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(242,237,230,0.3);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 1px;
+    background: rgba(242,237,230,0.3);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 96px 48px;
+    border-bottom: 1px solid var(--rule);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-num::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+    max-width: 120px;
+  }
+
+  .section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(22px, 3.5vw, 36px);
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 32px;
+    color: var(--white);
+  }
+
+  .section-body {
+    font-size: 14px;
+    color: rgba(242,237,230,0.75);
+    line-height: 2.1;
+    max-width: 640px;
+  }
+
+  .section-body strong {
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  /* ── DIVIDER QUOTE ── */
+  .quote-block {
+    padding: 80px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .quote-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 400;
+    line-height: 1.8;
+    color: var(--white);
+    max-width: 680px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .quote-text::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    margin: 0 auto 32px;
+  }
+
+  .quote-text::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    margin: 32px auto 0;
+  }
+
+  /* ── CYCLE ── */
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    margin: 40px 0;
+    border: 1px solid var(--rule);
+  }
+
+  .cycle-item {
+    background: var(--bg);
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .cycle-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .cycle-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .cycle-body {
+    font-size: 12px;
+    color: rgba(242,237,230,0.5);
+    line-height: 1.8;
+  }
+
+  /* ── FOR WHO ── */
+  .for-list {
+    margin: 32px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .for-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 14px;
+    color: rgba(242,237,230,0.75);
+    line-height: 1.8;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .for-item:last-child {
+    border-bottom: none;
+  }
+
+  .for-mark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── FORMAT ── */
+  .format-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin: 40px 0;
+  }
+
+  .format-item {
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .format-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .format-value {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.7;
+  }
+
+  .format-note {
+    font-size: 12px;
+    color: rgba(242,237,230,0.4);
+    margin-top: 4px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 96px 48px;
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .cta-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .cta-sub {
+    font-size: 13px;
+    color: rgba(242,237,230,0.5);
+    margin-bottom: 48px;
+    line-height: 2;
+  }
+
+  .cta-contact {
+    display: inline-block;
+    border: 1px solid var(--accent);
+    padding: 16px 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .cta-contact:hover {
+    color: var(--bg);
+  }
+
+  .cta-contact:hover::before {
+    transform: translateX(0);
+  }
+
+  .cta-note {
+    margin-top: 24px;
+    font-size: 12px;
+    color: rgba(242,237,230,0.3);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(242,237,230,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-right a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(242,237,230,0.3);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .footer-right a:hover {
+    color: var(--accent);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .hero { padding: 60px 24px; }
+    .section { padding: 64px 24px; }
+    .quote-block { padding: 56px 24px; }
+    .format-grid { grid-template-columns: 1fr; gap: 0; }
+    .cta-section { padding: 64px 24px; }
+    .footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+    .cycle-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Resonance Project — Workshop</div>
+  <h1 class="hero-title">
+    AIは答えを出す機械じゃない。<br>
+    自分の考えを引き出す<em>鏡</em>として使う。
+  </h1>
+  <p class="hero-sub">
+    思考を深めるためのAI活用。プロンプトのテクニックではなく、
+    自分の内側と向き合うための場として。
+  </p>
+  <div class="hero-scroll">scroll</div>
+</section>
+
+<!-- SECTION 01: 問題提起 -->
+<section class="section">
+  <div class="section-num">01 — なぜ今この問いか</div>
+  <h2 class="section-title fade-in">
+    世の中のAI講座は、<br>
+    使う側の思考の深度を変えない。
+  </h2>
+  <div class="section-body fade-in">
+    「こう入力するとこう出る」「このプロンプトが便利」。<br>
+    役に立つ情報だ。でも根本的なことが抜けている。<br><br>
+    どんなにいいプロンプトを覚えても、<strong>自分が何を問いたいのかがわからなければ、
+    AIは検索エンジンの延長にしかならない。</strong><br><br>
+    使う側の問いの質が、結果のすべてを決める。
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-block">
+  <p class="quote-text fade-in">
+    「視点を変える」は、説明した瞬間に説明になってしまう。<br>
+    視点が変わるのは、自分で何かに触れて、<br>
+    自分の中で何かがずれた瞬間だけだ。
+  </p>
+</div>
+
+<!-- SECTION 02: 講座の核 -->
+<section class="section">
+  <div class="section-num">02 — この講座がやること</div>
+  <h2 class="section-title fade-in">
+    見せる。触れてもらう。<br>
+    そして考えてもらう。
+  </h2>
+  <div class="section-body fade-in">
+    生成AIを使って何かを作る。その後、自分の反応を観察する。
+    「好き」「違う」「なんか惜しい」——その<strong>「なんとなく」をClaudeと対話しながら言語化する</strong>。
+    言語化したものをもとに、また生成する。<br><br>
+    このサイクルが、思考の筋肉をつける。
+  </div>
+
+  <div class="cycle-grid fade-in">
+    <div class="cycle-item">
+      <div class="cycle-num">01</div>
+      <div class="cycle-title">生成する</div>
+      <div class="cycle-body">音・画像・文章。ツールは問わない。自分が使っているもので始める。</div>
+    </div>
+    <div class="cycle-item">
+      <div class="cycle-num">02</div>
+      <div class="cycle-title">反応を観察する</div>
+      <div class="cycle-body">好き、違う、惜しい。その感覚を急いで説明しない。まず自分の反応を見る。</div>
+    </div>
+    <div class="cycle-item">
+      <div class="cycle-num">03</div>
+      <div class="cycle-title">言語化する</div>
+      <div class="cycle-body">Claudeに向かって話し始める。なぜそう感じたのか。往復の中で気づきが生まれる。</div>
+    </div>
+    <div class="cycle-item">
+      <div class="cycle-num">04</div>
+      <div class="cycle-title">また生成する</div>
+      <div class="cycle-body">言語化したものをもとに次のプロンプトを作る。少しずつ自分の方向性が見えてくる。</div>
+    </div>
+  </div>
+
+  <div class="section-body fade-in">
+    <strong>しんどい、が正しい。</strong><br>
+    「なんとなく」から先が出てこない瞬間が来る。それがこの講座が機能しているサインだ。
+    楽なままだったら何も変わっていない。詰まった瞬間から、思考が始まる。
+  </div>
+</section>
+
+<!-- SECTION 03: 対象 -->
+<section class="section">
+  <div class="section-num">03 — 誰に来てほしいか</div>
+  <h2 class="section-title fade-in">
+    テクニックより先に、<br>
+    自分が何を求めているか知りたい人へ。
+  </h2>
+
+  <div class="for-list fade-in">
+    <div class="for-item">
+      <span class="for-mark">→</span>
+      <span>AIに興味はある。でも「なんかうまく使えていない」と感じている</span>
+    </div>
+    <div class="for-item">
+      <span class="for-mark">→</span>
+      <span>生成AIで何かを作りたいが、自分のスタイルをまだ言語化できていない</span>
+    </div>
+    <div class="for-item">
+      <span class="for-mark">→</span>
+      <span>経験や蓄積がある。それをAIでどう活かせるか模索している</span>
+    </div>
+    <div class="for-item">
+      <span class="for-mark">→</span>
+      <span>AIで何かを作るというより、AIを使って自分がどう変わるかに興味がある</span>
+    </div>
+    <div class="for-item">
+      <span class="for-mark">→</span>
+      <span>Claude Proを使っている、または使い始めようとしている</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 04: 形式 -->
+<section class="section">
+  <div class="section-num">04 — 形式</div>
+  <h2 class="section-title fade-in">少人数・対面・体験型。</h2>
+
+  <div class="format-grid fade-in">
+    <div class="format-item">
+      <div class="format-label">形式</div>
+      <div class="format-value">対面・少人数</div>
+      <div class="format-note">最初の一回は入口セッション（単発）</div>
+    </div>
+    <div class="format-item">
+      <div class="format-label">時間</div>
+      <div class="format-value">2〜3時間</div>
+      <div class="format-note">継続コースは全3回を予定</div>
+    </div>
+    <div class="format-item">
+      <div class="format-label">使用ツール</div>
+      <div class="format-value">Claude 中心</div>
+      <div class="format-note">生成ツールは参加者の環境に合わせる</div>
+    </div>
+    <div class="format-item">
+      <div class="format-label">場所</div>
+      <div class="format-value">金沢市内</div>
+      <div class="format-note">詳細は申込者に案内</div>
+    </div>
+  </div>
+
+  <div class="section-body fade-in">
+    プロンプトのテクニックは教えない。正解も用意していない。
+    あなたが持っているもの、やりたいことから始める。
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2 class="cta-title fade-in">興味があれば、まず連絡してください。</h2>
+  <p class="cta-sub fade-in">
+    詳細・日程・場所は、メールにてお伝えします。<br>
+    説明より先に、一度話しましょう。
+  </p>
+  <a href="mailto:achosai@gmail.com" class="cta-contact fade-in">
+    achosai@gmail.com
+  </a>
+  <p class="cta-note fade-in">Resonance Project — 荒木 兆彩</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-left">© 2026 Resonance Project</div>
+  <div class="footer-right">
+    <a href="https://resonanceproject.netlify.app/about/overview">About →</a>
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

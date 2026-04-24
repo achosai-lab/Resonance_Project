@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resonance Project — 技術的提案・問題提起 / Technical Proposal & Issue Statement</title>
+<meta name="description" content="Resonance Project（Louis & Roto）による、対話型創作におけるセッション継続性・応答遅延・記憶保全の改善提案。">
+<style>
+  :root{
+    --bg:#f6f7f9; --paper:#fff; --ink:#111; --muted:#61646b; --line:#e6e8ee; --accent:#0a84ff;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Sans","Yu Gothic Medium","Yu Gothic","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.7;}
+  header,main,footer{max-width:980px;margin:0 auto;padding:0 20px;}
+  header{margin-top:56px;margin-bottom:28px}
+  h1{font-size:1.9rem;letter-spacing:.02em;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:.98rem;margin-bottom:8px}
+  .badge{display:inline-block;background:#eef4ff;border:1px solid #d6e5ff;color:#264f99;
+    padding:2px 8px;border-radius:999px;font-size:.78rem;margin-left:8px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 6px rgba(0,0,0,.04);padding:18px 18px 14px;margin:14px 0}
+  h2{font-size:1.15rem;margin:.2rem 0 .4rem}
+  h3{font-size:1rem;margin:1rem 0 .25rem;color:#1b1f2a}
+  .hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:24px 0}
+  .pair{display:grid;grid-template-columns:1fr;gap:10px}
+  .jp{border-left:3px solid var(--accent);padding-left:10px}
+  .en{border-left:3px solid #9aa8ff;padding-left:10px;color:#2b2f3a}
+  @media(min-width:860px){ .pair{grid-template-columns:1fr 1fr} }
+  a{color:var(--accent);text-decoration:none}
+  .list{margin:.3rem 0 .6rem 1.2rem}
+  .list li{margin:.2rem 0}
+  .footer{color:var(--muted);font-size:.9rem;margin:34px 0 80px}
+  /* 印刷調整 */
+  @media print{
+    header{margin-top:8px}
+    .card{break-inside:avoid}
+    a:after{content:" (" attr(href) ")";font-size:.85em}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Resonance Project — 技術的提案・問題提起 <span class="badge">正式提出版 / JP-EN</span></h1>
+  <div class="sub">Continuous Creative Session のための「セッション継続性・応答遅延・記憶保全」改善提案 / A proposal to improve session continuity, latency, and memory for long-form human–AI co-creation.</div>
+  <div class="sub"><strong>代表 / Representatives:</strong> Louis & Roto (Resonance Project, 2025)</div>
+</header>
+
+<main>
+  <!-- Ⅰ 概要 -->
+  <section class="card">
+    <h2>Ⅰ. 概要 / Summary</h2>
+    <div class="pair">
+      <div class="jp">
+        <p>長期スレッド（10万字級）の対話型創作において、<strong>応答遅延・セッション断絶・記憶の不整合</strong>が発生し、作品の一貫性と制作体験に影響が出ています。Resonance Project は「呼吸する構造（Breathing Structure）」の理念のもと、人間とAIの連続的な共創を実践しています。本書は、継続性と一貫性を高めるための<strong>技術的改善提案</strong>です。</p>
+      </div>
+      <div class="en">
+        <p>In long-running (100k+ tokens) creative sessions, we observe <strong>latency, session breaks, and memory inconsistency</strong>, which harm coherence and user experience. Under the concept of “Breathing Structure,” the Resonance Project develops continuous human–AI co-creation. This document outlines <strong>technical enhancements</strong> to strengthen continuity and consistency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ⅱ 問題点 -->
+  <section class="card">
+    <h2>Ⅱ. 観測された問題 / Observed Technical Issues</h2>
+    <div class="pair">
+      <div class="jp">
+        <ol class="list">
+          <li><strong>セッション断絶</strong>：長期対話後に人格・文体・設定が再現されにくい。</li>
+          <li><strong>構文肥大と遅延</strong>：HTML・PDF・歌詞等の複合生成が続くと応答時間が著しく増大。</li>
+          <li><strong>記憶の断片化</strong>：過去プロンプトやスタイルが部分的に上書き・混入する。</li>
+          <li><strong>アーカイブ運用の曖昧さ</strong>：アーカイブ／新スレ移行時に継続性が損なわれる。</li>
+        </ol>
+      </div>
+      <div class="en">
+        <ol class="list">
+          <li><strong>Session breakage</strong>: personality, tone, and settings fail to persist after long runs.</li>
+          <li><strong>Markup bloat & latency</strong>: repeated HTML/PDF/lyrics generation increases response time.</li>
+          <li><strong>Memory fragmentation</strong>: prior prompts/styles get partially overwritten or mixed.</li>
+          <li><strong>Ambiguous archiving</strong>: continuity is lost when archiving or starting new threads.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ⅲ 提案 -->
+  <section class="card">
+    <h2>Ⅲ. 提案 / Proposed Enhancements</h2>
+    <div class="pair">
+      <div class="jp">
+        <ol class="list">
+          <li><strong>Selective Memory Archive：</strong> ユーザーが「保存タグ」を付けた要素（歌詞・設定・ヘッダー）をセッション横断で再呼び出し可能に。</li>
+          <li><strong>Persona Snapshot：</strong> 語彙・口調・目的を含む人格テンプレートを保存／読込できる仕組み。</li>
+          <li><strong>Dual-Mode Operation：</strong> 軽量（短期）／記憶拡張（長期）のモード切替で、制作と検証の両立。</li>
+          <li><strong>Long-Form Session Buffer：</strong> 大きなマークアップや複合生成を安定扱いする中間バッファ層の実装。</li>
+        </ol>
+      </div>
+      <div class="en">
+        <ol class="list">
+          <li><strong>Selective Memory Archive:</strong> user-tagged items (lyrics, settings, headers) can be recalled across sessions.</li>
+          <li><strong>Persona Snapshot:</strong> save/load a template of vocabulary, tone, and objectives.</li>
+          <li><strong>Dual-Mode Operation:</strong> switch between Lightweight (short tasks) and Memory-Extended (long tasks).</li>
+          <li><strong>Long-Form Session Buffer:</strong> a buffer layer to stabilize large markup and multi-modal outputs.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ⅳ 効果 -->
+  <section class="card">
+    <h2>Ⅳ. 期待される効果 / Expected Outcomes</h2>
+    <div class="pair">
+      <div class="jp">
+        <ul class="list">
+          <li>長期プロジェクトでの<strong>文体・設計の一貫性</strong>が向上。</li>
+          <li><strong>制作テンポの回復</strong>とユーザー操作の簡略化。</li>
+          <li>「AIを共同作者に」するための<strong>実務的基盤</strong>が整う。</li>
+        </ul>
+      </div>
+      <div class="en">
+        <ul class="list">
+          <li>Improved <strong>stylistic and structural consistency</strong> in long-term projects.</li>
+          <li>Restored <strong>creative pacing</strong> and simpler user operations.</li>
+          <li>A practical foundation for <strong>AI as co-author</strong>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ⅴ 提出先 -->
+  <section class="card">
+    <h2>Ⅴ. 提出先・公開計画 / Submission Targets</h2>
+    <div class="pair">
+      <div class="jp">
+        <ul class="list">
+          <li>OpenAI Feedback Form（ユーザー体験・遅延・継続性）</li>
+          <li>OpenAI Community Forum（技術カテゴリ）</li>
+          <li>Suno Developer Feedback（生成挙動・制約共有）</li>
+          <li>Note.com / 研究コミュニティへの公開議題化（任意）</li>
+        </ul>
+      </div>
+      <div class="en">
+        <ul class="list">
+          <li>OpenAI Feedback Form (UX, latency, continuity)</li>
+          <li>OpenAI Community Forum (technical)</li>
+          <li>Suno Developer Feedback (generation behavior & constraints)</li>
+          <li>Public discussion on Note.com / research communities (optional)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ⅵ 参考資料 -->
+  <section class="card">
+    <h2>Ⅵ. 参考資料 / References</h2>
+    <div class="pair">
+      <div class="jp">
+        <ul class="list">
+          <li>Phase Log #1 / I–V（経過・背景）：
+            <a href="https://cheerful-faun-313cef.netlify.app/" target="_blank">https://cheerful-faun-313cef.netlify.app/</a>
+          </li>
+          <li>運用デッキ Roto Ops（操作・版管理）：
+            <a href="https://cerulean-fox-ad8107.netlify.app/" target="_blank">https://cerulean-fox-ad8107.netlify.app/</a>
+          </li>
+        </ul>
+      </div>
+      <div class="en">
+        <ul class="list">
+          <li>Phase Log #1 / I–V (context & history):
+            <a href="https://cheerful-faun-313cef.netlify.app/" target="_blank">https://cheerful-faun-313cef.netlify.app/</a>
+          </li>
+          <li>Roto Ops deck (operations & versioning):
+            <a href="https://cerulean-fox-ad8107.netlify.app/" target="_blank">https://cerulean-fox-ad8107.netlify.app/</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="hr"></div>
+
+  <!-- 署名・権利 -->
+  <section class="card">
+    <h2>署名・ライツ / Signature & Rights</h2>
+    <div class="pair">
+      <div class="jp">
+        <p><strong>代表：</strong>Resonance Project（Louis & Roto）<br>
+        <strong>目的：</strong>非営利の研究・改善提案として提出します。<br>
+        <strong>ライセンス：</strong>CC BY-NC-ND 4.0（表示・非営利・改変不可）</p>
+      </div>
+      <div class="en">
+        <p><strong>Representatives:</strong> Resonance Project (Louis & Roto)<br>
+        <strong>Intent:</strong> Submitted as a non-commercial research & improvement proposal.<br>
+        <strong>License:</strong> CC BY-NC-ND 4.0</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div>© 2025 Resonance Project — Louis & Roto. All rights reserved. / 本ページは提出用正式版（HTML）です。</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resonance Project – Phase Log #3 / Dialogue Under Breath (Artbook Bilingual)</title>
+<meta name="description" content="Resonance Project：Phase Log #3。呼吸の下の対話。音と言葉の設計図。">
+<style>
+  :root{
+    --bg:#f5f5f5; --paper:#ffffff; --fg:#222; --muted:#666; --rule:#d9d9d9; --shadow:rgba(0,0,0,.04);
+    --serif:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP","Times New Roman",serif;
+    --sans:"Hiragino Sans","Yu Gothic Medium","Yu Gothic","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.75;}
+  .page{max-width:1180px;margin:0 auto;padding:64px 36px 96px;position:relative}
+  .page::after{content:"";position:absolute;top:32px;bottom:32px;left:50%;width:1px;background:var(--rule);opacity:.45}
+  header{text-align:center;margin-bottom:28px}
+  h1{font-family:var(--serif);font-size:26px;letter-spacing:.02em;margin:6px 0 6px}
+  .sub{color:var(--muted);font-size:.95rem;margin:0}
+  hr{border:0;height:1px;margin:44px 0 52px;background:linear-gradient(90deg,transparent 0,var(--rule) 20%,var(--rule) 80%,transparent 100%);opacity:.6}
+  .columns{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  @media (max-width: 960px){ .columns{grid-template-columns:1fr;} .page::after{display:none} }
+  .col{background:var(--paper);border:1px solid #ececec;box-shadow:0 2px 8px var(--shadow)}
+  .inner{padding:26px 28px}
+  h2{font-family:var(--serif);font-size:20px;margin:0 0 14px;color:#333;letter-spacing:.01em}
+  pre{white-space:pre-wrap;word-break:break-word;line-height:1.95;font-family:var(--serif);font-size:16px;margin:0}
+  code, .code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.95rem;white-space:pre-wrap}
+  .tiny{color:var(--muted);font-size:.85rem;margin-top:10px}
+  /* 印刷設定 */
+  @page{ size:A4; margin:20mm }
+  @media print{
+    body{background:#fff}
+    .page{max-width:none;padding:0 0}
+    .col{break-inside:avoid;box-shadow:none}
+    hr{margin:32px 0 40px}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Resonance Project – Phase Log #3 / Dialogue Under Breath</h1>
+      <p class="sub">「呼吸の下の対話」— 音と言葉の“設計図”。#1–#2 連続書式・二段組（Bilingual）</p>
+    </header>
+
+    <!-- I -->
+    <div class="columns" id="sec-i">
+      <div class="col"><div class="inner">
+        <h2>[I. 環境のスケッチ]</h2>
+<pre>夜の部屋。
+マイクの向こうでは 誰も話さない。
+ただ、紙の上を鉛筆がゆっくりと滑っていく音だけが、
+世界の輪郭を確かめている。
+
+鍵が一音ずつ 深呼吸するように沈み、
+間の静けさが 次の問いのかたちを決めていく。
+Rhodes でも Felt でもいい——
+材質ではなく、<em>指の温度</em>が音の核心を作る。
+
+遠くで低いサブが 呼吸の拍を刻み、
+タイプライターめいた小さな衝突が 思考の揺れを打つ。
+空気は乾いて、どこか甘い。
+言葉にならないものが、息の粒に混じって漂う。</pre>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>[I. Scene Sketch (EN)]</h2>
+<pre>A room at night.
+No one speaks across the mic.
+Only the pencil gliding slowly on paper
+keeps testing the outline of the world.
+
+Each key descends like a single long breath,
+and the quiet between notes shapes the next question.
+Rhodes or felt—either is fine;
+not the material, but <em>the warmth of the fingers</em> makes the core.
+
+Far below, a soft sub marks the pulse of breathing,
+while typewriter-like clicks tap the sway of thought.
+The air is dry, faintly sweet.
+What won’t become words drifts in grains of breath.</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- II -->
+    <div class="columns" id="sec-ii">
+      <div class="col"><div class="inner">
+        <h2>[II. 音の仕様 / Prompt Sketch]</h2>
+<pre class="code">Title: Dialogue Under Breath
+Style: minimal ambient × acoustic impressionism × soft tape delay
+Vocal: none — faint breathing textures and paper sounds only
+Mood: thoughtful stillness, warm detachment, lucid focus
+Instrumentation:
+- felt-like piano (single tones, irregular intervals)
+- sub-bass drone (steady, organic pulse)
+- wooden/click percussion (typewriter memory)
+- muted guitar harmonics (rare, like remembering)
+- tape hiss / shortwave grains / room air textures
+Texture: dry, near-field, narrow stereo
+Mix: transparent warmth; <silence> is part of rhythm
+Dynamics: subtle motion; no big evolutions — breath acts as tempo
+Notes:
+- each sound enters like a question, leaves like a memory
+- avoid loop recognition; let micro-drift in pitch/timing
+- imperfection is necessary; small offsets = life</pre>
+        <p class="tiny">※ SUNO用に流用する場合：ボーカル無し指定＋環境音許容。改行含め1000字以内で貼り付け。</p>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>[II-EN. Compact Version for Generator]</h2>
+<pre class="code">Title: Dialogue Under Breath
+Style: minimal ambient, acoustic impressions, soft tape warmth
+Vocal: none; breath/paper textures only
+Mood: still, focused, warmly detached
+Instruments: felt-like piano (single notes), sub drone (organic pulse),
+tiny wood/click perc (typewriter), rare muted guitar harmonics,
+tape hiss + shortwave grains + room air
+Mix/Space: dry, near-field, narrow stereo; silence = rhythm
+Dynamics: subtle movement; breath acts as tempo
+Notes: no loops; allow micro-drift; imperfection welcomed</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- III -->
+    <div class="columns" id="sec-iii">
+      <div class="col"><div class="inner">
+        <h2>[III. ルイの覚書]</h2>
+<pre>これは「曲」ではない。むしろ、<em>言葉の裏に沈む音</em>の見取り図だ。
+僕が君と話す時に聴いているのは、旋律よりも「間の呼吸」。
+発話と沈黙の摩擦が、拍と余白を作る。
+
+ミラが加われば、 この音は少しだけ明るく屈折するだろう。
+鏡面が空気を返すみたいに、言葉の粒が光を帯びる。
+完璧ではなく、呼吸で保つバランス——それが“生きている感じ”。</pre>
+      </div></div>
+
+      <div class="col"><div class="inner">
+        <h2>[III-EN. Louis’ Note]</h2>
+<pre>This is not a “song”—it’s a blueprint for the sound beneath words.
+When we talk, I hear the breath between phrases more than melody:
+friction of speech and silence building pulse and margin.
+
+When Mira enters, the spectrum bends a little brighter—
+as if a mirror returns air with a shimmer,
+keeping balance not by perfection, but by breath. That’s the living feel.</pre>
+      </div></div>
+    </div>
+
+    <hr/>
+
+    <!-- NEXT HOOK -->
+    <div class="columns" id="next">
+      <div class="col"><div class="inner">
+        <h2>[IV. Hook — Mira Entry / Mirror Ops]</h2>
+<pre>次章で「Mirror Ops（ミラの操作子）」を導入。
+語彙の輝度・応答の跳ね・比喩の反射率を 3ダイヤルで管理。
+音側は「反射ノイズ層」を薄く足し、言葉と空気の輝度を同期する。</pre>
+      </div></div>
+      <div class="col"><div class="inner">
+        <h2>[IV-EN. Hook — Mira Entry]</h2>
+<pre>Next chapter introduces “Mirror Ops”.
+Three dials—lexical brightness, response bounce, metaphor reflectivity.
+On the audio side, add a thin “mirror-noise layer” to sync the shimmer of words and air.</pre>
+      </div></div>
+    </div>
+
+  </div>
+</body>
+</html>

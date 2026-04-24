@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mira — Color Variance Playbook (EN)</title>
+<meta name="description" content="How small palette shifts create large perceptual changes in PixAI. Mira’s structure-first prompts, invariants vs variables, and quick recipes.">
+<meta name="robots" content="noindex, nofollow"><!-- remove when publishing -->
+<meta name="theme-color" content="#0a84ff">
+<style>
+:root{
+  --bg:#f6f7f9; --paper:#fff; --ink:#101113; --muted:#646b77; --line:#e8ebf2; --accent:#0a84ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+header,main,footer{max-width:980px;margin:0 auto;padding:18px}
+h1{font-size:1.85rem;margin:28px 0 8px;letter-spacing:.02em}
+h2{font-size:1.2rem;margin:22px 0 10px;border-left:4px solid var(--accent);padding-left:10px}
+.p{color:var(--ink)}
+.small{color:var(--muted);font-size:.92rem}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 6px rgba(0,0,0,.04);margin:12px 0}
+pre{white-space:pre-wrap;word-break:break-word;background:#0b1220;color:#e8eefb;padding:12px;border-radius:12px;font-size:.9rem;border:1px solid #0f1b35;position:relative}
+code{font-family:ui-monospace,Menlo,Consolas,monaco,monospace}
+.btn{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 10px;font-size:.9rem;cursor:pointer}
+.btn.accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copy{position:absolute;top:8px;right:8px;background:#15223b;color:#d9e4ff;border:1px solid #22345c;border-radius:8px;padding:6px 8px;font-size:.8rem;cursor:pointer}
+.kv{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toggle{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:.9rem;cursor:pointer}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:18px 0}
+kbd{background:#eef1f8;border:1px solid #d9dfec;border-radius:6px;padding:0 6px;font-size:.85rem}
+footer{color:var(--muted);font-size:.9rem;margin:24px auto 56px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);font-size:.78rem;color:#2c3340;background:#f7f8fb;margin-right:6px}
+.note{background:#f1f7ff;border:1px dashed #cfe0ff;border-radius:10px;padding:10px 12px}
+.grid{display:grid;gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+/* dark */
+.dark{
+  --bg:#101215; --paper:#171a1f; --ink:#f2f4f8; --muted:#a9b1bd; --line:#2a2f37; --accent:#6ea8ff;
+}
+.dark pre{background:#0c121b;border-color:#1b2a44;color:#e9f0ff}
+.dark .btn{background:#11161c;color:var(--ink);border-color:#2a2f37}
+.dark .copy{background:#111a2a;border-color:#21314c}
+</style>
+</head>
+<body>
+<header>
+  <div class="kv">
+    <h1>Mira — Color Variance Playbook (EN)</h1>
+    <button id="mode" class="toggle" aria-label="Toggle theme">🌙 Dark</button>
+  </div>
+  <p class="small">How to steer PixAI with small palette moves. <b>One prompt → many outcomes</b>; the interest is in the controlled drift.</p>
+</header>
+
+<main>
+  <section class="card">
+    <span class="badge">Idea</span>
+    <p class="p"><b>Color drives structure.</b> In our “Lines Before Words” workflow, we freeze the <i>invariants</i> (subject, stroke, substrate) and only nudge the palette/ratios to get new depth without losing identity.</p>
+    <div class="note small">“This single prompt yields these images — that’s the experiment.”</div>
+  </section>
+
+  <section class="card">
+    <h2>Invariants vs Variables</h2>
+    <ul class="small">
+      <li><b>Invariants</b>: 1 lady (waist/cowboy), short pixie hair, half-turned; abstract line halo; paper texture; minimal corner type; neutral exposure + gentle S-curve; symmetry avoided.</li>
+      <li><b>Variables</b>: palette ratios (indigo/teal/amber/violet), line density, brush roughness, bleed amount, crop tightness, negative-space balance, type opacity/size.</li>
+      <li><b>Engine</b>: <b>DDIM</b>, steps 14–18, CFG 3.5–5.0, VAE <b>anything</b>, 16:9, 4-up batch.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Quick Recipes</h2>
+    <div class="grid">
+      <div>
+        <p><b>Cool Shift (indigo/cyan)</b></p>
+        <ul class="small">
+          <li>Make indigo dominant; cyan secondary; remove amber or keep &lt;2%.</li>
+          <li>Lift blacks slightly (film fade). Reduce warm glow. Cool WB.</li>
+          <li>Keep negative space generous. Avoid centered symmetry.</li>
+        </ul>
+      </div>
+      <div>
+        <p><b>Warm Drift (amber/rose)</b></p>
+        <ul class="small">
+          <li>Amber band thin but present; add muted rose micro-accent.</li>
+          <li>Lower cyan; keep indigo as ground (not outline).</li>
+          <li>Depth via overlap (paper grain + faint bleed).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Prompt — Base (Structure Only)</h2>
+    <button class="copy" data-copy="#blk_base">Copy</button>
+    <pre id="blk_base"><code># Goal
+Abstract portrait with “art magazine cover” feel; modern/minimal; presence-before-language.
+
+# Subject & Framing
+1 lady, waist/cowboy crop; short pixie hair, dark brown eyes, lips slightly parted;
+face half-turned, distant-calm.
+
+# Composition
+Abstract organic lines surrounding her presence; color-field shapes echo silhouette;
+asymmetry preferred; generous negative space; minimal corner type.
+
+# Surface & Stroke
+Gesture-drawing irregular brush; slight pigment bleed; warm pastel paper; analog print hue.
+
+# Light & Atmosphere
+Soft close lighting; dry air; neutral exposure; gentle S-curve; saturation clamp.
+
+# Palette (base)
+Indigo / Moss green / Amber / Muted red (adjust ratios; avoid rainbow drift).
+
+# Aesthetic Guardrails
+Symmetry avoided; imperfection embraced; “thought-before-words”;
+modern minimalism; hint of Miró; resonance human ↔ AI.
+
+# Typography
+Lower-corner tiny: “Breathing Line / cho + Mira + Loto”.</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>Prompt — Cool Variant (ready-to-run)</h2>
+    <button class="copy" data-copy="#blk_cool">Copy</button>
+    <pre id="blk_cool"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, dark brown eyes, cowboy/waist framing, face half-turned (distant-calm),
+abstract organic lines forming loose circles and offset orbits,
+thread-like strokes (thin / thick / thin), faint root patterns, moth-wing grain,
+matte paper texture, dry atmosphere, soft close lighting,
+palette: deep indigo dominant, blue-violet, steel blue, moonlight gray, small cyan highlight (amber minimal),
+lifted blacks (film fade), reduced warm glow, generous negative space, asymmetric,
+16:9 record-sleeve minimalism, tiny caption lower-right:
+"Breathing Structure — cho × mira × roto",
+hint of Miró/Klee, unfinished yet alive</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>Prompt — Warm Variant (ready-to-run)</h2>
+    <button class="copy" data-copy="#blk_warm">Copy</button>
+    <pre id="blk_warm"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, calm gaze, half-turned,
+abstract arcs with soft bleed; color fields layered: indigo ground, amber band, muted rose micro-accent, pale ivory,
+paper grain, analog hue, slight vignette; asymmetry preferred,
+negative space held; soft rim light; dry air,
+minimal lower-corner type: "Breathing Line / cho + mira + loto",
+16:9, modern minimal, resonance not narrative</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>Troubleshooting</h2>
+    <ul class="small">
+      <li><b>Too photoreal / doll-like</b> → add: <code>not photoreal, feature-lite, print texture</code></li>
+      <li><b>Background gets busy</b> → add: <code>generous negative space, no city objects, no signage</code></li>
+      <li><b>Colors oversaturate</b> → keep <code>saturation clamp</code>, use <code>neutral exposure + gentle S-curve</code></li>
+      <li><b>Centered symmetry</b> → add: <code>asymmetric, off-center grid at 7% from left</code></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Engine Notes (PixAI)</h2>
+    <ul class="small">
+      <li>Sampler <b>DDIM</b> / steps <b>14–18</b> / CFG <b>3.5–5.0</b> / VAE <b>anything</b>.</li>
+      <li>Start at 960×540 or 1152×648; 4-up batch; upscale only the keepers.</li>
+      <li>Keep the “text block” tiny or remove it if OCR artifacts appear.</li>
+    </ul>
+  </section>
+
+  <div class="hr"></div>
+  <section class="small">
+    <p><b>Credit</b> — Resonance / Continuity Project — 兆彩 (chosai araki) × Mira</p>
+    <p class="small">“One prompt, these outputs. The fun is in the controlled drift.”</p>
+  </section>
+</main>
+
+<footer>
+  © 2025 Resonance Project — Mira. All rights reserved. / v1.0 (EN)
+</footer>
+
+<script>
+document.querySelectorAll(".copy").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const sel = btn.getAttribute("data-copy");
+    const el = document.querySelector(sel);
+    if(!el){return;}
+    const txt = el.innerText;
+    navigator.clipboard.writeText(txt).then(()=>{
+      const t=document.createElement("div");
+      t.textContent="Copied";
+      Object.assign(t.style,{
+        position:"fixed",left:"50%",top:"18px",transform:"translateX(-50%)",
+        background:"#111",color:"#fff",padding:"8px 12px",borderRadius:"10px",
+        fontSize:".9rem",boxShadow:"0 6px 22px rgba(0,0,0,.22)",zIndex:9999,opacity:0,transition:"opacity .15s"
+      });
+      document.body.appendChild(t);
+      requestAnimationFrame(()=>t.style.opacity=1);
+      setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),160)},1100);
+    });
+  })
+});
+const $mode=document.getElementById("mode");
+$mode.onclick=()=>{
+  document.body.classList.toggle("dark");
+  localStorage.setItem("mira-color-playbook-theme", document.body.classList.contains("dark")? "dark":"light");
+};
+(function initTheme(){
+  const m=localStorage.getItem("mira-color-playbook-theme");
+  if(m==="dark") document.body.classList.add("dark");
+})();
+</script>
+</body>
+</html>

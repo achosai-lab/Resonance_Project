@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Resonance / Continuity Project — Top</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Resonance / Continuity Project — 楽曲・歌詞・プロンプト・運用ログを横断する"呼吸する構造"の記録と提案。">
+<style>
+  :root{
+    --bg:#f2f0e9; --ink:#222; --paper:#fff; --muted:#666; --shadow:rgba(0,0,0,.06);
+    --accent:#0a84ff; --btn:#111; --btn-ink:#fff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    text-align:center; line-height:1.7;
+  }
+  header{padding:84px 20px 42px}
+  h1{font-size:2.4rem; margin:0 0 10px; letter-spacing:.02em}
+  p.tagline{font-size:1.08rem; color:var(--muted); margin:0 0 22px}
+  .quick{max-width:900px; margin:18px auto 32px; color:#444; font-size:.98rem}
+  .hero{
+    width:min(900px, 92vw);
+    aspect-ratio: 900 / 297;
+    height:auto;
+    display:block;
+    margin:18px auto 36px;
+    border-radius:14px;
+    box-shadow:0 8px 28px rgba(0,0,0,.12);
+    object-fit:cover;
+    background:#ddd;
+  }
+  .grid{
+    max-width:1040px; margin:60px auto; display:grid; gap:20px; padding:0 20px;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  }
+  .card{
+    background:var(--paper); padding:22px; border-radius:14px; text-align:left;
+    box-shadow:0 4px 14px var(--shadow);
+  }
+  .card h3{margin:0 0 6px; font-size:1.08rem; letter-spacing:.01em}
+  .card p{margin:.2rem 0 .6rem; color:#454545; font-size:.96rem}
+  .card a{color:var(--accent); text-decoration:none; font-weight:600}
+  /* Workshop カードだけ強調 */
+  .card.workshop{
+    background:#111;
+    border:1px solid rgba(200,169,110,0.4);
+  }
+  .card.workshop h3{color:#f2ede6;}
+  .card.workshop p{color:rgba(242,237,230,0.6);}
+  .card.workshop a{color:#c8a96e;}
+  footer{padding:40px 0 60px; color:#777; font-size:.9rem}
+  .badge{display:inline-block; margin-left:8px; padding:2px 8px; font-size:.74rem;
+         color:#264f99; background:#eef4ff; border:1px solid #d6e5ff; border-radius:999px}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Resonance / Continuity Project <span class="badge">I–V / Phase Log</span></h1>
+  <p class="tagline">構造は呼吸し、呼吸は記録になる。── 音・言葉・運用を同じリズムで。</p>
+
+  <img class="hero" src="pic/top.pic_2.1.png" alt="Resonance Project cover" loading="lazy" decoding="async">
+  <div class="quick">
+    <strong>これは何？（超要約）</strong><br>
+    楽曲生成（Suno）・歌詞（日英）・可変プロンプト・運用ログを "継続" 前提で束ねた実験。<br>
+    調整過程も成果物も残し、<em>「整いすぎない美」</em>と<em>「記憶の連続性」</em>を検証します。
+  </div>
+</header>
+
+<section style="border:1px solid #e5e7eb;border-radius:14px;padding:14px;background:#fff">
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center">
+    <strong>Resonance / Continuity Project — WIP</strong>
+    <span style="padding:2px 8px;border-radius:999px;background:#eef4ff;border:1px solid #d6e5ff;color:#264f99;font-size:.8rem">Work in Progress</span>
+    <span style="color:#666;font-size:.85rem">Site v0.3 · 更新: 2026-4-24</span>
+  </div>
+</section>
+
+<section style="margin-top:14px;border:1px solid #e5e7eb;border-radius:14px;padding:14px;background:#fff">
+  <h3 style="margin:.2rem 0 .6rem">🎧 Listening Room</h3>
+  <article style="display:grid;grid-template-columns:1fr;gap:10px">
+    <div><strong>V5</strong> — Breathing Structure（EN v1.6）<br><audio controls src="/audio/BreathingStructure10_24v_e5.mp3"></audio></div>
+    <div><strong>V4.5+</strong> — The Moment of Awareness<br><audio controls src="/audio/The Moment of Awareness _RUi_11_3_1_v4.5+.mp3"></audio></div>
+    <div><strong>Compare</strong> — Before Awareness<br><audio controls src="/audio/BeforeAwareness_RUi_11_4_ex1_v5.mp3"></audio></div>
+    <div><strong>v4.5+</strong> —thin-crescent sky#1<br><audio controls src="/audio/thin-crescent sky_mira_1_30_#1_4.5+_40_70.mp3"></audio></div>
+    <div><strong>v5</strong> —thin-crescent sky#2<br><audio controls src="audio/thin-crescent sky_mira_V4_1_30_#2_sv5.mp3"></audio></div>
+  </article>
+  <p style="font-size:.9rem;color:#666;margin:.5rem 0 0">→ 追加は <a href="/hub">Hub</a> へ</p>
+</section>
+
+<section style="margin-top:14px;border:1px solid #e5e7eb;border-radius:14px;padding:14px;background:#fff">
+  <h3 style="margin:.2rem 0 .6rem">📝 Latest Logs</h3>
+  <ol style="margin:.2rem 0 0;padding-left:1.1rem">
+   <li>workshop 追加 - JP</li>
+    <li>about 追加 <a href="/about/overview.html">/JP</a></li>
+    <li>Phase Log #2（City Pop 編 / 差分・可変プロンプト）— <a href="/logs/phase2.html">JP</a> | <a href="/logs/phase2_en.html">EN</a></li>
+    <li>構造的虚偽：事件の要旨と再構成 — <a href="/docs/structural-falsehood.html">JP</a></li>
+    <li>Ops Deck v2（コピー対応）— <a href="/ops/">/ops</a></li>
+  </ol>
+</section>
+
+<script>
+function copyTxt(id){
+  const el=document.getElementById(id); if(!el) return;
+  const t=el.innerText.replace(/\s+$/,'');
+  navigator.clipboard.writeText(t).then(()=>toast("コピーしました")).catch(()=>toast("コピーに失敗"));
+}
+function toast(msg){
+  const d=document.createElement('div');
+  d.textContent=msg;
+  Object.assign(d.style,{position:'fixed',left:'50%',top:'18px',transform:'translateX(-50%)',
+    background:'#111',color:'#fff',padding:'8px 12px',borderRadius:'10px',fontSize:'.9rem',
+    boxShadow:'0 6px 22px rgba(0,0,0,.22)',zIndex:9999,opacity:0,transition:'opacity .15s'});
+  document.body.appendChild(d); requestAnimationFrame(()=>d.style.opacity=1);
+  setTimeout(()=>{d.style.opacity=0; setTimeout(()=>d.remove(),160)},1100);
+}
+</script>
+
+<section class="grid">
+
+  <!-- Workshop カード（新規追加・先頭に配置） -->
+  <div class="card workshop">
+    <h3>Workshop</h3>
+    <p>AIを使って思考を深めるトレーニング。金沢・対面・少人数。</p>
+    <a href="/workshop/index.html">詳細を見る →</a>
+  </div>
+
+  <div class="card">
+    <h3>Phase Log #1 / I–V</h3>
+    <p>「構造の呼吸」制作記録（JP/EN）。歌詞・音・意図の最初のまとまり。</p>
+    <a href="/breathing-structure/index.html">開く →</a>
+  </div>
+
+  <div class="card">
+    <h3>技術的提案・問題提起</h3>
+    <p>記憶連続性／説明責任に関する提案。Phase2 英語報告書も収録。</p>
+    <a href="/suggestion2/suggestion2.html">開く →</a>
+  </div>
+
+  <div class="card">
+    <h3>Mirror（ミラ）</h3>
+    <p>創造的鏡構造：ビジュアル対話の試作群（記録＋解析）。</p>
+    <a href="/mirror/Mirror_Entry_Voyager_Startup_Full.html">開く →</a>
+  </div>
+
+  <div class="card">
+    <h3>Hub（運用ハブ）</h3>
+    <p>固定ヘッダー・差分テンプレ・Suno可変プロンプト集。</p>
+    <a href="/hub/index.html" id="hubLink">開く（要パス） →</a>
+  </div>
+
+  <div class="card">
+    <h3>about</h3>
+    <p>AIとの対話から生まれた実験の全記録</p>
+    <a href="/about/overview.html">開く →</a>
+  </div>
+
+</section>
+
+<footer>
+  Resonance / Continuity Project — 2025
+</footer>
+
+<script>
+  (function(){
+    const a = document.getElementById('hubLink');
+    if(!a) return;
+    const params = new URLSearchParams(location.search);
+    const viaKey = params.get('key') === '2046';
+    a.addEventListener('click', function(e){
+      if(viaKey) return;
+      e.preventDefault();
+      const pw = window.prompt('Hub を開くにはパスワードが必要です。/ Enter Password:');
+      if (pw === null) return;
+      if (pw.trim() === '2046') {
+        window.location.href = a.getAttribute('href');
+      } else {
+        alert('パスワードが違います。');
+      }
+    });
+  })();
+</script>
+</body>
+</html>

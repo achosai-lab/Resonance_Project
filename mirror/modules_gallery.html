@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resonance Project — Audio & Visual Modules</title>
+<meta name="description" content="Breathing Structure / Fermat’s Breath など、音と視覚のモジュール展示。">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0a84ff">
+<style>
+:root{
+  --bg:#0f1116; --paper:#151923; --ink:#e9edf6; --muted:#aab3c2; --line:#232a36; --accent:#79a8ff; --accent2:#ffd166;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif, -apple-system, "Hiragino Sans","Noto Sans JP","Segoe UI", Roboto, Arial, sans-serif;line-height:1.7}
+a{color:var(--accent);text-decoration:none}
+header,main{max-width:1120px;margin:0 auto;padding:20px}
+h1{margin:24px 0 6px;font-size:1.8rem;letter-spacing:.02em}
+.sub{color:var(--muted);font-size:.95rem}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 6px}
+button,select{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
+.grid{display:grid;gap:16px;margin-top:16px}
+@media(min-width:900px){ .grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.card h3{margin:.2rem 0 .4rem;font-size:1.05rem}
+.thumb{aspect-ratio:16/9;background:#0b0e14;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
+.badge{padding:2px 8px;border-radius:999px;border:1px solid var(--line);font-size:.78rem;color:#cfd8ea;background:#111622}
+.desc{color:var(--muted);font-size:.92rem;margin:.2rem 0 .5rem}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.s{font-size:.85rem;color:var(--muted)}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:20px 0}
+.hide{display:none}
+.note{background:#101520;border:1px dashed #2b3443;border-radius:12px;padding:10px;color:#c7d2e5}
+.light{--bg:#f5f7fb;--paper:#ffffff;--ink:#111419;--muted:#5b6675;--line:#e6e9f0;--accent:#1f6fff}
+.k{color:var(--accent2)}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Audio & Visual Modules</h1>
+  <div class="sub" id="subtitle">音と視覚の小さな標本。作品のみ公開、手法は非公開。</div>
+  <div class="toolbar">
+    <button id="mode">🌙 Dark</button>
+    <select id="lang">
+      <option value="ja">日本語</option>
+      <option value="en">English</option>
+    </select>
+    <select id="cat">
+      <option value="">All / すべて</option>
+      <option value="audio">Audio</option>
+      <option value="visual">Visual</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div class="hr"></div>
+  <div id="grid" class="grid"></div>
+  <div class="hr"></div>
+  <p class="s" id="footnote">
+    ※ 内部ノートはURLに <span class="k">?dev=1</span> を付けた場合のみ表示。Prompts/手法は公開しません。
+  </p>
+</main>
+
+<script>
+/* ---------- 言語テキスト ---------- */
+const T = {
+  ja:{
+    title:"Audio & Visual Modules",
+    subtitle:"音と視覚の小さな標本。作品のみ公開、手法は非公開。",
+    open:"開く", listen:"聴く", view:"見る", more:"詳細", minutes:"分",
+    audio:"Audio", visual:"Visual",
+    noteLabel:"内部ノート（非公開）"
+  },
+  en:{
+    title:"Audio & Visual Modules",
+    subtitle:"Small specimens of sound & vision. Works public, methods private.",
+    open:"Open", listen:"Listen", view:"View", more:"More", minutes:"min",
+    audio:"Audio", visual:"Visual",
+    noteLabel:"Internal Note (private)"
+  }
+};
+
+/* ---------- データ（ここだけ差し替えれば運用OK） ---------- */
+const ITEMS = [
+  {
+    id:"opa-audio",
+    type:"audio",
+    title:{
+      ja:"Breathing Structure — OPA Phase",
+      en:"Breathing Structure — OPA Phase"
+    },
+    desc:{
+      ja:"静かな圧と透明な空気。Suno 800字版。",
+      en:"Quiet pressure, clear air. Suno 800-char version."
+    },
+    thumb:"./thumbs/opa_phase_audio.jpg", // 16:9画像
+    link:"https://example.com/opa_audio", // 音源URL
+    meta:["Suno","78 BPM","female vox"],
+    note:"seed固定／低CFGで空気感を優先。コーラスで高域を薄く開く。"
+  },
+  {
+    id:"fermat-audio",
+    type:"audio",
+    title:{ja:"Fermat’s Breath", en:"Fermat’s Breath"},
+    desc:{ja:"「音の定理」テクスチャ。整数比と微小ずれ。", en:"A theorem-like texture: integer ratios with micro drift."},
+    thumb:"./thumbs/fermat_audio.jpg",
+    link:"https://example.com/fermat_audio",
+    meta:["Suno","non-quantized","grain"],
+    note:"周期と非周期の境界を往復。倍音は薄め。"
+  },
+  {
+    id:"opa-visual",
+    type:"visual",
+    title:{ja:"Breathing Structure — OPA Phase", en:"Breathing Structure — OPA Phase"},
+    desc:{ja:"PixAI 16:9／女性構成。人格×共振×深度の三層。", en:"PixAI 16:9, female figure. Persona × resonance × depth."},
+    thumb:"./thumbs/opa_phase_visual.jpg",
+    link:"https://example.com/opa_visual",
+    meta:["PixAI","16:9","abstract"],
+    note:"顔情報は面で示す。紙質・微ブリード固定。"
+  },
+  {
+    id:"fermat-visual",
+    type:"visual",
+    title:{ja:"Fermat’s Breath", en:"Fermat’s Breath"},
+    desc:{ja:"視覚的音像。渦と段差で“問いの深度”を示す。", en:"Visual sonics: spirals & steps for depth-of-question."},
+    thumb:"./thumbs/fermat_visual.jpg",
+    link:"https://example.com/fermat_visual",
+    meta:["PixAI","poster","minimal"],
+    note:"黄金比の核＋オフセンター配置。"
+  }
+];
+
+/* ---------- レンダリング ---------- */
+const $g = document.getElementById("grid");
+const $lang = document.getElementById("lang");
+const $cat = document.getElementById("cat");
+const $title = document.getElementById("title");
+const $subtitle = document.getElementById("subtitle");
+const $mode = document.getElementById("mode");
+const devMode = new URLSearchParams(location.search).get("dev")==="1";
+
+function render(){
+  const L = T[$lang.value];
+  $title.textContent = L.title;
+  $subtitle.textContent = L.subtitle;
+  const list = ITEMS.filter(it => !$cat.value || it.type===$cat.value);
+  $g.innerHTML = list.map(it => card(it,L)).join("");
+  document.getElementById("footnote").innerHTML =
+    L===T.ja ? "※ 内部ノートはURLに <span class='k'>?dev=1</span> を付けた場合のみ表示。Prompts/手法は公開しません。"
+             : "※ Internal notes appear only with <span class='k'>?dev=1</span> in URL. Prompts/methods are not public.";
+}
+function card(it,L){
+  return `
+  <article class="card">
+    <div class="thumb">${ it.thumb ? `<img src="${it.thumb}" alt="">` : "" }</div>
+    <h3>${it.title[$lang.value]||it.title.ja}</h3>
+    <div class="meta">
+      <span class="badge">${it.type==="audio"?L.audio:L.visual}</span>
+      ${it.meta.map(m=>`<span class="badge">${m}</span>`).join("")}
+    </div>
+    <div class="desc">${it.desc[$lang.value]||it.desc.ja}</div>
+    <div class="row">
+      <a href="${it.link}" target="_blank" rel="noopener">
+        <button>${it.type==="audio"?L.listen:L.view}</button>
+      </a>
+    </div>
+    ${devMode ? `<div class="note" style="margin-top:10px"><b>${L.noteLabel}：</b> ${it.note||"-"}</div>` : "" }
+  </article>`;
+}
+
+/* ---------- UI ---------- */
+$lang.onchange = render;
+$cat.onchange = render;
+$mode.onclick = ()=>{
+  document.body.classList.toggle("light");
+  $mode.textContent = document.body.classList.contains("light") ? "🌞 Light" : "🌙 Dark";
+};
+render();
+</script>
+</body>
+</html>

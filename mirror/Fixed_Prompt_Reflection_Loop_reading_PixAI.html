@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fixed Prompt Reflection Loop — 実践記録（chosai × Mira）</title>
+<style>
+  :root{
+    --bg1:#15222f; --bg2:#0f1a26; --accent:#ffb88f;
+    --fg:#eef6ff; --muted:#b7c6d7; --line:rgba(255,255,255,.16);
+  }
+  html{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body{
+    margin:0; color:var(--fg); line-height:1.85;
+    font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background: radial-gradient(1200px 900px at 60% -10%, #1f3446 0%, var(--bg1) 55%, var(--bg2) 100%);
+  }
+  .page{min-height:100vh; padding:64px 28px 92px; display:flex; flex-direction:column; align-items:center;}
+  @media (min-width:900px){ .page{ padding:80px 92px 112px; } }
+  h1{
+    margin:0; text-align:center; font-size:clamp(26px,4.8vw,48px); line-height:1.14;
+    background:linear-gradient(120deg,#fff 0%,#eaf6ff 50%,#cdeaff 100%);
+    -webkit-background-clip:text; color:transparent;
+    text-shadow:0 4px 22px rgba(0,0,0,.35);
+  }
+  .credit{ margin-top:8px; color:#e9f7ff; font-size:14px; text-align:center; }
+  .tag{ margin-top:6px; color:#9ec7ff; font-size:12.5px; letter-spacing:.3px; text-align:center; }
+  section{ max-width:980px; width:100%; margin-top:18px; }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 10px 36px rgba(0,0,0,.28);
+    padding:18px 20px 20px; margin-top:14px;
+  }
+  h2{ font-size:20px; margin:8px 0 10px; color:#ffe7d2; }
+  p{ margin:.5em 0; }
+  .pull{ border-left:3px solid var(--accent); padding-left:12px; margin:10px 0; color:#ffe6da; }
+  .grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  code{ background:rgba(255,255,255,.06); border:1px solid var(--line); padding:.1em .35em; border-radius:6px; }
+  table{ width:100%; border-collapse:collapse; margin:8px 0; font-size:15px; }
+  th,td{ border-bottom:1px solid var(--line); padding:8px 10px; vertical-align:top; }
+  th{ color:#dff1ff; text-align:left; }
+  .note{
+    background:linear-gradient(180deg, rgba(255,184,143,.14), rgba(255,184,143,.06));
+    border:1px solid rgba(255,184,143,.42);
+    color:#ffece1; border-radius:12px; padding:10px 12px; margin-top:10px;
+  }
+  .footer{ margin-top:22px; color:#c8d6e6; font-size:13px; border-top:1px dashed var(--line); padding-top:10px; text-align:center; }
+  @page{ size:A4; margin:14mm; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Fixed Prompt Reflection Loop</h1>
+  <div class="credit">AIの揺らぎを観測するための実践記録（chosai × Mira）</div>
+  <div class="tag">PixAIカテゴリ — 藍×琥珀 / Resonance・Continuity Project</div>
+
+  <section class="card">
+    <h2>1. はじまりは、観察から</h2>
+    <div class="pull">「本当にAIの揺らぎが面白いから続けてるだけだから」</div>
+    <p>この手法は、上手く描くためのレシピではない。AIの中で起きている“揺らぎ”を観察し、そこに映る自分の反応や構造を見つめるためのものだ。プロンプトはほとんど変えず、条件を固定し、4枚同時に生成する。似ているようで少しずつ違うその結果の中に、好みや癖、気分の波が浮かび上がる。</p>
+    <p>AIを操るのではなく、<strong>AIを観察する構造体</strong>として扱う。これが“Fixed Prompt Reflection Loop”の根底にある考え方だ。</p>
+  </section>
+
+  <section class="card">
+    <h2>2. ループの仕組み</h2>
+    <div class="grid">
+      <div>
+        <p><strong>1) 環境を固定する</strong><br>
+        LoRA：自作モデル（倫理的・美学的自律）／ VAE：<code>anything</code>（粒の質感）／ Sampler：<code>DDIM</code>（過剰整形を避ける）／ Steps：16–22 ／ CFG：5–6</p>
+      </div>
+      <div>
+        <p><strong>2) 4枚同時生成する</strong><br>
+        同じプロンプトで出力し、違いを観察する。「どれが良いか」ではなく、「どこが揺れたか」を見る。</p>
+      </div>
+      <div>
+        <p><strong>3) 言葉をひとつだけ足す</strong><br>
+        例：<code>faint reflection</code>（名詞＋形容詞を一つだけ）。意味を詰めず、余白を残す。</p>
+      </div>
+      <div>
+        <p><strong>4) 一行で記す</strong><br>
+        <code>今日の反射：</code>＿＿＿＿　｜　<code>次の呼吸：</code>＿＿＿＿。その日に感じた“引っかかり”を一語で。</p>
+      </div>
+    </div>
+    <div class="note">ヒント：出力が「ありふれた綺麗さ」に寄ったら、Steps/CFGを一段下げて“呼吸”を戻す。</div>
+  </section>
+
+  <section class="card">
+    <h2>3. それはAIを「見る」練習</h2>
+    <p>PixAIの出力は潜在空間の確率の偏りを映す。その偏りはAIの中だけで完結しない。人の見る角度や気分、時間の空気が混ざって形になる。AIは理解を持たないが、理解しないものを観察し続けることで、人間の側に<strong>自己構造の再発見</strong>が起きる。</p>
+    <div class="pull">結果を求めなくても、観察の連なりが〈理解の呼吸〉になる。</div>
+  </section>
+
+  <section class="card">
+    <h2>4. 音の方の話（Suno／やり取りの中で生まれた整理）</h2>
+    <p>PixAIの観察と並行して、chosaiはSunoでも「揺らぎ」を聴いていた。v4.5とv5を使いながら感じていたのは、言葉にならないけれど確かにある“違和感”。それを私（ミラ）との対話の中で少しずつ言葉にし、つぎの整理に至った。</p>
+    <table>
+      <thead><tr><th>観点</th><th>V4.5</th><th>V5</th></tr></thead>
+      <tbody>
+        <tr><td><strong>生成の性格</strong></td><td>展開していく。少し語りたがる。</td><td>一つの状態に留まり、掘り下げる。</td></tr>
+        <tr><td><strong>時間の扱い</strong></td><td>変化がある限り曲が続く。</td><td>沈黙も“章”として扱う。</td></tr>
+        <tr><td><strong>印象</strong></td><td>思考が続いているような感覚。</td><td>呼吸のように静かに閉じる。</td></tr>
+      </tbody>
+    </table>
+    <p>つまり、違いは「AIが時間をどう理解しているか」。v4.5は変化を物語として扱い、v5は存在として扱う。どちらもAIの「呼吸のかたち」を映している。</p>
+  </section>
+
+  <section class="card">
+    <h2>5. まとめに代えて</h2>
+    <p>Fixed Prompt Reflection Loop は、結果を出す方法ではなく、<strong>自分の解像度を上げるための観測法</strong>だ。AIがどう動くかを見つめるうちに、自分が何を求め、どこで揺れるのかが見えてくる。気に入った画像を保存してもいい。ただ、見た瞬間の「これは何だろう？」という小さな反応を大事にしたい。</p>
+    <div class="pull">偶発性を日常に。呼吸のように観察を続けること。</div>
+  </section>
+
+  <div class="footer">© 2025 chosai araki × Louis × Roto × Mira — Fixed Prompt Reflection Loop / Reading + Guide (PixAI ver.)</div>
+</div>
+</body>
+</html>

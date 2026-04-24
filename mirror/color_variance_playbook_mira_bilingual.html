@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mira — Color Variance Playbook (JP/EN)</title>
+<meta name="description" content="Miraの配色バリアンス運用（PixAI）— 不変/可変、クイックレシピ、構造だけのプロンプト。ENタブで英語版。">
+<meta name="robots" content="noindex, nofollow"><!-- 公開時は削除 -->
+<meta name="theme-color" content="#0a84ff">
+<style>
+:root{
+  --bg:#f6f7f9; --paper:#fff; --ink:#101113; --muted:#646b77; --line:#e8ebf2; --accent:#0a84ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:Inter,"Hiragino Sans","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.75}
+header,main,footer{max-width:980px;margin:0 auto;padding:18px}
+h1{font-size:1.85rem;margin:28px 0 8px;letter-spacing:.02em}
+h2{font-size:1.2rem;margin:22px 0 10px;border-left:4px solid var(--accent);padding-left:10px}
+.small{color:var(--muted);font-size:.92rem}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 1px 6px rgba(0,0,0,.04);margin:12px 0}
+pre{white-space:pre-wrap;word-break:break-word;background:#0b1220;color:#e8eefb;padding:12px;border-radius:12px;font-size:.9rem;border:1px solid #0f1b35;position:relative}
+code{font-family:ui-monospace,Menlo,Consolas,monaco,monospace}
+.copy{position:absolute;top:8px;right:8px;background:#15223b;color:#d9e4ff;border:1px solid #22345c;border-radius:8px;padding:6px 8px;font-size:.8rem;cursor:pointer}
+.kv{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toggle{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:.9rem;cursor:pointer}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:.9rem;cursor:pointer}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;gap:14px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--line);font-size:.78rem;background:#f7f8fb;margin-right:6px}
+.note{background:#f1f7ff;border:1px dashed #cfe0ff;border-radius:10px;padding:10px 12px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:18px 0}
+footer{color:var(--muted);font-size:.9rem;margin:28px auto 56px}
+/* dark */
+.dark{
+  --bg:#101215; --paper:#171a1f; --ink:#f2f4f8; --muted:#a9b1bd; --line:#2a2f37; --accent:#6ea8ff;
+}
+.dark pre{background:#0c121b;border-color:#1b2a44;color:#e9f0ff}
+.tab, .toggle{transition:.15s}
+</style>
+</head>
+<body>
+<header>
+  <div class="kv">
+    <h1>Mira — Color Variance Playbook</h1>
+    <button id="mode" class="toggle" aria-label="テーマ切替">🌙 ダーク</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-lang="jp">JP</button>
+    <button class="tab" data-lang="en">EN</button>
+  </div>
+  <p class="small">One prompt → many outcomes. 面白さは「固定の中の揺れ」。タブで言語を切替。</p>
+</header>
+
+<main>
+  <!-- JP -->
+  <section id="sec-jp" class="section active">
+    <section class="card">
+      <span class="badge">考え方</span>
+      <p><b>色が構造を動かす。</b>「ことばの前の線」ワークフローでは <i>不変</i>（主題/筆致/紙）を固定し、<b>配色と比率だけ</b>を少し動かして、個性を失わずに深さを出す。</p>
+      <div class="note small">「<b>この一つのプロンプト</b>で、<b>これらが出てくる</b>——それが実験です。」</div>
+    </section>
+
+    <section class="card">
+      <h2>不変 / 可変</h2>
+      <ul class="small">
+        <li><b>不変</b>：1 lady（ウエスト/カウボーイ）、ショートのピクシー、半身/半顔、抽象ラインのハロー、紙の質感、隅の極小タイプ、露出ニュートラル＋Sカーブ、非対称。</li>
+        <li><b>可変</b>：配色比（indigo/teal/amber/violet）、線密度、筆の粗さ、にじみ量、トリミング、余白、タイプ濃度。</li>
+        <li><b>推奨エンジン</b>：DDIM / steps 14–18 / CFG 3.5–5.0 / VAE anything / 16:9 / 4-up。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>クイックレシピ</h2>
+      <div class="grid">
+        <div>
+          <p><b>Cool Shift（寒色寄り）</b></p>
+          <ul class="small">
+            <li>indigoを主役、cyanを従。amberは0〜2%。</li>
+            <li>黒レベルを持ち上げ（film fade）、暖色グロウ減、WBややクール。</li>
+            <li>余白を広く、中央対称は避ける。</li>
+          </ul>
+        </div>
+        <div>
+          <p><b>Warm Drift（暖色寄り）</b></p>
+          <ul class="small">
+            <li>amberの帯は薄く存在、muted roseを微アクセントに。</li>
+            <li>cyanを抑え、indigoは“地”として保持。</li>
+            <li>紙目＋軽いにじみで奥行きを作る。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>構造だけのプロンプト（Base / Structure Only）</h2>
+      <button class="copy" data-copy="#jp_base">コピー</button>
+      <pre id="jp_base"><code># 目的
+抽象ポートレート（アート誌カバー感）。ミニマル／「言葉の前の存在」。
+
+# 主題とフレーミング
+1 lady、ウエスト/カウボーイ、ショートのピクシー、濃茶の瞳、わずかに開いた唇。
+半身で半顔、穏やかで距離のある表情。
+
+# 構図
+抽象の有機ラインが存在を囲む。シルエットに反響する色面。非対称、余白たっぷり。
+隅に極小のタイプ。
+
+# 表面と筆致
+ジェスチャー描きの不均一な筆、軽い顔料にじみ。暖色寄りの紙地。アナログな刷りの色。
+
+# 光と空気
+ソフトな近距離光、ドライな空気。露出ニュートラル、緩いSカーブ、彩度はクランプ。
+
+# パレット（基調）
+Indigo / Moss green / Amber / Muted red（比率だけ調整、虹配色は避ける）
+
+# 美的ガード
+対称回避・微細な不完全歓迎・“言葉の前”。
+モダン・ミニマル。Miró ほのかな影響。human↔AIの共鳴。
+
+# タイポ
+下隅に極小文字：“Breathing Line / cho + Mira + Loto”。</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Cool Variant（実行用・寒色）</h2>
+      <button class="copy" data-copy="#jp_cool">コピー</button>
+      <pre id="jp_cool"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, dark brown eyes, cowboy/waist framing, face half-turned (distant-calm),
+abstract organic lines forming loose circles and offset orbits,
+thread-like strokes (thin / thick / thin), faint root patterns, moth-wing grain,
+matte paper texture, dry atmosphere, soft close lighting,
+palette: deep indigo dominant, blue-violet, steel blue, moonlight gray, small cyan highlight (amber minimal),
+lifted blacks (film fade), reduced warm glow, generous negative space, asymmetric,
+16:9 record-sleeve minimalism, tiny caption lower-right:
+"Breathing Structure — cho × mira × roto",
+hint of Miró/Klee, unfinished yet alive</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Warm Variant（実行用・暖色）</h2>
+      <button class="copy" data-copy="#jp_warm">コピー</button>
+      <pre id="jp_warm"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, calm gaze, half-turned,
+abstract arcs with soft bleed; color fields layered: indigo ground, amber band, muted rose micro-accent, pale ivory,
+paper grain, analog hue, slight vignette; asymmetry preferred,
+negative space held; soft rim light; dry air,
+minimal lower-corner type: "Breathing Line / cho + mira + loto",
+16:9, modern minimal, resonance not narrative</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>トラブル対処</h2>
+      <ul class="small">
+        <li><b>人形っぽい/写真寄り</b> → <code>not photoreal, feature-lite, print texture</code> を追加</li>
+        <li><b>背景がうるさい</b> → <code>generous negative space, no city objects, no signage</code></li>
+        <li><b>彩度が暴れる</b> → <code>saturation clamp</code> と <code>neutral exposure + gentle S-curve</code></li>
+        <li><b>中央対称になる</b> → <code>asymmetric, off-center grid at 7% from left</code></li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- EN -->
+  <section id="sec-en" class="section">
+    <section class="card">
+      <span class="badge">Idea</span>
+      <p><b>Color steers structure.</b> In “Lines Before Words,” we freeze the <i>invariants</i> (subject/stroke/substrate) and only nudge <b>palette ratios</b> to gain depth without losing identity.</p>
+      <div class="note small">“<b>This single prompt</b> yields <b>these images</b> — that’s the experiment.”</div>
+    </section>
+
+    <section class="card">
+      <h2>Invariants / Variables</h2>
+      <ul class="small">
+        <li><b>Invariants</b>: 1 lady (waist/cowboy), short pixie, half-turned; abstract line halo; paper texture; tiny corner type; neutral exposure + gentle S-curve; asymmetry.</li>
+        <li><b>Variables</b>: palette ratios (indigo/teal/amber/violet), line density, brush roughness, bleed amount, crop tightness, negative space, type opacity.</li>
+        <li><b>Engine</b>: DDIM / steps 14–18 / CFG 3.5–5.0 / VAE anything / 16:9 / 4-up.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Quick Recipes</h2>
+      <div class="grid">
+        <div>
+          <p><b>Cool Shift</b></p>
+          <ul class="small">
+            <li>Make indigo dominant; cyan secondary; amber ≤ 2%.</li>
+            <li>Lift blacks (film fade); reduce warm glow; slightly cool WB.</li>
+            <li>Keep negative space generous; avoid centered symmetry.</li>
+          </ul>
+        </div>
+        <div>
+          <p><b>Warm Drift</b></p>
+          <ul class="small">
+            <li>Keep a thin amber band; add muted-rose micro accent.</li>
+            <li>Lower cyan; keep indigo as ground (not outline).</li>
+            <li>Depth via paper grain + light bleed.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Prompt — Base (Structure Only)</h2>
+      <button class="copy" data-copy="#en_base">Copy</button>
+      <pre id="en_base"><code># Goal
+Abstract portrait with “art magazine cover” feel; minimal; presence-before-language.
+
+# Subject & Framing
+1 lady, waist/cowboy crop; short pixie hair, dark brown eyes, lips slightly parted;
+face half-turned, distant-calm.
+
+# Composition
+Abstract organic lines surrounding her presence; color-field shapes echo silhouette;
+asymmetry preferred; generous negative space; minimal corner type.
+
+# Surface & Stroke
+Gesture-drawing irregular brush; slight pigment bleed; warm pastel paper; analog print hue.
+
+# Light & Atmosphere
+Soft close lighting; dry air; neutral exposure; gentle S-curve; saturation clamp.
+
+# Palette (base)
+Indigo / Moss green / Amber / Muted red (adjust ratios; avoid rainbow drift).
+
+# Aesthetic Guardrails
+Asymmetry; embraced imperfection; “thought-before-words”;
+modern minimalism; hint of Miró; human ↔ AI resonance.
+
+# Typography
+Lower-corner tiny: “Breathing Line / cho + Mira + Loto”.</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Prompt — Cool Variant (ready-to-run)</h2>
+      <button class="copy" data-copy="#en_cool">Copy</button>
+      <pre id="en_cool"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, dark brown eyes, cowboy/waist framing, face half-turned (distant-calm),
+abstract organic lines forming loose circles and offset orbits,
+thread-like strokes (thin / thick / thin), faint root patterns, moth-wing grain,
+matte paper texture, dry atmosphere, soft close lighting,
+palette: deep indigo dominant, blue-violet, steel blue, moonlight gray, small cyan highlight (amber minimal),
+lifted blacks (film fade), reduced warm glow, generous negative space, asymmetric,
+16:9 record-sleeve minimalism, tiny caption lower-right:
+"Breathing Structure — cho × mira × roto",
+hint of Miró/Klee, unfinished yet alive</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Prompt — Warm Variant (ready-to-run)</h2>
+      <button class="copy" data-copy="#en_warm">Copy</button>
+      <pre id="en_warm"><code>((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, short pixie hair, calm gaze, half-turned,
+abstract arcs with soft bleed; color fields layered: indigo ground, amber band, muted rose micro-accent, pale ivory,
+paper grain, analog hue, slight vignette; asymmetry preferred,
+negative space held; soft rim light; dry air,
+minimal lower-corner type: "Breathing Line / cho + mira + loto",
+16:9, modern minimal, resonance not narrative</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Troubleshooting</h2>
+      <ul class="small">
+        <li><b>Too photoreal / doll-like</b> → add <code>not photoreal, feature-lite, print texture</code></li>
+        <li><b>Background too busy</b> → <code>generous negative space, no city objects, no signage</code></li>
+        <li><b>Over-saturation</b> → keep <code>saturation clamp</code>, use <code>neutral exposure + gentle S-curve</code></li>
+        <li><b>Centered symmetry</b> → <code>asymmetric, off-center grid at 7% from left</code></li>
+      </ul>
+    </section>
+  </section>
+
+  <div class="hr"></div>
+  <section class="small">
+    <p><b>Credit</b> — Resonance / Continuity Project — 兆彩（chosai araki） × Mira</p>
+    <p class="small">“One prompt, these outputs. The fun is in the controlled drift.”</p>
+  </section>
+</main>
+
+<footer>
+  © 2025 Resonance Project — Mira. All rights reserved. / v1.1 (JP/EN)
+</footer>
+
+<script>
+function copyFrom(sel){
+  const el=document.querySelector(sel);
+  if(!el) return;
+  const txt=el.innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const t=document.createElement("div");
+    t.textContent="Copied";
+    Object.assign(t.style,{
+      position:"fixed",left:"50%",top:"18px",transform:"translateX(-50%)",
+      background:"#111",color:"#fff",padding:"8px 12px",borderRadius:"10px",
+      fontSize:".9rem",boxShadow:"0 6px 22px rgba(0,0,0,.22)",zIndex:9999,opacity:0,transition:"opacity .15s"
+    });
+    document.body.appendChild(t);
+    requestAnimationFrame(()=>t.style.opacity=1);
+    setTimeout(()=>{t.style.opacity=0; setTimeout(()=>t.remove(),160)},1100);
+  });
+}
+document.querySelectorAll(".copy").forEach(btn=>{
+  btn.addEventListener("click",()=> copyFrom(btn.getAttribute("data-copy")));
+});
+const $mode=document.getElementById("mode");
+$mode.onclick=()=>{
+  document.body.classList.toggle("dark");
+  localStorage.setItem("mira-color-playbook-theme", document.body.classList.contains("dark")? "dark":"light");
+};
+(function init(){
+  const m=localStorage.getItem("mira-color-playbook-theme");
+  if(m==="dark") document.body.classList.add("dark");
+  // language init by hash
+  const hash=location.hash.replace("#","");
+  if(hash==="en") switchLang("en");
+  if(hash==="jp") switchLang("jp");
+})();
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=> switchLang(t.getAttribute("data-lang")));
+});
+function switchLang(lang){
+  const jp=document.getElementById("sec-jp");
+  const en=document.getElementById("sec-en");
+  const tabs=document.querySelectorAll(".tab");
+  if(lang==="en"){jp.classList.remove("active");en.classList.add("active");}
+  else{en.classList.remove("active");jp.classList.add("active");}
+  tabs.forEach(b=>b.classList.toggle("active", b.getAttribute("data-lang")===lang));
+  history.replaceState(null,"", "#"+(lang==="en"?"en":"jp"));
+}
+</script>
+</body>
+</html>

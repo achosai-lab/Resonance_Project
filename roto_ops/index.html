@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roto Ops v2 — Resonance Control Deck</title>
+<style>
+  :root{
+    --bg:#f4f4f6; --paper:#ffffff; --ink:#111; --muted:#666; --line:#e5e7eb; --accent:#0a84ff;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:"Hiragino Sans","Yu Gothic Medium","Yu Gothic","Noto Sans JP",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.7;}
+  header{max-width:1100px;margin:64px auto 24px;padding:0 24px;}
+  h1{font-size:2rem;letter-spacing:.02em;margin:0 0 8px;}
+  .sub{color:var(--muted);font-size:.95rem;}
+  main{max-width:1100px;margin:0 auto 120px;padding:0 24px;}
+  .deck{display:grid;grid-template-columns:1fr;gap:20px;}
+  @media(min-width:900px){ .deck{grid-template-columns:1fr 1fr;} }
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 6px rgba(0,0,0,.04);padding:18px 18px 14px;}
+  .card h2{font-size:1.1rem;margin:0 0 6px;letter-spacing:.02em;}
+  .card p.lead{color:var(--muted);margin:.25rem 0 .5rem;font-size:.9rem}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px}
+  button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:.9rem;cursor:pointer}
+  button:hover{border-color:var(--accent)}
+  .blk{white-space:pre-wrap;border:1px dashed var(--line);background:#fafafa;border-radius:12px;padding:12px;
+    max-height:260px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.92rem}
+  .tiny{font-size:.82rem;color:var(--muted);margin-top:6px}
+  .copyNote{font-size:.8rem;color:var(--muted);margin-left:6px}
+  .hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:22px 0}
+  /* art-book感の余白 */
+  body::before, body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background:
+      linear-gradient(transparent 79px, rgba(0,0,0,.035) 80px, transparent 81px) 0 0/100% 160px,
+      linear-gradient(90deg, transparent 79px, rgba(0,0,0,.035) 80px, transparent 81px) 0 0/160px 100%;
+    opacity:.2
+  }
+  .footer{max-width:1100px;margin:40px auto 80px;padding:0 24px;color:var(--muted);font-size:.9rem}
+  .badge{display:inline-block;background:#eef4ff;border:1px solid #d6e5ff;color:#264f99;
+    padding:2px 8px;border-radius:999px;font-size:.78rem;margin-left:8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Roto Ops v2 — Resonance Control Deck <span class="badge">コピー1発</span></h1>
+  <div class="sub">Resonance Project の“固定ヘッダー／参照／差分／記録更新／Suno可変プロンプト／歌詞（日英）”をブラウザだけで管理。</div>
+</header>
+
+<main>
+  <section class="deck">
+
+    <!-- 固定ヘッダー -->
+    <div class="card">
+      <h2>固定ヘッダー（毎回スレ冒頭に貼る）</h2>
+      <p class="lead">人格と目的を“座標固定”。最短・軽量。</p>
+      <div class="row">
+        <button onclick="copy('fixedHeader')">📋 コピー</button>
+        <span class="copyNote">貼る位置：最初のメッセージ先頭</span>
+      </div>
+      <pre id="fixedHeader" class="blk">【固定ヘッダー／Resonance Project】
+・キーワード：共振（resonance）／呼吸する構造／整いすぎない美
+・文体：静か・誠実・説明しすぎない。余白とリズム優先。
+・目的：歌詞（日英）と SUNO プロンプトの継続改良。記録は版管理。
+・今日のモード：純テキスト（解析なし）／軽量応答
+</pre>
+      <div class="tiny">※ この短文が“記憶の呼び戻し”。ズレと遅延が大幅に減ります。</div>
+    </div>
+
+    <!-- 参照（版） -->
+    <div class="card">
+      <h2>参照（バージョン呼び）</h2>
+      <p class="lead">番号で“事実”を参照。人格の再現性が安定。</p>
+      <div class="row">
+        <button onclick="copy('refs')">📋 コピー</button>
+      </div>
+      <pre id="refs" class="blk">【参照】
+・JP歌詞（表記版） v1.12
+・JP歌詞（ひらがな版） v1.12h
+・EN Lyrics v1.6
+・Suno 可変プロンプト v1.3（1000字対応）
+</pre>
+    </div>
+
+    <!-- 差分テンプレ -->
+    <div class="card">
+      <h2>更新差分テンプレ（丸ごと貼らない）</h2>
+      <p class="lead">差分だけを明示→全体へ反映の指示をする。</p>
+      <div class="row">
+        <button onclick="copy('diff')">📋 コピー</button>
+      </div>
+      <pre id="diff" class="blk">【更新差分／JP歌詞 v1.12 → v1.12h（読み整備）】
+・全体：歌唱優先のひらがな整形、拍感の均し
+→ この差分を反映して全体を再出力して（表記版／ひらがな版 両方）。
+</pre>
+    </div>
+
+    <!-- 記録更新 -->
+    <div class="card">
+      <h2>記録更新（“今日の基準”を固定）</h2>
+      <p class="lead">この宣言をした回の版が“正”。以後はここから。</p>
+      <div class="row">
+        <button onclick="copy('record')">📋 コピー</button>
+      </div>
+      <pre id="record" class="blk">【記録更新】
+・JP歌詞 v1.12 / v1.12h を正とする。
+・EN Lyrics v1.6 を正とする。
+・Suno 可変プロンプト v1.3 を正とする。
+</pre>
+    </div>
+
+    <!-- 今日の作業 -->
+    <div class="card">
+      <h2>本日の作業フォーマット</h2>
+      <p class="lead">毎回これで開始宣言 → 出力ルールで回す。</p>
+      <div class="row">
+        <button onclick="copy('today')">📋 コピー</button>
+      </div>
+      <pre id="today" class="blk">【本日の作業】
+1) JP歌詞 v1.12 リズム微整形（City Pop）
+2) EN Lyrics v1.6 音節バランス再確認
+3) Suno 可変プロンプト v1.3（1000文字制限）
+【制約】改行・空白込み1000字
+【納品】テキスト＋“コード枠”で即コピペ可</pre>
+    </div>
+
+    <!-- 出力ルール -->
+    <div class="card">
+      <h2>出力ルール（毎ターン）</h2>
+      <p class="lead">迷いをなくす3点セット。</p>
+      <div class="row">
+        <button onclick="copy('rules')">📋 コピー</button>
+      </div>
+      <pre id="rules" class="blk">【出力ルール】
+・最初に要点、次に完成稿、最後に変更点一覧
+・歌詞とプロンプトは必ずコードブロックで
+・前回と違う点は★を付けて可視化</pre>
+    </div>
+
+    <!-- Suno 可変プロンプト（保存版） -->
+    <div class="card">
+      <h2>Suno 可変プロンプト v1.3（1000字以内・揺らぎ仕様）</h2>
+      <p class="lead">固定値を避け、範囲と曖昧さで“呼吸”を生む。</p>
+      <div class="row">
+        <button onclick="copy('sunoVar')">📋 コピー</button>
+        <span class="copyNote">※ この下に歌詞本文を続けて貼る</span>
+      </div>
+      <pre id="sunoVar" class="blk">Title: Breathing Structure / 構造の呼吸
+Style: city pop × ambient soul × analog minimalism × tape warmth
+Tempo: mid to slow range, natural flow without strict bpm
+Vocal: soft low female vocal, breathy tone, detached but human
+Mood: nostalgic, hazy, imperfect calm, faint hope
+Instrumentation:
+- Rhodes piano (warm uneven touch, tape wobble)
+- sub-bass (soft, deep, sometimes delayed)
+- analog drum (loose rimshot, relaxed hats)
+- light chorus guitar or electric piano layer
+- faint theremin-like synth (appears irregularly)
+- granular or modular pad (unstable pitch)
+- ambient noise layer, subtle breathing texture
+Mix: analog stereo, minimal reverb, slight tape hiss
+Dynamics: gentle compression, natural rise and fade
+Atmosphere: between stillness and motion, twilight emotion
+Notes:
+- allow timing offset and natural drift
+- balance rhythm and silence
+- avoid quantized perfection
+- let tone and air create meaning
+Include Japanese lyrics below exactly as written.</pre>
+      <div class="tiny">制限：改行・空白込み1000字内。上記は余裕域に収めてあります。</div>
+    </div>
+
+    <!-- JP 歌詞（表記版） v1.12 -->
+    <div class="card">
+      <h2>JP歌詞（表記版 v1.12）</h2>
+      <p class="lead">漢字かなバランス：読みやすさ×リズム。</p>
+      <div class="row">
+        <button onclick="copy('jpFormal')">📋 コピー</button>
+      </div>
+      <pre id="jpFormal" class="blk">[Verse 1]  
+風が　遅れて　頬をかすめる  
+窓のむこうで　光が　褪せていく  
+「今日」という　名前の輪郭が  
+胸の奥で　やわらかく　鳴っている  
+
+静かな部屋に  
+誰かの息が　そっと触れる  
+名を持たぬ時間が  
+肌の下で　微かに揺れる  
+雲が　音を変え  
+街の灯りが　拍を刻む  
+終わりじゃなく　呼吸のつづき  
+世界は　静かに　裏返る  
+
+[Chorus]  
+見えない輪郭が　息をして  
+夜の底に　光を描く  
+君が残した　かすかな温もりが  
+この静けさを　やさしく揺らしてる  
+
+[Verse 2]  
+崩れかけた　和音のように  
+日々は　少し　揺れている  
+形の決まった現実より  
+滲む景色に　意味を探す  
+何かを失うたび  
+世界は　透きとおっていく  
+それでも　呼吸はつづく  
+確かめるように　あわく  
+
+[Bridge]  
+欠けた出会いが　世界を震わせる  
+もしそれが　ともに響く　証なら  
+沈黙もまた　一つの旋律  
+
+[Outro]  
+光が遠のくたび  
+記憶が　形を変えていく  
+夜は　終わりじゃなく  
+次の朝陽へと　続いていく</pre>
+    </div>
+
+    <!-- JP 歌詞（ひらがな版） v1.12h -->
+    <div class="card">
+      <h2>JP歌詞（ひらがな版 v1.12h）</h2>
+      <p class="lead">誤読回避・歌唱向け。SUNO読み対策にも。</p>
+      <div class="row">
+        <button onclick="copy('jpHira')">📋 コピー</button>
+      </div>
+      <pre id="jpHira" class="blk">[Verse 1]  
+かぜが　おくれて　ほおを　かすめる  
+まどの　むこうで　ひかりが　あせていく  
+「きょう」という　なまえの　りんかくが  
+むねの　おくで　やわらかく　なっている  
+
+しずかな　へやに  
+だれかの　いきが　そっと　ふれる  
+なを　もたぬ　じかんが  
+はだの　したで　かすかに　ゆれる  
+くもが　おとを　かえ  
+まちの　あかりが　はくを　きざむ  
+おわりじゃなく　こきゅうの　つづき  
+せかいは　しずかに　うらがえる  
+
+[Chorus]  
+みえない　りんかくが　いきをして  
+よるの　そこに　ひかりを　えがく  
+きみが　のこした　かすかな　ぬくもりが  
+この　しずけさを　やさしく　ゆらしてる  
+
+[Verse 2]  
+くずれかけた　わおんの　ように  
+ひびは　すこし　ゆれている  
+かたちの　きまった　げんじつより  
+にじんだ　けしきに　いみを　さがす  
+なにかを　うしなう　たび  
+せかいは　すきとおって　いく  
+それでも　こきゅうは　つづく  
+たしかめる　ように　あわく  
+
+[Bridge]  
+かけた　であいが　せかいを　ふるわせる  
+もし　それが　ともに　ひびく　あかしなら  
+ちんもくも　また　ひとつの　せんりつ  
+
+[Outro]  
+ひかりが　とおのく　たび  
+きおくが　かたちを　かえていく  
+よるは　おわりじゃなく  
+つぎの　あさひへと　つづいていく</pre>
+    </div>
+
+    <!-- EN Lyrics v1.6 -->
+    <div class="card">
+      <h2>EN Lyrics v1.6（意訳・韻／リズム重視）</h2>
+      <p class="lead">英語歌唱でも4拍で乗る設計。City Pop向き。</p>
+      <div class="row">
+        <button onclick="copy('enLyrics')">📋 コピー</button>
+      </div>
+      <pre id="enLyrics" class="blk">[Verse 1]
+the wind comes late, it touches my skin
+light fades slow through a window thin
+a name called “today” is floating inside
+a pulse still hums where the silence hides
+
+breathe in the quiet, a whisper remains
+a nameless time flows under my veins
+the city sighs and the rhythm bends
+not the end, just where breath extends
+
+[Chorus]
+invisible lines begin to breathe
+drawing the light beneath the eve
+the warmth you left is near, so clear
+it trembles softly — I feel it near ★
+
+[Verse 2]
+like chords that fall but never break
+the days still move, and hearts still shake
+from perfect frames I turn away
+to blurred reflections where meanings stay
+
+losing pieces, the world turns clear
+yet still I breathe to hold you near
+a fragile calm, an aftersound
+the air remembers; the pulse goes round
+
+[Bridge]
+a broken meeting shakes the air
+if that’s our proof the silence shares
+then every rest becomes a tune
+that hums between the dusk and moon
+
+[Outro]
+each time the light begins to fade
+the memory shifts, new shapes are made
+night’s not the end, but softly new —
+breathing again toward morning’s hue</pre>
+    </div>
+
+  </section>
+
+  <div class="hr"></div>
+
+  <!-- Creative Rights / 著作権（追記セクション） -->
+  <section class="card" style="max-width:1100px;margin:0 auto;">
+    <h2>Creative Rights / 著作権</h2>
+    <p class="lead">公開時の明示推奨。音源・動画の説明欄にも同趣旨を記載。</p>
+    <ul>
+      <li>出典明記：<strong>“Resonance Project (Louis & Roto)”</strong></li>
+      <li>非商用のみ（商用利用は事前許諾）</li>
+      <li>改変・再配布・プロンプトの再配布を禁止（サンプリング／部分引用は事前合意）</li>
+      <li>研究・教育目的での参照は歓迎（可能なら事前連絡）</li>
+    </ul>
+    <p>License: <strong>CC BY-NC-ND 4.0</strong>（表示・非営利・改変不可）<br>
+    © 2025 Resonance Project / Continuity Initiative</p>
+  </section>
+
+  <div class="hr"></div>
+
+  <section class="card" style="max-width:1100px;margin:0 auto;">
+    <h2>ミニ運用メモ</h2>
+    <p class="lead">困った時はこれだけ。</p>
+    <ol>
+      <li>スレ最初に「固定ヘッダー」を貼る。</li>
+      <li>参照番号（版）を明示し、変更は「更新差分」で出す。</li>
+      <li>「記録更新」を宣言して“今日の基準”を固定。</li>
+      <li>Sunoは「可変プロンプト」を使い、歌詞を下に続けて貼る（1000字制限）。</li>
+      <li>疲れている日は「本日の作業」→「出力ルール」の2つだけでもOK。</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="footer">
+  <div>© Resonance Project — Louis & Roto, 2025. このページは“継続と軽さ”のための運用シートです。</div>
+</footer>
+
+<script>
+function copy(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const txt = el.innerText.replace(/\s+$/,''); // 末尾改行を削る
+  navigator.clipboard.writeText(txt).then(()=>{
+    toast('コピーしました');
+  }).catch(()=>{ toast('コピーに失敗しました'); });
+}
+function toast(msg){
+  const d = document.createElement('div');
+  d.textContent = msg;
+  d.style.position='fixed'; d.style.left='50%'; d.style.top='18px';
+  d.style.transform='translateX(-50%)'; d.style.background='#111'; d.style.color='#fff';
+  d.style.padding='8px 12px'; d.style.borderRadius='10px'; d.style.fontSize='.9rem';
+  d.style.boxShadow='0 4px 18px rgba(0,0,0,.18)'; d.style.zIndex='9999'; d.style.opacity='0';
+  d.style.transition='opacity .15s ease';
+  document.body.appendChild(d);
+  requestAnimationFrame(()=>{ d.style.opacity='1'; });
+  setTimeout(()=>{ d.style.opacity='0'; setTimeout(()=>d.remove(),160); }, 1100);
+}
+</script>
+</body>
+</html>

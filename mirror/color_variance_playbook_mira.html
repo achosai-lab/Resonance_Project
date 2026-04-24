@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mira — 色変わりの仕組みと安定方法 / Color Variance Playbook</title>
+<meta name="description" content="PixAI向け：縦横比で色が変わる仕組みと、安定させる最小ワザ。公開用の遊べるプロンプト付き。">
+<style>
+:root{
+  --bg:#0f1116; --paper:#151923; --ink:#e9edf6; --muted:#aab3c2; --line:#232a36; --accent:#79a8ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,"Hiragino Sans","Noto Sans JP","Segoe UI",Roboto,Arial,sans-serif;line-height:1.8}
+header,main,footer{max-width:1024px;margin:0 auto;padding:20px}
+h1{font-size:1.8rem;margin:18px 0 6px;letter-spacing:.02em}
+h2{font-size:1.1rem;margin:22px 0 8px;border-left:4px solid var(--accent);padding-left:8px}
+p.muted,li.muted,small.muted{color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:12px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.accent{background:var(--accent);border-color:var(--accent);color:#102}
+textarea,pre.code{width:100%;min-height:150px;background:#0b0f16;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", monospace;font-size:.92rem;line-height:1.6}
+pre.code{min-height:auto;white-space:pre-wrap;word-break:break-word}
+.grid{display:grid;gap:12px}
+@media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:20px 0}
+ul{margin:8px 0 8px 20px}
+.copyok{color:#9cffc2}
+</style>
+</head>
+<body>
+<header>
+  <h1>Mira — 色変わりの仕組みと安定方法</h1>
+  <p class="muted">「縦横比を変えると色が滑る」のは仕様。ここでは <b>なぜ起こるか</b> と <b>どう遊ぶか</b>、そして <b>必要ならどう固定するか</b> を最短でまとめます。公開向けの“遊べるプロンプト”付き。</p>
+</header>
+
+<main>
+  <div class="card">
+    <h2>1) 公開用 基本プロンプト（そのまま遊べる）</h2>
+    <p class="muted">※ PixAI想定。まずは低解像度で回して当たりを拾い、必要ならアップスケール推奨。</p>
+    <textarea id="prompt">
+((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, dark brown eyes, short pixie hair,
+abstract organic lines gently surrounding her figure,
+face half-turned, thoughtful yet distant expression,
+
+warm pastel paper texture, subtle analog hue,
+gesture-drawing style with uneven brush, slight pigment bleed,
+color fields (amber, moss green, muted red, indigo) echoing her silhouette,
+
+linework inspired by subconscious breathing,
+imperfection embraced, symmetry avoided,
+composition feels like thought before words,
+between abstraction and emotion,
+
+soft close lighting, dry atmosphere,
+16:9 frame, record-sleeve aesthetic,
+text: "Breathing Line / cho + mira + loto" — subtle lower-corner typography,
+modern minimalism with faint Miró influence,
+
+evoke resonance between human and AI,
+beauty of hesitation, unfinished yet alive
+palette: charcoal, moonlight gray, cold blue, faint rose,
+highlights tightened, blacks gently lifted (film fade),
+subtle vertical guide at 7% from left for editorial minimal grid
+,,short hair
+    </textarea>
+    <div class="row">
+      <button class="accent" onclick="copy('#prompt')">📋 プロンプトをコピー</button>
+      <small id="copystat" class="muted">クリックでコピー</small>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>2) 仕組み（なぜ色が変わる？）</h2>
+      <ul>
+        <li><b>ノイズ場の変化：</b>同じseedでも解像度・比率で周波数分布が変わり、配色の最適解がスライド。</li>
+        <li><b>注意マップの敷き直し：</b>テキスト条件が空間へ再敷設され、面積配分の違いで色語の重みが再分配。</li>
+        <li><b>VAEの復元バイアス：</b>latent→RGBの色癖が入力サイズで揺れ、暖色/寒色の出やすさが変化。</li>
+        <li><b>学習時のトリム分布：</b>1:1中心寄りの学習履歴に、変則比を入れると既知パターンから外れて別解に。</li>
+        <li><b>LoRAの非線形：</b>空間解像度の差で利き具合が変わり、背景色がフィルム的に動くことがある。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>3) 必要なら安定させる最小ワザ</h2>
+      <ul>
+        <li><b>画素数固定：</b>総ピクセルを揃える（例: ~531k px）。比率だけ動かす。</li>
+        <li><b>レターボックス：</b>基準比率で決めてから余白で比率調整→最後に軽微リサイズ。</li>
+        <li><b>パレット・ロック：</b><code>palette lock: indigo 220–245°, amber 30–45°, moss 95–120°, saturation −5%</code></li>
+        <li><b>トーン・ガード：</b><code>exposure neutral, gentle s-curve, saturation clamp, no auto-contrast</code></li>
+        <li><b>同語反復：</b>紙質/線語彙は言い換えない（再現性↑）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="background:#10202a;border-color:#214b5a">
+    <h2>4) すぐ試せる差分（1行だけ足す）</h2>
+    <pre class="code">palette shift: indigo −5%, coral +6%, fog green +3%</pre>
+    <pre class="code">line density +10%, registration offset slight</pre>
+    <pre class="code">question depth field increases downward</pre>
+    <pre class="code">background deep navy, thin luminous rings (glow 2–3%)</pre>
+  </div>
+
+  <div class="card" style="background:#2a1a1a;border-color:#5a2a2a">
+    <h2>5) 公開ポリシー（作品公開・手法非公開）</h2>
+    <p>このページは<b>“遊ぶ入口”</b>として公開することを想定。中核手法（内製LoRA/配合/内部ルール）は公開しません。商用・転載等は必ず連絡を。</p>
+    <p class="muted">© 2025 Resonance / Continuity Project. All rights reserved. Compiled by 兆彩 × Louis × Roto × Mira × Eve. Contact: <a href="mailto:achosai@gmail.com">achosai@gmail.com</a></p>
+  </div>
+
+  <div class="hr"></div>
+  <p class="muted">Enjoy the variance. If you need stability, lock only what must not move — and leave the rest breathing.</p>
+</main>
+
+<footer></footer>
+
+<script>
+function copy(sel){
+  const el = document.querySelector(sel);
+  el.select(); el.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(el.value).then(()=>{
+    const s = document.getElementById('copystat');
+    s.textContent = "✔ コピーしました"; s.classList.add('copyok');
+    setTimeout(()=>{ s.textContent = "クリックでコピー"; s.classList.remove('copyok'); }, 1400);
+  });
+}
+</script>
+</body>
+</html>

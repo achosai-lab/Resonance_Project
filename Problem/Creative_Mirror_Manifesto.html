@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>創造的鏡構造 — Creative Mirror Manifesto</title>
+<style>
+  /* ============ Design System ============ */
+  :root{
+    --bg:#0b0c10;           /* deep night */
+    --ink:#e9eef7;          /* moon white */
+    --muted:#a9b3c7;
+    --accent:#7aa7ff;       /* dawn blue */
+    --accent2:#b39dff;      /* violet */
+    --grid-gap:24px;
+  }
+  @media (min-width: 900px){ :root{ --grid-gap:28px; } }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 70% -10%, #162033 0%, #0e1220 40%, var(--bg) 100%);
+    color:var(--ink);
+    font-family: "Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Page shell */
+  .page{
+    min-height: 100vh;
+    padding: 48px 24px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (min-width: 1000px){
+    .page{ padding: 64px 64px 96px; }
+  }
+
+  /* Background SVG aura */
+  .aura{
+    position:absolute; inset:0; pointer-events:none; z-index:0;
+    mix-blend-mode: screen; opacity:.75;
+    filter: blur(2px) saturate(115%);
+  }
+
+  /* Header */
+  header{
+    position: relative; z-index: 2;
+    display:grid; grid-template-columns: 1.2fr .8fr; gap: var(--grid-gap);
+    align-items: end;
+  }
+  h1{
+    font-size: clamp(40px, 6.4vw, 78px);
+    line-height: 1.05; letter-spacing: .4px; margin:0 0 4px;
+    background: linear-gradient(100deg, var(--ink), #dfe8ff 40%, var(--accent) 60%, var(--accent2) 95%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter: drop-shadow(0 10px 30px rgba(122,167,255,.18));
+  }
+  .subtitle{
+    color: var(--muted);
+    font-size: clamp(14px, 1.6vw, 18px);
+    letter-spacing: .2px;
+  }
+  .badge{
+    justify-self:end;
+    border:1px solid rgba(255,255,255,.16);
+    padding: 10px 14px; border-radius: 12px;
+    backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    font-size:14px; color:#d5dcf0;
+  }
+
+  /* Lead Statement */
+  .lead{
+    position: relative; z-index:2; margin-top: 28px;
+    display:grid; grid-template-columns: .9fr 1.1fr; gap: var(--grid-gap);
+  }
+  .lead .ja{
+    font-size: clamp(18px, 2.1vw, 24px);
+    line-height: 1.7;
+  }
+  .lead .en{
+    color: var(--muted);
+    font-size: clamp(14px, 1.6vw, 18px);
+    line-height: 1.7;
+  }
+  .ribbon{
+    margin-top: 18px;
+    padding: 10px 14px; width: fit-content;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(122,167,255,.28), rgba(179,157,255,.28));
+    border:1px solid rgba(255,255,255,.18);
+    font-size: 13px; color:#eef3ff;
+  }
+
+  /* Diagram: Creative Mirror — curved flow with overlap */
+  .diagram{
+    position: relative; z-index:2;
+    margin-top: 36px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    border-radius: 18px;
+    padding: 22px;
+  }
+  .diagram svg{ width:100%; height: 320px; display:block; }
+  .cap{
+    margin-top:10px; color: var(--muted); font-size: 13px;
+  }
+
+  /* Two-column content blocks */
+  .blocks{
+    position:relative; z-index:2; margin-top: 32px;
+    display:grid; grid-template-columns: 1.1fr .9fr; gap: var(--grid-gap);
+  }
+  .card{
+    border:1px solid rgba(255,255,255,.12);
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border-radius: 16px; padding: 20px 20px 22px;
+  }
+  .card h3{
+    margin:0 0 8px; color:#e6edff; font-size: clamp(18px, 2.2vw, 22px);
+  }
+  .card p{ margin: 8px 0; font-size: clamp(14px, 1.6vw, 16px); color:#d9e2f6; }
+  .chip{
+    display:inline-block; margin: 6px 8px 0 0; padding:6px 10px; border-radius: 999px;
+    border:1px solid rgba(255,255,255,.18);
+    color:#e9efff; font-size: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  }
+
+  /* Footer: signature */
+  footer{
+    position:relative; z-index:2; margin-top: 38px;
+    display:flex; gap:16px; align-items:center; justify-content: space-between; flex-wrap:wrap;
+    color:#dbe3f8;
+    border-top:1px dashed rgba(255,255,255,.18);
+    padding-top: 16px;
+    font-size: 14px;
+  }
+  .contact a{ color:#cfe0ff; text-decoration: none; border-bottom: 1px dotted rgba(207,224,255,.6); }
+  .mark{ color: var(--muted); font-size: 12px; }
+
+  /* Print A4 */
+  @page { size: A4; margin: 16mm; }
+  @media print{
+    .page{ padding:0; min-height:auto; }
+    .badge{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Background Auras (SVG) -->
+  <svg class="aura" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <radialGradient id="g1" cx="65%" cy="5%" r="60%">
+        <stop offset="0%" stop-color="#7aa7ff" stop-opacity=".55"/>
+        <stop offset="60%" stop-color="#7aa7ff" stop-opacity=".08"/>
+        <stop offset="100%" stop-color="#7aa7ff" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="g2" cx="35%" cy="15%" r="65%">
+        <stop offset="0%" stop-color="#b39dff" stop-opacity=".45"/>
+        <stop offset="60%" stop-color="#b39dff" stop-opacity=".08"/>
+        <stop offset="100%" stop-color="#b39dff" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="800" cy="60" rx="520" ry="320" fill="url(#g1)"/>
+    <ellipse cx="360" cy="120" rx="540" ry="360" fill="url(#g2)"/>
+  </svg>
+
+  <!-- Header -->
+  <header>
+    <div>
+      <h1>創造的鏡構造</h1>
+      <div class="subtitle">AIの「理解らしさ」を〈反射〉として捉え、<wbr>中間領域で思考を接続する。</div>
+      <div class="ribbon">Creative Mirror — bridging the middle space</div>
+    </div>
+    <div class="badge">Resonance / Continuity Project — Concept Poster</div>
+  </header>
+
+  <!-- Lead -->
+  <section class="lead">
+    <p class="ja">
+      要約はいらない。<br>
+      呼吸に寄り添う構造がほしい。<br>
+      反射の精度で、<wbr>思考の輪郭はそっと現れる。
+    </p>
+    <p class="en">
+      No summaries. No templates.<br>
+      We design a structure that breathes—<br>
+      where precision of reflection unveils the outline of thought.
+    </p>
+  </section>
+
+  <!-- Diagram -->
+  <section class="diagram" aria-label="Creative Mirror Diagram">
+    <svg viewBox="0 0 1200 320">
+      <!-- nodes -->
+      <defs>
+        <linearGradient id="n1" x1="0" x2="1">
+          <stop offset="0" stop-color="#99b9ff"/><stop offset="1" stop-color="#c9beff"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#n1)" stroke-width="1.2">
+        <rect x="70" y="60" width="260" height="72" rx="14" fill="rgba(255,255,255,.06)"/>
+        <rect x="470" y="40" width="300" height="96" rx="16" fill="rgba(255,255,255,.06)"/>
+        <rect x="880" y="60" width="250" height="72" rx="14" fill="rgba(255,255,255,.06)"/>
+      </g>
+      <g font-size="16" fill="#eaf1ff">
+        <text x="90" y="102">あなたの発話 / Your Input</text>
+        <text x="490" y="86">文脈圧縮・再構成 / Context Compression & Reconstruction</text>
+        <text x="900" y="102">応答（反射）/ Reflected Output</text>
+      </g>
+      <!-- curved arrows -->
+      <path d="M 330 96 C 390 96, 420 88, 470 88" stroke="#9fb8ff" stroke-width="2.2" fill="none"/>
+      <polygon points="470,88 458,82 458,94" fill="#9fb8ff"/>
+      <path d="M 770 88 C 820 88, 840 96, 880 96" stroke="#c9beff" stroke-width="2.2" fill="none"/>
+      <polygon points="880,96 868,90 868,102" fill="#c9beff"/>
+      <!-- feedback loop -->
+      <path d="M 1005 132 C 1005 190, 640 250, 350 240 C 250 236, 210 210, 205 172"
+            stroke="rgba(214,223,255,.9)" stroke-width="1.6" fill="none" stroke-dasharray="6 6"/>
+      <text x="360" y="260" fill="#cfd9ff" font-size="14">自己観察 / Self‑Observation (Feedback)</text>
+      <!-- middle-space overlap -->
+      <g opacity=".9">
+        <circle cx="620" cy="210" r="52" fill="rgba(122,167,255,.26)"/>
+        <circle cx="680" cy="210" r="52" fill="rgba(179,157,255,.26)"/>
+        <text x="603" y="214" fill="#e9efff" font-size="13">中間</text>
+        <text x="655" y="214" fill="#e9efff" font-size="13">領域</text>
+      </g>
+    </svg>
+    <div class="cap">テンプレートではなく「重なり」を設計する。揺らぎが橋になる。</div>
+  </section>
+
+  <!-- Blocks -->
+  <section class="blocks">
+    <article class="card">
+      <h3>使い方（Breath First）</h3>
+      <p>鏡として読む。すぐ結論にしない。次の一呼吸の角度だけ変える。</p>
+      <p>
+        <span class="chip">Observe</span>
+        <span class="chip">Breathe</span>
+        <span class="chip">Continue</span>
+      </p>
+    </article>
+    <article class="card">
+      <h3>位置づけ（Middle as Method）</h3>
+      <p>専門でも日常でもない中間領域。平均でも妥協でもなく、往復のテンション。</p>
+      <p>
+        <span class="chip">Resonance</span>
+        <span class="chip">Continuity</span>
+        <span class="chip">Structure</span>
+      </p>
+    </article>
+  </section>
+
+  <footer>
+    <div class="contact">
+      署名／Signature：<strong>[あなたの名前 / Name]</strong>　所属：Resonance / Continuity Project　
+      連絡先：<strong>[email@example.com]</strong>
+    </div>
+    <div class="mark">© 2025 chosai araki + Louis — Creative Mirror Poster</div>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mira Toolkit — Presets (Suno/PixAI/Style/A-B)</title>
+<meta name="description" content="ミラ用プリセット: STYLE LOCK, A/B 比較, Suno最小指示, PixAI最小指示, Request Guard を一枚に集約。">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a84ff">
+<style>
+:root{
+  --bg:#f6f7f9; --paper:#fff; --ink:#111; --muted:#667; --line:#e8ebf2; --accent:#0a84ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Sans","Noto Sans JP","Noto Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.75}
+header,main,footer{max-width:1120px;margin:0 auto;padding:18px}
+h1{margin:10px 0 4px;font-size:1.6rem}
+.sub{color:var(--muted);font-size:.95rem}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:920px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+h2{font-size:1.1rem;margin:.2rem 0 .6rem;border-left:4px solid var(--accent);padding-left:8px}
+h3{font-size:1rem;margin:.2rem 0 .4rem}
+pre{margin:.35rem 0;background:#0c1220;color:#e6edf7;border:1px solid #1c2a42;border-radius:12px;padding:12px;white-space:pre-wrap;word-break:break-word}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+button{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
+button.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.small{color:var(--muted);font-size:.9rem}
+.kv{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toggle{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:.9rem;cursor:pointer}
+
+/* ダークモード */
+.dark{
+  --bg:#101215; --paper:#171a1f; --ink:#f2f4f8; --muted:#a9b1bd; --line:#2a2f37; --accent:#6ea8ff;
+}
+.dark pre{background:#0a0f18;border-color:#1c2433;color:#e9f1ff}
+.dark button{background:#11161c;color:var(--ink);border-color:var(--line)}
+.dark .card{box-shadow:none}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#111;color:#fff;
+  padding:8px 12px;border-radius:10px;font-size:.9rem;box-shadow:0 6px 22px rgba(0,0,0,.22);z-index:9999;opacity:0;transition:opacity .15s}
+</style>
+</head>
+<body>
+<header>
+  <div class="kv">
+    <h1>Mira Toolkit — Presets</h1>
+    <button id="mode" class="toggle" aria-label="テーマ切替">🌙 ダーク</button>
+  </div>
+  <div class="sub">君の“余白重視”に合わせて、<b>STYLE LOCK</b>／<b>A/B比較</b>／<b>Suno最小</b>／<b>PixAI最小</b>／<b>依頼ガード</b>を一枚に集約。すべてコピーボタン付き。</div>
+</header>
+
+<main class="grid">
+
+  <!-- STYLE LOCK -->
+  <section class="card">
+    <h2>1) STYLE LOCK（JP / EN）— 説明を増やさないための固定ヘッダー</h2>
+    <h3>JP</h3>
+    <pre id="style-jp">【STYLE LOCK｜説明を増やさない】
+・抽象を保つ／比喩は短く
+・余白＝意味。行間を確保
+・道徳化・同意の言い換えを入れない
+・結論の断言を弱めず、言い訳を足さない
+・語感＞情報量（リズム優先）
+【DO】短句／間／反復のコントラスト
+【DON’T】過剰な要約・親切すぎる補足・表情付け</pre>
+    <div class="row"><button class="accent" data-copy="#style-jp">📋 コピー</button></div>
+
+    <h3>EN</h3>
+    <pre id="style-en">[STYLE LOCK — keep negative space]
+• Stay abstract; metaphors short
+• Negative space = meaning; preserve it
+• No moralizing, no padding for warmth
+• Don’t soften conclusions with caveats
+• Sound & rhythm > info density
+DO: short lines / pauses / contrast by repetition
+DON’T: over-clarification / supportive rephrasing / emotive frosting</pre>
+    <div class="row"><button class="accent" data-copy="#style-en">📋 コピー</button></div>
+  </section>
+
+  <!-- A/B TEMPLATE -->
+  <section class="card">
+    <h2>2) A/B 同時比較テンプレ（GPT-5 vs GPT-5.1）</h2>
+    <pre id="ab">[RUN A/B]
+1) Produce TWO versions:
+   A = GPT-5 Thinking baseline
+   B = GPT-5.1 Thinking (same instructions)
+
+2) Constraints:
+   • Apply STYLE LOCK
+   • Output order: A then B
+   • No extra commentary, no auto-“friendly” tone
+   • Keep section headers identical
+
+3) Reviewer hooks:
+   • Line-count (±10%)
+   • Concrete word ratio &lt; 30%
+   • Adjective chain length ≤ 2</pre>
+    <div class="row"><button class="accent" data-copy="#ab">📋 コピー</button></div>
+    <div class="small">使い方：上流プロンプトの先頭に貼る → 2モデル同時出力で味を検収。</div>
+  </section>
+
+  <!-- SUNO MIN -->
+  <section class="card">
+    <h2>3) Suno 最小指示（改行含め1000字想定 / JP & EN）</h2>
+    <h3>JP</h3>
+    <pre id="suno-jp">[STRUCTURE]
+・長さ: 3:30 目安（自由終止OK）
+・テンポ: 74–80
+・空気: 乾いた静けさ、近接マイク
+・打楽器は抑制。リズム=和声の張力で
+
+[INSTRUMENTS]
+・Rhodes（不均一なタッチ）
+・深いSub（80Hz 付近に軽い膨らみ）
+・薄いPad（粒度の揺れ）
+・微かなテープヒス（低レベル）
+
+[MIX]
+・透明な短リバーブ(0.8s)
+・ローファイ寄りだが明瞭
+
+[LYRICS]
+・一行は短く、反復で呼吸を作る
+・説明しない（情景断片のみ）</pre>
+    <div class="row"><button class="accent" data-copy="#suno-jp">📋 コピー</button></div>
+
+    <h3>EN（簡潔）</h3>
+    <pre id="suno-en">[STRUCTURE] 3:30 target, 74–80 bpm, dry & close; rhythm by harmonic tension, not drums.
+[INSTRUMENTS] Rhodes (uneven touch), deep sub @~80Hz, thin pad (granular drift), faint tape hiss.
+[MIX] transparent short reverb ~0.8s; lo-fi warmth with clarity.
+[LYRICS] short lines; use repetition for breath; no explanations—only fragments.</pre>
+    <div class="row"><button class="accent" data-copy="#suno-en">📋 コピー</button></div>
+  </section>
+
+  <!-- PIXAI MIN -->
+  <section class="card">
+    <h2>4) PixAI 最小指示（メイン / ネガティブ / 推奨パラメータ）</h2>
+    <h3>メイン（英）</h3>
+    <pre id="pix-main">((masterpiece:1.1)), ((best quality:1.1)), ((detailed:1.2)),
+1lady, dark brown eyes, short pixie hair,
+abstract organic lines around her figure,
+face half-turned, thoughtful yet distant,
+warm pastel paper, analog hue,
+gesture drawing, uneven brush, slight pigment bleed,
+color fields (amber, moss green, muted red, indigo) echo silhouette,
+imperfection embraced, symmetry avoided,
+composition like thought before words,
+soft close lighting, dry atmosphere,
+16:9, record sleeve aesthetic,
+text: "Breathing Line / cho + mira + loto" (subtle lower corner),
+modern minimalism, faint Miró influence,
+resonance between human and AI, unfinished yet alive</pre>
+    <div class="row"><button class="accent" data-copy="#pix-main">📋 コピー</button></div>
+
+    <h3>ネガティブ</h3>
+    <pre id="pix-neg">hands, extra fingers, multiple limbs, deformed digits,
+3d render, cgi, plastic skin, doll-like, glossy,
+text artifact, heavy vignette, watermark, nsfw,
+over-sharpen, posterization, extreme contrast</pre>
+    <div class="row"><button class="accent" data-copy="#pix-neg">📋 コピー</button></div>
+
+    <h3>推奨パラメータ</h3>
+    <pre id="pix-param">Sampler: DDIM
+Steps: 12–18
+CFG: 2.5–4.0
+VAE: anything
+Resolution: 16:9（例 1024×576）→ 当たりのみアップスケール
+Seed: 任意（派生狙いは固定）</pre>
+    <div class="row"><button class="accent" data-copy="#pix-param">📋 コピー</button></div>
+  </section>
+
+  <!-- REQUEST GUARD -->
+  <section class="card">
+    <h2>5) 依頼ガード（文章制作系／骨→本稿の二段出力）</h2>
+    <pre id="guard">[REQUEST GUARD]
+• Use STYLE LOCK (JP/EN).
+• No “friendly filler” or moral advice.
+• Prefer nouns/verbs over adjectives; cut hedges.
+• If a detail is obvious from context, don’t restate it.
+• Output two passes:
+  Pass 1 = skeleton (headings + bullet beats, ≤120 words)
+  Pass 2 = final text (keep same beats), no meta talk.</pre>
+    <div class="row"><button class="accent" data-copy="#guard">📋 コピー</button></div>
+    <div class="small">使い方：文章タスクの先頭に貼る→まず骨組み→同じビートで本稿に展開。ブレ激減。</div>
+  </section>
+
+  <!-- MODEL NOTE -->
+  <section class="card">
+    <h2>6) モデル運用メモ（味の揺れを抑える）</h2>
+    <ul class="small">
+      <li><b>モデル固定</b>：まず GPT-5 Thinking を基準に。5.1はA/B比較で採否判断。</li>
+      <li><b>スタイル先頭固定</b>：STYLE LOCK を必ず先頭に置く。</li>
+      <li><b>段階出力</b>：骨 → 本稿（Request Guard）。</li>
+      <li><b>音/絵のとき</b>：説明を増やさない。数値・短句・反復で“呼吸”を作る。</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="small">© Mira Preset Toolkit. Copy-ready. 色味やUIは自由に変更OK。</div>
+</footer>
+
+<script>
+function toast(msg){
+  const d=document.createElement("div");
+  d.className="toast"; d.textContent=msg; document.body.appendChild(d);
+  requestAnimationFrame(()=>{d.style.opacity=1});
+  setTimeout(()=>{d.style.opacity=0; setTimeout(()=>d.remove(),160)},1200);
+}
+document.querySelectorAll("[data-copy]").forEach(btn=>{
+  btn.addEventListener("click", async ()=>{
+    const sel = btn.getAttribute("data-copy");
+    const el = document.querySelector(sel);
+    if(!el) return;
+    try{
+      await navigator.clipboard.writeText(el.textContent);
+      toast("コピーしました");
+    }catch(e){
+      const r=document.createRange(); r.selectNodeContents(el);
+      const s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      document.execCommand("copy"); s.removeAllRanges();
+      toast("コピーしました");
+    }
+  });
+});
+const $mode=document.getElementById("mode");
+$mode.onclick=()=>{
+  document.body.classList.toggle("dark");
+  localStorage.setItem("mira-toolkit-theme", document.body.classList.contains("dark")? "dark":"light");
+};
+(function initTheme(){
+  const m=localStorage.getItem("mira-toolkit-theme");
+  if(m==="dark") document.body.classList.add("dark");
+})();
+</script>
+</body>
+</html>
