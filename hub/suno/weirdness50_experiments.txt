@@ -1,0 +1,3 @@
+# Weirdness 50 実験ログ
+# Suno 可変プロンプト（800字ルール）
+# 準備中 / Coming Soon
