@@ -32,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* breathing background pulse */
   body::before {
     content: '';
     position: fixed;
@@ -48,7 +47,6 @@
     50% { opacity: 1; transform: scale(1.15); }
   }
 
-  /* grain overlay */
   body::after {
     content: '';
     position: fixed;
@@ -67,7 +65,6 @@
     z-index: 2;
   }
 
-  /* HEADER */
   header {
     padding: 6rem 0 4rem;
     border-bottom: 1px solid var(--border);
@@ -110,7 +107,6 @@
     animation: fadeUp 0.8s ease 0.6s forwards;
   }
 
-  /* PREMISE */
   .premise {
     padding: 4rem 0;
     border-bottom: 1px solid var(--border);
@@ -133,7 +129,6 @@
     font-weight: 400;
   }
 
-  /* SECTIONS */
   .section {
     padding: 3.5rem 0;
     border-bottom: 1px solid var(--border);
@@ -170,7 +165,6 @@
     line-height: 1.8;
   }
 
-  /* LINKS */
   .link-card {
     display: block;
     padding: 1.2rem 1.5rem;
@@ -232,7 +226,6 @@
     transform: translateY(-50%) translateX(4px);
   }
 
-  /* PHASE TIMELINE */
   .phase-list {
     border-left: 1px solid var(--border);
     padding-left: 1.5rem;
@@ -276,7 +269,6 @@
     line-height: 1.7;
   }
 
-  /* FOOTER */
   footer {
     padding: 4rem 0;
     text-align: center;
@@ -303,13 +295,11 @@
     margin-top: 1rem;
   }
 
-  /* ANIMATIONS */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* RESPONSIVE */
   @media (max-width: 600px) {
     header { padding: 4rem 0 3rem; }
     .container { padding: 0 1.5rem; }
@@ -322,18 +312,18 @@
 
   <header>
     <p class="label">Chosai Araki — Project Archive</p>
-    <h1>Knowledge<br>to <em>Intelligence</em></h1>
+    <h1>やりたいことが、<br><em>あった。</em></h1>
     <p class="tagline">
-      AIとの対話から生まれた実験の全記録。<br>
-      音楽・言語・ビジュアル・思想——すべては対話から導き出された。
+      AIがいたから、できた。ただそれだけの話。<br>
+      音楽・言語・ビジュアル・古いMac——その過程ごと残している。
     </p>
   </header>
 
   <div class="premise section">
     <p class="premise-text">
-      このプロジェクトは<strong>設計されていない。</strong><br>
-      AIとの会話から意思が生まれ、成果物が生まれた。<br>
-      その過程ごと記録することが、<strong>知能の実証</strong>になる。
+      設計していない。<br>
+      やりたいことをAIに話しかけたら、<strong>何かが生まれた。</strong><br>
+      その繰り返しが、いつの間にか記録になっていた。
     </p>
   </div>
 
@@ -342,8 +332,8 @@
     <p class="section-label">Foundation · 01</p>
     <h2 class="section-title">AI Breathing</h2>
     <p class="section-sub">
-      知識としてのAIではなく、効率性の哲学として——<br>
-      このプロジェクト全体の思想的出発点。
+      AIを道具として使うより前に、<br>
+      どう付き合うかを考えた。その出発点になった本。
     </p>
     <a href="https://amzn.asia/d/0bDxRWAz" target="_blank" class="link-card">
       <span class="link-title">AI Breathing — Amazon</span>
@@ -357,8 +347,8 @@
     <p class="section-label">Core Experiment · 02</p>
     <h2 class="section-title">Resonance / Continuity Project</h2>
     <p class="section-sub">
-      楽曲生成・歌詞・可変プロンプト・運用ログを「継続」前提で束ねた実験。<br>
-      整いすぎない美と、記憶の連続性を検証する。
+      楽曲・歌詞・プロンプト・ビジュアルを「継続」前提で束ねた実験。<br>
+      整いすぎない美と、記憶の連続性を検証している。
     </p>
 
     <div class="phase-list">
@@ -391,14 +381,44 @@
     </a>
   </div>
 
+  <!-- WORKSHOP -->
+  <div class="section">
+    <p class="section-label">Workshop · 03</p>
+    <h2 class="section-title">AIの使い方は教えない。</h2>
+    <p class="section-sub">
+      自分が何に興味あるか、それをAIと一緒に探す場をつくっている。<br>
+      金沢・対面・少人数。PC持参で来てほしい。
+    </p>
+    <a href="https://resonanceproject.netlify.app/workshop/" target="_blank" class="link-card">
+      <span class="link-title">Workshop — 詳細</span>
+      <span class="link-meta">金沢 · 対面 · 少人数</span>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- LINUX / RECYCLE -->
+  <div class="section">
+    <p class="section-label">Hands-on · 04</p>
+    <h2 class="section-title">古いものを、使える形に。</h2>
+    <p class="section-sub">
+      1万円のジャンクMacにLinuxを入れてAI環境を作った。<br>
+      新品より高いリサイクルは意味がない。自分で作ればいい、という話。
+    </p>
+    <a href="https://note.com/chosai_1968/n/nee42084bdae8" target="_blank" class="link-card">
+      <span class="link-title">1万円のジャンクMacにLinux入れたらAI活用環境できた話</span>
+      <span class="link-meta">note · 2026 · Linux / Reuse</span>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
   <!-- MEDIUM -->
   <div class="section">
-    <p class="section-label">Writing · 03</p>
+    <p class="section-label">Writing · 05</p>
     <h2 class="section-title">Medium — Resonance Field</h2>
     <p class="section-sub">
       AIの効率性・継続性・創造性への問い。英語での発信。
     </p>
-    <a href="https://medium.com/@achosai" target="_blank" class="link-card">
+    <a href="https://medium.com/resonance-field/ai-efficiency-the-simple-question-nobody-will-answer-c89a7452347f" target="_blank" class="link-card">
       <span class="link-title">AI Efficiency: The Simple Question Nobody Will Answer</span>
       <span class="link-meta">Medium · Jan 2026</span>
       <span class="link-arrow">→</span>
@@ -417,10 +437,11 @@
 
   <!-- NOTE -->
   <div class="section">
-    <p class="section-label">Writing · 04</p>
+    <p class="section-label">Writing · 06</p>
     <h2 class="section-title">note — 日本語発信</h2>
     <p class="section-sub">
-      創作の視点からAIの構造・振る舞い・長所短所を記録する。
+      使ってみて気づいたこと、詰まったこと、面白かったことを書いている。<br>
+      創作の視点から、AIの構造と振る舞いを記録する。
     </p>
     <a href="https://note.com/chosai_1968" target="_blank" class="link-card">
       <span class="link-title">Chosai Araki — note</span>
@@ -432,12 +453,11 @@
 </div>
 
 <footer>
-  <p class="footer-breath">構造は呼吸し、呼吸は記録になる。</p>
+  <p class="footer-breath">過程が、記録になる。</p>
   <p class="footer-year">© 2025–2026 Chosai Araki</p>
 </footer>
 
 <script>
-  // scroll reveal
   const sections = document.querySelectorAll('.section');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -448,8 +468,6 @@
   }, { threshold: 0.1 });
 
   sections.forEach(s => observer.observe(s));
-
-  // premise auto-visible
   document.querySelector('.premise').classList.add('visible');
 </script>
 
