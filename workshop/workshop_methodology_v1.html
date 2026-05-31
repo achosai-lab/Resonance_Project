@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ワークショップ方法論の骨格 — Resonance Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0e11;
+    --ink-2:#14161b;
+    --panel:#171a20;
+    --line:#2a2e37;
+    --gold:#c8a96a;
+    --gold-soft:#d8c197;
+    --gold-dim:rgba(200,169,106,.18);
+    --text:#e7e3da;
+    --text-dim:#a39e93;
+    --text-faint:#6f6b62;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:"Shippori Mincho",serif;
+    line-height:1.95;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:
+      radial-gradient(900px 600px at 78% -10%, rgba(200,169,106,.07), transparent 60%),
+      radial-gradient(700px 500px at -5% 110%, rgba(200,169,106,.05), transparent 55%);
+    pointer-events:none;z-index:0;
+  }
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 28px}
+
+  /* header */
+  header{padding:94px 0 64px;border-bottom:1px solid var(--line)}
+  .eyebrow{
+    font-family:"Cormorant Garamond",serif;
+    font-style:italic;
+    color:var(--gold);
+    letter-spacing:.04em;
+    font-size:19px;
+    opacity:0;animation:rise .9s .1s forwards;
+  }
+  h1{
+    font-weight:800;
+    font-size:clamp(34px,6.4vw,52px);
+    line-height:1.3;
+    margin:18px 0 26px;
+    letter-spacing:.01em;
+    opacity:0;animation:rise .9s .25s forwards;
+  }
+  h1 .br{display:block}
+  .sub{
+    color:var(--text-dim);
+    font-size:18px;
+    max-width:54ch;
+    opacity:0;animation:rise .9s .4s forwards;
+  }
+  .sub b{color:var(--gold-soft);font-weight:600}
+  .meta{
+    margin-top:34px;
+    font-family:"Cormorant Garamond",serif;
+    color:var(--text-faint);
+    font-size:16px;
+    letter-spacing:.05em;
+    opacity:0;animation:rise .9s .55s forwards;
+  }
+
+  /* sections */
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  .tag{
+    font-family:"Cormorant Garamond",serif;
+    font-style:italic;
+    color:var(--gold);
+    font-size:18px;
+    letter-spacing:.05em;
+    display:flex;align-items:center;gap:14px;
+    margin-bottom:22px;
+  }
+  .tag::before{
+    content:"";width:34px;height:1px;background:var(--gold);opacity:.6;
+  }
+  h2{
+    font-weight:700;
+    font-size:clamp(24px,4.2vw,30px);
+    line-height:1.45;
+    margin-bottom:24px;
+    letter-spacing:.01em;
+  }
+  p{margin-bottom:20px;color:var(--text)}
+  p .beat{color:var(--gold-soft);font-weight:700}
+  .dim{color:var(--text-dim)}
+  .lead{font-size:20px}
+
+  .declare{
+    font-size:clamp(22px,4vw,28px);
+    font-weight:600;
+    line-height:1.7;
+    color:var(--text);
+  }
+  .declare .x{color:var(--text-faint);text-decoration:line-through;text-decoration-color:var(--gold-dim);text-decoration-thickness:2px}
+  .declare .o{color:var(--gold-soft)}
+
+  /* cycle diagram */
+  .cycle{margin:14px auto 30px;display:block;width:100%;max-width:520px}
+  .cycle text{font-family:"Shippori Mincho",serif}
+  .steps{list-style:none;counter-reset:s;margin-top:10px}
+  .steps li{
+    counter-increment:s;
+    position:relative;
+    padding:16px 0 16px 56px;
+    border-top:1px solid var(--line);
+  }
+  .steps li:last-child{border-bottom:1px solid var(--line)}
+  .steps li::before{
+    content:counter(s,decimal-leading-zero);
+    position:absolute;left:0;top:16px;
+    font-family:"Cormorant Garamond",serif;
+    font-size:22px;color:var(--gold);
+    letter-spacing:.02em;
+  }
+  .steps b{color:var(--gold-soft);font-weight:700}
+  .steps .note{display:block;color:var(--text-dim);font-size:15.5px;margin-top:2px}
+  .loopback{
+    margin-top:18px;color:var(--text-faint);
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;
+    text-align:right;
+  }
+
+  /* boundary block */
+  .boundary{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:3px solid var(--gold);
+    padding:30px 30px;
+    margin:8px 0;
+  }
+  .boundary h3{font-weight:700;font-size:19px;margin-bottom:14px;color:var(--gold-soft)}
+  .boundary p:last-child{margin-bottom:0}
+
+  /* closing */
+  .closing p{font-size:20px;line-height:2.05}
+  footer{padding:56px 0 90px;color:var(--text-faint)}
+  footer .rp{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold);letter-spacing:.04em}
+  footer .small{font-size:14.5px;margin-top:8px;line-height:1.8}
+
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Resonance Project — Workshop</div>
+    <h1><span class="br">何をするのか、</span><span class="br">何をしないのか。</span></h1>
+    <p class="sub">プロンプトの技術を教える講座ではない。<br>AIを使って、<b>自分の中にあるまだ言葉になっていないもの</b>を、外に出すための場だ。</p>
+    <div class="meta">方法論の骨格 ／ v1 draft</div>
+  </header>
+
+  <section class="reveal">
+    <div class="tag">前提</div>
+    <h2>経験則がある人ほど、AIに深く潜れる。</h2>
+    <p class="lead">これがこの場の出発点であり、たぶん一番大事な一文だ。</p>
+    <p>AIは、ゼロから何かを生むのが得意なように見える。<br>でも自分が見てきた限り、本当に面白いものが出てくるのは、<span class="beat">使う側に積み重ねがあるとき</span>だ。</p>
+    <p>楽器を触ってきた手。<br>現場で判断してきた目。<br>言葉にできないまま体に入っている、その人だけの経験則。<br>AIはそれを増幅する装置になる。経験がある人ほど、深いところまで潜っていける。</p>
+    <p class="dim">だからここで立つのは、技術者の目線でも研究者の目線でもない。<br>実際に使い倒した人間の目線——使用者目線だ。</p>
+  </section>
+
+  <section class="reveal">
+    <div class="tag">やること</div>
+    <h2>潜って、言葉にして、動かして、また潜る。</h2>
+    <p>やっていることは、突き詰めるとひとつの円環だ。<br>ツールが何であっても、この形は変わらない。</p>
+
+    <svg class="cycle" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <marker id="arrow" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 Z" fill="#c8a96a"/>
+        </marker>
+      </defs>
+      <circle cx="180" cy="180" r="120" fill="none" stroke="#2a2e37" stroke-width="1.2"/>
+      <!-- rotating arc accents -->
+      <path d="M180 60 A120 120 0 0 1 283 122" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
+      <path d="M283 238 A120 120 0 0 1 180 300" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
+      <path d="M77 238 A120 120 0 0 1 77 122" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
+      <!-- nodes -->
+      <g fill="#d8c197" font-size="13" font-weight="700" text-anchor="middle" font-family="Shippori Mincho, serif">
+        <text x="180" y="50">対話する</text>
+        <text x="305" y="184">言葉にする</text>
+        <text x="246" y="320">翻訳する</text>
+        <text x="114" y="320">動かす</text>
+        <text x="55" y="184">また対話</text>
+      </g>
+      <g fill="#c8a96a">
+        <circle cx="180" cy="60" r="4"/>
+        <circle cx="300" cy="180" r="4"/>
+        <circle cx="240" cy="284" r="4"/>
+        <circle cx="120" cy="284" r="4"/>
+        <circle cx="60" cy="180" r="4"/>
+      </g>
+      <text x="180" y="176" text-anchor="middle" fill="#6f6b62" font-size="11" font-family="Cormorant Garamond, serif" font-style="italic">the loop</text>
+      <text x="180" y="196" text-anchor="middle" fill="#a39e93" font-size="12" font-family="Shippori Mincho, serif">回り続ける</text>
+    </svg>
+
+    <ol class="steps">
+      <li><b>対話する。</b><span class="note">まだ形になっていないもやもやを、そのままAIに話す。正解を聞くのではなく、何を作りたいのかを一緒に探る。</span></li>
+      <li><b>方向を言葉にする。</b><span class="note">対話の中で、自分が本当は何を求めていたのかが立ち上がってくる。体に入っていた経験則を、言葉に引き出す。</span></li>
+      <li><b>ツールのプロンプトに翻訳する。</b><span class="note">言葉にした方向を、SUNO・PixAI、その時々のツール用の指示に置き換える。ツールは何でもいい。</span></li>
+      <li><b>動かす。</b><span class="note">実際に生成する。出てきたものを、自分の耳と目で確かめる。</span></li>
+      <li><b>また対話する。</b><span class="note">出力と狙いのズレを見て、AIに戻る。次の方向を、また言葉にする。</span></li>
+    </ol>
+    <div class="loopback">— そして 1 に戻る。</div>
+  </section>
+
+  <section class="reveal">
+    <div class="tag">やらないこと</div>
+    <h2>正解のプロンプト集は、配らない。</h2>
+    <p>この円環のうち、外から見える「形」はここに書いたとおりだ。<br>でも一番効くところ——<span class="beat">何をどう言葉にするか</span>は、ここには書かない。書けない。</p>
+    <p>それは相手の経験によって、毎回まるごと変わるからだ。<br>楽器屋の人と、農家の人と、役所の人とでは、引き出すべきものも、問いの立て方も違う。<br>マニュアルに落とした瞬間、それは別物になる。</p>
+
+    <div class="boundary">
+      <h3>境界線を引くこと自体が、答えになっている。</h3>
+      <p>誰でも真似できる手順に落とせるものは、誰でも真似できる。<br>つまり、すぐにコモディティになる。</p>
+      <p class="dim">骨格は開いておく。深さは、潜った人にしか応えない。<br>——オープンソースのように。開かれているのに、尖っている。</p>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="tag">逆転</div>
+    <h2>AIを突き詰めるほど、人間に還ってくる。</h2>
+    <p>もうすぐ、生まれたときからAIがある世代が来る。<br>検索が当たり前だったネット世代のさらに先だ。</p>
+    <p>そのとき効いてくるのは、たぶん逆のものだと思っている。<br>AIで何でも出せるからこそ、<span class="beat">人間にしかない経験・判断・身体</span>の価値が際立つ。</p>
+    <p>AIを否定するのではない。<br>使い込むほど、人間の側の手応えが要る、と気づく。<br>AIを肯定するほど、人間が浮かび上がる。<br>この皮肉のような構造を、実際に手を動かして体験してもらう。それがこの場でやりたいことだ。</p>
+  </section>
+
+  <section class="closing reveal">
+    <div class="tag">結び</div>
+    <p>教えるのは、プロンプトの書き方ではない。<br>AIと向き合いながら、自分の中にあったものを、自分の言葉で掴み直す——その潜り方だ。</p>
+    <p class="dim">経験のある人ほど、深く行ける。<br>だからこの場は、何かを身につける場というより、すでに持っているものを、見つけ直す場に近い。</p>
+  </section>
+
+  <footer>
+    <div class="rp">Resonance Project</div>
+    <div class="small">代表 ／ 荒木兆彩　　金沢<br>resonanceproject.netlify.app</div>
+  </footer>
+
+</div>
+<script>
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>現場のためのAI活用支援 — Resonance Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4efe4;
+    --paper-2:#efe8d8;
+    --card:#fbf8f0;
+    --ink:#22201b;
+    --ink-soft:#524d42;
+    --ink-faint:#8a8273;
+    --indigo:#274a5c;
+    --indigo-deep:#1c3744;
+    --clay:#b5612f;
+    --clay-soft:#c8794a;
+    --line:#d9cfba;
+    --line-strong:#c3b698;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Shippori Mincho",serif;
+    line-height:1.92;
+    font-size:16.5px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      linear-gradient(rgba(0,0,0,0) 0,rgba(0,0,0,0) 100%),
+      repeating-linear-gradient(0deg, rgba(180,160,120,.03) 0 1px, transparent 1px 4px);
+  }
+  .gothic{font-family:"Zen Kaku Gothic New",sans-serif}
+  .wrap{max-width:780px;margin:0 auto;padding:0 26px}
+
+  header{padding:70px 0 46px}
+  .brandline{
+    font-family:"Zen Kaku Gothic New",sans-serif;
+    font-weight:700;font-size:13px;letter-spacing:.22em;
+    color:var(--clay);text-transform:uppercase;
+  }
+  .lead-badge{
+    display:inline-block;margin-top:20px;
+    font-family:"Zen Kaku Gothic New",sans-serif;font-weight:700;
+    font-size:14px;letter-spacing:.04em;
+    color:var(--indigo);
+    border:1.5px solid var(--indigo);
+    padding:6px 16px;border-radius:2px;
+  }
+  h1{
+    font-weight:800;font-size:clamp(30px,5.6vw,46px);
+    line-height:1.32;margin:20px 0 22px;letter-spacing:.01em;
+  }
+  h1 em{font-style:normal;color:var(--clay);}
+  .deck{color:var(--ink-soft);font-size:17.5px;max-width:58ch}
+  .deck b{color:var(--indigo);font-weight:700}
+  .rule{height:3px;background:var(--indigo);width:64px;margin:34px 0 0}
+
+  section{padding:46px 0;border-bottom:1px solid var(--line)}
+  .num{
+    font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;
+    color:var(--clay);font-size:15px;letter-spacing:.12em;
+    display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  }
+  .num span{color:var(--ink-faint);font-weight:700;letter-spacing:.04em}
+  h2{font-weight:700;font-size:clamp(22px,3.9vw,28px);line-height:1.45;margin-bottom:18px}
+  h2 .hl{color:var(--indigo)}
+  p{margin-bottom:16px;color:var(--ink)}
+  p .k{color:var(--clay);font-weight:700}
+  .soft{color:var(--ink-soft)}
+
+  /* positioning row */
+  .gap{
+    display:grid;grid-template-columns:1fr;gap:12px;margin:8px 0 4px;
+  }
+  .gap .row{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:14px 16px;border:1px solid var(--line);background:var(--card);border-radius:3px;
+  }
+  .gap .row .t{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:700;color:var(--ink-faint);min-width:124px;font-size:14px}
+  .gap .row.us{border:1.5px solid var(--indigo);background:#eef2f2}
+  .gap .row.us .t{color:var(--indigo)}
+  .gap .row .d{font-size:15px;color:var(--ink-soft)}
+  .gap .row.us .d{color:var(--ink)}
+
+  /* process steps */
+  .flow{margin-top:8px;border-top:1px solid var(--line)}
+  .flow .st{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .flow .st .i{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;color:var(--clay);min-width:30px;font-size:18px}
+  .flow .st .b{font-weight:700;color:var(--indigo);min-width:170px}
+  .flow .st .n{color:var(--ink-soft);font-size:15px}
+  .loop{margin-top:12px;text-align:right;color:var(--ink-faint);font-size:14px;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:700;letter-spacing:.04em}
+
+  /* proof box */
+  .proof{background:var(--indigo-deep);color:#eef0ec;border-radius:4px;padding:28px 28px;margin-top:6px}
+  .proof .h{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:13px;letter-spacing:.14em;color:var(--clay-soft);margin-bottom:10px}
+  .proof h3{font-weight:700;font-size:21px;margin-bottom:16px;color:#fff}
+  .proof p{color:#d6dcd8;margin-bottom:14px;font-size:15.5px}
+  .proof .cost{
+    display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px;
+  }
+  .proof .cost .c{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:3px;padding:10px 14px;flex:1;min-width:130px}
+  .proof .cost .c .lbl{font-family:"Zen Kaku Gothic New",sans-serif;font-size:12px;color:#9fb0ad;letter-spacing:.04em}
+  .proof .cost .c .val{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:20px;color:#fff;margin-top:2px}
+  .proof .src{font-size:13px;color:#8fa09c;margin-bottom:0;margin-top:14px}
+
+  /* value */
+  .value-card{background:var(--card);border:1px solid var(--line-strong);border-left:4px solid var(--clay);padding:24px 24px;border-radius:3px}
+  .value-card h3{font-weight:700;font-size:18px;color:var(--clay);margin-bottom:12px}
+  .value-card p:last-child{margin-bottom:0}
+
+  .close{padding:44px 0 16px}
+  .close p{font-size:18.5px;line-height:1.95}
+  footer{padding:30px 0 80px;border-top:1px solid var(--line);margin-top:24px}
+  .org{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;color:var(--indigo);font-size:18px;letter-spacing:.04em}
+  .who{color:var(--ink-soft);font-size:14.5px;margin-top:6px;line-height:1.8}
+
+  @media(max-width:560px){
+    .flow .st{flex-wrap:wrap}
+    .flow .st .b{min-width:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brandline">Resonance Project</div>
+    <div class="lead-badge gothic">中小事業者・個人事業主のための</div>
+    <h1>AIの、<em>ホームセンター</em>。</h1>
+    <p class="deck">高い全国コンサルでも、売り込み型のIT業者でも、手取り足取りまではしてくれない行政窓口でもない。<br><b>現場の人が、自分の手でAIを使えるようになる</b>ための、実地の伴走です。</p>
+    <div class="rule"></div>
+  </header>
+
+  <section>
+    <div class="num gothic">01 <span>立ち位置</span></div>
+    <h2>「専門家に任せる」と「自分には無理」の<span class="hl">あいだ</span>を埋める。</h2>
+    <p>AIを使いたい現場の前には、たいてい三つしか選択肢がない。高い全国コンサルに頼むか、IT業者にシステムを売られるか、行政の相談窓口で一般論を聞くか。</p>
+    <p>そのどれもが、<span class="k">「現場で、実際に手を動かす」ところまでは付き合ってくれない。</span></p>
+    <div class="gap">
+      <div class="row"><div class="t gothic">全国コンサル</div><div class="d">的確だが高額。地方の小さな現場には届きにくい。</div></div>
+      <div class="row"><div class="t gothic">IT業者</div><div class="d">自社製品の導入が前提。本当に必要かは別の話。</div></div>
+      <div class="row"><div class="t gothic">行政の窓口</div><div class="d">無料だが一般論まで。実際の操作は教われない。</div></div>
+      <div class="row us"><div class="t gothic">Resonance Project</div><div class="d">隣で一緒に手を動かす。道具の選び方から使い方まで。だから「ホームセンター」。</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="num gothic">02 <span>前提</span></div>
+    <h2>現場の経験がある人ほど、AIを<span class="hl">深く使える。</span></h2>
+    <p>AIは、知識ゼロの人に答えを配る道具だと思われがちです。でも実際は逆で、<span class="k">その仕事を長くやってきた人ほど、AIから引き出せるものが深くなります。</span></p>
+    <p>長年の勘、現場でしか分からない判断、言葉にしていないコツ。そうした経験を、AIとの対話で言葉にしていく。技術者の理屈ではなく、実際に使う人の目線で進めます。</p>
+  </section>
+
+  <section>
+    <div class="num gothic">03 <span>進め方</span></div>
+    <h2>困りごとを話し、言葉にし、試し、また直す。</h2>
+    <p>やることはシンプルなくり返しです。特別なソフトも、専門用語も要りません。</p>
+    <div class="flow">
+      <div class="st"><div class="i gothic">1</div><div class="b">困りごとを話す</div><div class="n">何に時間を取られているか、何を楽にしたいかを、そのまま話す。</div></div>
+      <div class="st"><div class="i gothic">2</div><div class="b">やりたいことを言葉にする</div><div class="n">対話の中で、本当に解決したいことをはっきりさせる。</div></div>
+      <div class="st"><div class="i gothic">3</div><div class="b">AIへの指示に変える</div><div class="n">それをAIに伝わる言葉(指示)に置き換える。道具は何でもいい。</div></div>
+      <div class="st"><div class="i gothic">4</div><div class="b">実際に動かす</div><div class="n">その場でやってみて、結果を自分の目で確かめる。</div></div>
+      <div class="st"><div class="i gothic">5</div><div class="b">ズレを直す</div><div class="n">思った通りでなければ、また話して、調整する。</div></div>
+    </div>
+    <div class="loop">→ そして 1 に戻る。回しながら、現場に合わせていく。</div>
+  </section>
+
+  <section>
+    <div class="num gothic">04 <span>実例</span></div>
+    <h2>口で説明するより、現物を見てください。</h2>
+    <p>たとえば、講座で使う持ち出し用のパソコン。これ自体が「AIと対話しながら作った」実例です。</p>
+    <div class="proof">
+      <div class="h gothic">CASE — 2万円のAI活用環境</div>
+      <h3>1万円のジャンクMacに無料OSを入れて、仕事用のAI環境にした。</h3>
+      <p>ヤフオクで落とした古いノートに、無料のLinuxを導入。詰まるたびにAIに聞きながら、ほぼ2日で実用環境ができました。新型を買うのでも、業者に頼むのでもなく、自分の手で。</p>
+      <div class="cost">
+        <div class="c"><div class="lbl gothic">本体(中古)</div><div class="val gothic">¥10,000</div></div>
+        <div class="c"><div class="lbl gothic">部材・電源ほか</div><div class="val gothic">約¥8,000</div></div>
+        <div class="c"><div class="lbl gothic">OS・ソフト</div><div class="val gothic">¥0</div></div>
+      </div>
+      <p class="src">合計2万円以下。ブラウザでのAI活用、画像・音声・動画編集、資料作成まで。行政斡旋のリサイクルPCより安く、実用十分。— 全工程をnoteに記録・公開済み。</p>
+    </div>
+    <p style="margin-top:18px" class="soft">「高い新型を買え」でも「専門家に任せろ」でもない。<span class="k">自分でやってみた記録が、そのまま手本になる。</span>これが伝えたいことの全部です。</p>
+  </section>
+
+  <section>
+    <div class="num gothic">05 <span>価値</span></div>
+    <h2>汎用マニュアルは配りません。<span class="hl">現場ごとに最適化します。</span></h2>
+    <div class="value-card">
+      <h3>だから、横展開しても陳腐化しない。</h3>
+      <p>同じAIでも、何に使うかは事業者ごとに違います。製造の現場と、小売の現場と、サービス業では、引き出すべき答えも、聞き方も変わる。</p>
+      <p class="soft">決まった手順書を渡して終わり、ではなく、その事業者の現場に合わせて一緒に組み立てる。だからこそ、一社で効いた型が、次の現場でも応用できます。</p>
+    </div>
+  </section>
+
+  <div class="close">
+    <p>地方だからこそ、できるAIの使い方があります。<br>大きな投資も、専門の人材も要らない。<span class="k">いまある現場の経験と、2万円の道具と、対話だけで始められます。</span></p>
+    <p class="soft">まずは一度、現物をお見せできればと思います。</p>
+  </div>
+
+  <footer>
+    <div class="org gothic">Resonance Project</div>
+    <div class="who">代表　荒木兆彩　／　金沢<br>resonanceproject.netlify.app</div>
+  </footer>
+
+</div>
+</body>
+</html>
