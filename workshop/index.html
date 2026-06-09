@@ -309,6 +309,46 @@
     margin-top: 4px;
   }
 
+  /* ── EVENT TABLE ── */
+  .event-table {
+    margin: 40px 0;
+  }
+
+  .event-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .event-row:first-child {
+    border-top: 1px solid var(--rule);
+  }
+
+  .event-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding-top: 3px;
+  }
+
+  .event-value {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.7;
+  }
+
+  .event-note {
+    font-size: 12px;
+    color: rgba(242,237,230,0.45);
+    display: block;
+    margin-top: 2px;
+  }
+
   /* ── CTA ── */
   .cta-section {
     padding: 96px 48px;
@@ -569,7 +609,7 @@
   <div class="section-body fade-in">
     <strong>しんどい、が正しい。</strong><br>
     「なんとなく」から先が出てこない瞬間が来る。それがこの講座が機能しているサインだ。
-    楽なままだったら何も変わっていない。詰まった瞬間から、思考が始まる。
+    楽なままだったら何も変わっていない。<!-- 息継ぎ：本人が一言入れる -->詰まった瞬間から、思考が始まる。
   </div>
 </section>
 
@@ -614,12 +654,12 @@
     <div class="format-item">
       <div class="format-label">形式</div>
       <div class="format-value">対面・少人数</div>
-      <div class="format-note">最初の一回は入口セッション（単発）</div>
+      <div class="format-note">月一開催・単発参加可</div>
     </div>
     <div class="format-item">
       <div class="format-label">時間</div>
-      <div class="format-value">2〜3時間</div>
-      <div class="format-note">継続コースは全3回を予定</div>
+      <div class="format-value">約2時間</div>
+      <div class="format-note">13:30 開場 ／ 14:00〜16:00</div>
     </div>
     <div class="format-item">
       <div class="format-label">使用ツール</div>
@@ -628,14 +668,51 @@
     </div>
     <div class="format-item">
       <div class="format-label">場所</div>
-      <div class="format-value">金沢市内</div>
-      <div class="format-note">詳細は申込者に案内</div>
+      <div class="format-value">妙應寺</div>
+      <div class="format-note">金沢市東山2-14-59</div>
     </div>
   </div>
 
   <div class="section-body fade-in">
     プロンプトのテクニックは教えない。正解も用意していない。
     あなたが持っているもの、やりたいことから始める。
+  </div>
+</section>
+
+<!-- SECTION 05: 開催概要 -->
+<section class="section">
+  <div class="section-num">05 — 開催概要（第1回）</div>
+  <h2 class="section-title fade-in">2026年6月21日（日）</h2>
+
+  <div class="event-table fade-in">
+    <div class="event-row">
+      <div class="event-label">日時</div>
+      <div class="event-value">2026年6月21日（日）<br><span class="event-note">13:30 開場・受付 ／ 14:00〜16:00（約2時間）</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">場所</div>
+      <div class="event-value">妙應寺<br><span class="event-note">金沢市東山2-14-59 ／ 駐車場あり（約10台）</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">定員</div>
+      <div class="event-value">4〜5名</div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">参加費</div>
+      <div class="event-value">3,000円</div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">持ち物</div>
+      <div class="event-value">スマートフォンかノートPC<br><span class="event-note">AIアカウントは無料のもので可</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">支払い</div>
+      <div class="event-value">事前入金制（PayPay ／ 銀行振込）<br><span class="event-note">申込後に案内します</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-label">キャンセル</div>
+      <div class="event-value">前日まで全額返金<br><span class="event-note">当日キャンセルは返金なし</span></div>
+    </div>
   </div>
 </section>
 
@@ -653,12 +730,13 @@
 <div class="cta-section">
   <h2 class="cta-title fade-in">興味があれば、まず連絡してください。</h2>
   <p class="cta-sub fade-in">
-    詳細・日程・場所は、メールにてお伝えします。<br>
+    フォームから申込後、支払い方法をご案内します。<br>
     説明より先に、一度話しましょう。
   </p>
-  <a href="mailto:achosai@gmail.com" class="cta-contact fade-in">
-    achosai@gmail.com
+  <a href="https://forms.gle/oBFxsdjpR8aD6Q759" target="_blank" class="cta-contact fade-in">
+    申込フォームへ →
   </a>
+  <p class="cta-note fade-in">問い合わせ：<a href="mailto:resonance.project.kc@gmail.com" style="color:inherit;text-decoration:none">resonance.project.kc@gmail.com</a></p>
   <p class="cta-note fade-in">Resonance Project — 荒木 兆彩</p>
 </div>
 
