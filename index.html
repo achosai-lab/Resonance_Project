@@ -61,7 +61,7 @@
   <h1>Resonance / Continuity Project <span class="badge">I–V / Phase Log</span></h1>
   <p class="tagline">構造は呼吸し、呼吸は記録になる。── 音・言葉・運用を同じリズムで。</p>
 
-  <img class="hero" src="pic/resotop7.png" alt="Resonance Project cover" loading="lazy" decoding="async">
+  <img class="hero" id="heroImg" src="pic/reso_top1.webp" alt="Resonance Project cover" decoding="async">
   <div class="quick">
     <strong>これは何？（超要約）</strong><br>
     楽曲生成（Suno）・歌詞（日英）・可変プロンプト・運用ログを "継続" 前提で束ねた実験。<br>
@@ -103,6 +103,17 @@
 </section>
 
 <script>
+// トップ画像をランダム表示（読み込みごとに候補から1枚）
+(function(){
+  const pics=[
+    "pic/reso_top1.webp","pic/reso_top2.webp","pic/reso_top3.webp","pic/reso_top4.webp",
+    "pic/reso_top5.webp","pic/reso_top6.webp","pic/reso_top7.webp"
+  ];
+  const img=document.getElementById("heroImg");
+  if(!img) return;
+  const pick=pics[Math.floor(Math.random()*pics.length)];
+  if(pick!==img.getAttribute("src")) img.src=pick;
+})();
 function copyTxt(id){
   const el=document.getElementById(id); if(!el) return;
   const t=el.innerText.replace(/\s+$/,'');
