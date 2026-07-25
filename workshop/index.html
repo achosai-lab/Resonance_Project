@@ -1,768 +1,251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Workshop — Resonance Project</title>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="description" content="AIを使って思考を深めるワークショップ。金沢・対面・少人数。プロンプトのテクニックではなく、自分の内側と向き合う場として。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
 <style>
-  :root {
-    --bg: #0e0e0d;
-    --paper: #f2ede6;
-    --ink: #1a1a18;
-    --accent: #c8a96e;
-    --accent-dim: rgba(200,169,110,0.15);
-    --muted: #6b6558;
-    --rule: rgba(200,169,110,0.2);
-    --white: #f2ede6;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--white);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 300;
-    line-height: 1.8;
-    overflow-x: hidden;
-  }
-
-  /* ── GRAIN OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 80px 48px;
-    position: relative;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  }
-
-  .hero-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.2s;
-  }
-
-  .hero-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(36px, 6vw, 72px);
-    font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
-  }
-
-  .hero-title em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    font-size: 15px;
-    color: rgba(242,237,230,0.6);
-    max-width: 520px;
-    line-height: 2;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.6s;
-  }
-
-  .hero-scroll {
-    position: absolute;
-    bottom: 40px;
-    left: 48px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: rgba(242,237,230,0.3);
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 1s;
-  }
-
-  .hero-scroll::after {
-    content: '';
-    display: block;
-    width: 48px;
-    height: 1px;
-    background: rgba(242,237,230,0.3);
-  }
-
-  /* ── SECTION ── */
-  .section {
-    padding: 96px 48px;
-    border-bottom: 1px solid var(--rule);
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .section-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .section-num::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--rule);
-    max-width: 120px;
-  }
-
-  .section-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(22px, 3.5vw, 36px);
-    font-weight: 400;
-    line-height: 1.4;
-    margin-bottom: 32px;
-    color: var(--white);
-  }
-
-  .section-body {
-    font-size: 14px;
-    color: rgba(242,237,230,0.75);
-    line-height: 2.1;
-    max-width: 640px;
-  }
-
-  .section-body strong {
-    color: var(--white);
-    font-weight: 400;
-  }
-
-  /* ── DIVIDER QUOTE ── */
-  .quote-block {
-    padding: 80px 48px;
-    text-align: center;
-    border-bottom: 1px solid var(--rule);
-    position: relative;
-  }
-
-  .quote-text {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(18px, 3vw, 28px);
-    font-weight: 400;
-    line-height: 1.8;
-    color: var(--white);
-    max-width: 680px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  .quote-text::before {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, transparent, var(--accent));
-    margin: 0 auto 32px;
-  }
-
-  .quote-text::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    margin: 32px auto 0;
-  }
-
-  /* ── CYCLE ── */
-  .cycle-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background: var(--rule);
-    margin: 40px 0;
-    border: 1px solid var(--rule);
-  }
-
-  .cycle-item {
-    background: var(--bg);
-    padding: 28px 24px;
-    position: relative;
-  }
-
-  .cycle-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
-  }
-
-  .cycle-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 15px;
-    color: var(--white);
-    margin-bottom: 8px;
-    font-weight: 400;
-  }
-
-  .cycle-body {
-    font-size: 12px;
-    color: rgba(242,237,230,0.5);
-    line-height: 1.8;
-  }
-
-  /* ── FOR WHO ── */
-  .for-list {
-    margin: 32px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .for-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    font-size: 14px;
-    color: rgba(242,237,230,0.75);
-    line-height: 1.8;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .for-item:last-child {
-    border-bottom: none;
-  }
-
-  .for-mark {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    margin-top: 4px;
-    flex-shrink: 0;
-  }
-
-  /* ── FORMAT ── */
-  .format-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin: 40px 0;
-  }
-
-  .format-item {
-    padding: 24px 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .format-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .format-value {
-    font-size: 14px;
-    color: var(--white);
-    line-height: 1.7;
-  }
-
-  .format-note {
-    font-size: 12px;
-    color: rgba(242,237,230,0.4);
-    margin-top: 4px;
-  }
-
-  /* ── EVENT TABLE ── */
-  .event-table {
-    margin: 40px 0;
-  }
-
-  .event-row {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    gap: 24px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--rule);
-    align-items: start;
-  }
-
-  .event-row:first-child {
-    border-top: 1px solid var(--rule);
-  }
-
-  .event-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    text-transform: uppercase;
-    padding-top: 3px;
-  }
-
-  .event-value {
-    font-size: 14px;
-    color: var(--white);
-    line-height: 1.7;
-  }
-
-  .event-note {
-    font-size: 12px;
-    color: rgba(242,237,230,0.45);
-    display: block;
-    margin-top: 2px;
-  }
-
-  /* ── CTA ── */
-  .cta-section {
-    padding: 96px 48px;
-    text-align: center;
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .cta-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: clamp(20px, 3vw, 32px);
-    font-weight: 400;
-    color: var(--white);
-    margin-bottom: 16px;
-  }
-
-  .cta-sub {
-    font-size: 13px;
-    color: rgba(242,237,230,0.5);
-    margin-bottom: 48px;
-    line-height: 2;
-  }
-
-  .cta-contact {
-    display: inline-block;
-    border: 1px solid var(--accent);
-    padding: 16px 40px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    color: var(--accent);
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-contact::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--accent);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: -1;
-  }
-
-  .cta-contact:hover {
-    color: var(--bg);
-  }
-
-  .cta-contact:hover::before {
-    transform: translateX(0);
-  }
-
-  .cta-note {
-    margin-top: 24px;
-    font-size: 12px;
-    color: rgba(242,237,230,0.3);
-  }
-
-  .method-link {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 48px 64px;
-  }
-
-  .method-link a {
-    display: block;
-    border: 1px solid var(--rule);
-    padding: 28px 36px;
-    text-decoration: none;
-    transition: border-color 0.25s, background 0.25s;
-    position: relative;
-  }
-
-  .method-link a:hover {
-    border-color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  .method-link .card-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 10px;
-  }
-
-  .method-link .card-title {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--white);
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  .method-link .card-sub {
-    font-size: 12px;
-    color: rgba(242,237,230,0.45);
-    display: block;
-  }
-
-  .method-link .card-arrow {
-    position: absolute;
-    right: 36px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
-    color: var(--accent);
-    transition: transform 0.2s;
-  }
-
-  .method-link a:hover .card-arrow {
-    transform: translateY(-50%) translateX(5px);
-  }
-
-  /* ── FOOTER ── */
-  .footer {
-    padding: 32px 48px;
-    border-top: 1px solid var(--rule);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .footer-left {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: rgba(242,237,230,0.3);
-    letter-spacing: 0.05em;
-  }
-
-  .footer-right a {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: rgba(242,237,230,0.3);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-  }
-
-  .footer-right a:hover {
-    color: var(--accent);
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .hero { padding: 60px 24px; }
-    .section { padding: 64px 24px; }
-    .quote-block { padding: 56px 24px; }
-    .format-grid { grid-template-columns: 1fr; gap: 0; }
-    .cta-section { padding: 64px 24px; }
-    .footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
-    .cycle-grid { grid-template-columns: 1fr; }
+  /* ── workshop-specific components (built on site.css tokens) ── */
+
+  /* pull quote */
+  .quote{padding:72px 0;border-bottom:1px solid var(--line);text-align:center}
+  .quote p{
+    font-family:var(--serif);font-size:clamp(17px,2.6vw,26px);line-height:1.85;
+    color:var(--ink);max-width:38em;margin:0 auto;font-weight:400;text-wrap:balance;
+  }
+  .quote p::before,.quote p::after{
+    content:'';display:block;width:1px;height:44px;margin:0 auto;
+  }
+  .quote p::before{background:linear-gradient(to bottom,transparent,var(--gold));margin-bottom:28px}
+  .quote p::after{background:linear-gradient(to bottom,var(--gold),transparent);margin-top:28px}
+
+  /* cycle steps */
+  .cycle{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;margin:36px 0;
+  }
+  .cycle .step{background:var(--bg);padding:26px 24px}
+  .cycle .n{font-family:var(--mono);font-size:11px;color:var(--clay);letter-spacing:.08em;margin-bottom:12px}
+  .cycle .st{font-family:var(--serif);font-size:15px;color:var(--ink);font-weight:500;margin-bottom:8px}
+  .cycle .sb{font-size:12.5px;color:var(--muted);line-height:1.85}
+
+  /* audience list */
+  .wants{display:flex;flex-direction:column;gap:0;max-width:var(--read);margin:8px 0}
+  .wants li{
+    list-style:none;display:flex;gap:16px;align-items:flex-start;
+    padding:16px 0;border-bottom:1px solid var(--line-soft);
+    font-size:14px;color:var(--ink);line-height:1.8;
+  }
+  .wants li::before{content:'→';color:var(--clay);font-family:var(--mono);flex-shrink:0;margin-top:2px}
+
+  /* format specs */
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:36px 0;max-width:var(--read)}
+  .spec{padding:20px 0;border-top:1px solid var(--line)}
+  .spec .l{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+  .spec .v{font-size:14px;color:var(--ink)}
+  .spec .note{font-size:12px;color:var(--muted);margin-top:4px}
+
+  /* event definition table */
+  .event{margin:8px 0;max-width:var(--read)}
+  .event .row{
+    display:grid;grid-template-columns:92px 1fr;gap:24px;
+    padding:16px 0;border-bottom:1px solid var(--line);align-items:start;
+  }
+  .event .row:first-child{border-top:1px solid var(--line)}
+  .event .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);padding-top:3px}
+  .event .v{font-size:14px;color:var(--ink);line-height:1.75}
+  .event .v small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+
+  /* methodology card */
+  .method{max-width:var(--wrap);margin:0 auto;padding:40px 32px}
+  .method a{
+    display:block;position:relative;border:1px solid var(--line);border-radius:10px;
+    padding:26px 34px;background:var(--paper);transition:border-color .2s,background .2s;
+  }
+  .method a:hover{border-color:var(--clay);background:var(--bg-tint)}
+  .method .l{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px}
+  .method .t{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--ink);display:block;margin-bottom:5px}
+  .method .s{font-size:12.5px;color:var(--muted);display:block}
+  .method .arrow{position:absolute;right:32px;top:50%;transform:translateY(-50%);color:var(--clay);transition:transform .2s}
+  .method a:hover .arrow{transform:translateY(-50%) translateX(5px)}
+
+  /* CTA */
+  .cta{max-width:var(--wrap);margin:0 auto;padding:80px 32px;text-align:center}
+  .cta h2{font-family:var(--serif);font-weight:400;font-size:clamp(20px,3vw,30px);color:var(--ink);margin-bottom:16px;text-wrap:balance}
+  .cta .sub{font-size:13.5px;color:var(--muted);line-height:2;margin-bottom:38px}
+  .cta .note{margin-top:22px;font-size:12px;color:var(--muted)}
+  .cta .note a{color:inherit}
+
+  @media (max-width:640px){
+    .specs{grid-template-columns:1fr;gap:0}
+    .cta{padding:56px 20px}
+    .method{padding:32px 20px}
   }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
+<!-- ── SHARED HEADER ── -->
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">Resonance <span class="mark">/</span> Continuity</a>
+    <nav class="site-nav">
+      <a href="/">Top</a>
+      <a href="/workshop/index.html" aria-current="page">Workshop</a>
+      <a href="/about/overview.html">About</a>
+      <a href="/#archive">Archive</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-tag">Resonance Project — Workshop</div>
-  <h1 class="hero-title">
-    AIは答えを出す機械じゃない。<br>
-    自分の考えを引き出す<em>鏡</em>として使う。
-  </h1>
-  <p class="hero-sub">
-    思考を深めるためのAI活用。プロンプトのテクニックではなく、
-    自分の内側と向き合うための場として。
-  </p>
-  <div class="hero-scroll">scroll</div>
+  <div class="wrap">
+    <div class="eyebrow">Resonance Project — Workshop</div>
+    <h1>AIは答えを出す機械じゃない。<br>自分の考えを引き出す<em>鏡</em>として使う。</h1>
+    <p class="lead">思考を深めるためのAI活用。プロンプトのテクニックではなく、自分の内側と向き合うための場として。</p>
+    <div class="btn-row">
+      <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfa9w-5t-PNrTjo4SQfcEUlycMLElslqVgqqhyV1fmqVA_IRQ/viewform" target="_blank" rel="noopener">申込フォームへ →</a>
+    </div>
+  </div>
 </section>
 
-<!-- SECTION 01: 問題提起 -->
+<!-- 01 -->
 <section class="section">
-  <div class="section-num">01 — なぜ今この問いか</div>
-  <h2 class="section-title fade-in">
-    世の中のAI講座は、<br>
-    使う側の思考の深度を変えない。
-  </h2>
-  <div class="section-body fade-in">
-    「こう入力するとこう出る」「このプロンプトが便利」。<br>
-    役に立つ情報だ。でも根本的なことが抜けている。<br><br>
-    どんなにいいプロンプトを覚えても、<strong>自分が何を問いたいのかがわからなければ、
-    AIは検索エンジンの延長にしかならない。</strong><br><br>
-    使う側の問いの質が、結果のすべてを決める。
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">01 — なぜ今この問いか</span></div>
+    <h2 style="margin-bottom:26px" class="fade">世の中のAI講座は、<br>使う側の思考の深度を変えない。</h2>
+    <div class="prose fade">
+      「こう入力するとこう出る」「このプロンプトが便利」。役に立つ情報だ。でも根本的なことが抜けている。<br><br>
+      どんなにいいプロンプトを覚えても、<strong>自分が何を問いたいのかがわからなければ、AIは検索エンジンの延長にしかならない。</strong><br><br>
+      使う側の問いの質が、結果のすべてを決める。
+    </div>
   </div>
 </section>
 
 <!-- QUOTE -->
-<div class="quote-block">
-  <p class="quote-text fade-in">
-    「視点を変える」は、説明した瞬間に説明になってしまう。<br>
-    視点が変わるのは、自分で何かに触れて、<br>
-    自分の中で何かがずれた瞬間だけだ。
-  </p>
+<div class="quote">
+  <div class="wrap">
+    <p class="fade">「視点を変える」は、説明した瞬間に説明になってしまう。視点が変わるのは、自分で何かに触れて、自分の中で何かがずれた瞬間だけだ。</p>
+  </div>
 </div>
 
-<!-- SECTION 02: 講座の核 -->
+<!-- 02 -->
 <section class="section">
-  <div class="section-num">02 — この講座がやること</div>
-  <h2 class="section-title fade-in">
-    見せる。触れてもらう。<br>
-    そして考えてもらう。
-  </h2>
-  <div class="section-body fade-in">
-    生成AIを使って何かを作る。その後、自分の反応を観察する。
-    「好き」「違う」「なんか惜しい」——その<strong>「なんとなく」をClaudeと対話しながら言語化する</strong>。
-    言語化したものをもとに、また生成する。<br><br>
-    このサイクルが、思考の筋肉をつける。
-  </div>
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">02 — この講座がやること</span></div>
+    <h2 style="margin-bottom:26px" class="fade">見せる。触れてもらう。<br>そして考えてもらう。</h2>
+    <div class="prose fade">
+      生成AIを使って何かを作る。その後、自分の反応を観察する。「好き」「違う」「なんか惜しい」——その<strong>「なんとなく」をClaudeと対話しながら言語化する</strong>。言語化したものをもとに、また生成する。<br><br>
+      このサイクルが、思考の筋肉をつける。
+    </div>
 
-  <div class="cycle-grid fade-in">
-    <div class="cycle-item">
-      <div class="cycle-num">01</div>
-      <div class="cycle-title">生成する</div>
-      <div class="cycle-body">音・画像・文章。ツールは問わない。自分が使っているもので始める。</div>
+    <div class="cycle fade">
+      <div class="step"><div class="n">01</div><div class="st">生成する</div><div class="sb">音・画像・文章。ツールは問わない。自分が使っているもので始める。</div></div>
+      <div class="step"><div class="n">02</div><div class="st">反応を観察する</div><div class="sb">好き、違う、惜しい。その感覚を急いで説明しない。まず自分の反応を見る。</div></div>
+      <div class="step"><div class="n">03</div><div class="st">言語化する</div><div class="sb">Claudeに向かって話し始める。なぜそう感じたのか。往復の中で気づきが生まれる。</div></div>
+      <div class="step"><div class="n">04</div><div class="st">また生成する</div><div class="sb">言語化したものをもとに次のプロンプトを作る。少しずつ自分の方向性が見えてくる。</div></div>
     </div>
-    <div class="cycle-item">
-      <div class="cycle-num">02</div>
-      <div class="cycle-title">反応を観察する</div>
-      <div class="cycle-body">好き、違う、惜しい。その感覚を急いで説明しない。まず自分の反応を見る。</div>
-    </div>
-    <div class="cycle-item">
-      <div class="cycle-num">03</div>
-      <div class="cycle-title">言語化する</div>
-      <div class="cycle-body">Claudeに向かって話し始める。なぜそう感じたのか。往復の中で気づきが生まれる。</div>
-    </div>
-    <div class="cycle-item">
-      <div class="cycle-num">04</div>
-      <div class="cycle-title">また生成する</div>
-      <div class="cycle-body">言語化したものをもとに次のプロンプトを作る。少しずつ自分の方向性が見えてくる。</div>
-    </div>
-  </div>
 
-  <div class="section-body fade-in">
-    <strong>しんどい、が正しい。</strong><br>
-    「なんとなく」から先が出てこない瞬間が来る。それがこの講座が機能しているサインだ。
-    楽なままだったら何も変わっていない。<!-- 息継ぎ：本人が一言入れる -->詰まった瞬間から、思考が始まる。
-  </div>
-</section>
-
-<!-- SECTION 03: 対象 -->
-<section class="section">
-  <div class="section-num">03 — 誰に来てほしいか</div>
-  <h2 class="section-title fade-in">
-    テクニックより先に、<br>
-    自分が何を求めているか知りたい人へ。
-  </h2>
-
-  <div class="for-list fade-in">
-    <div class="for-item">
-      <span class="for-mark">→</span>
-      <span>AIに興味はある。でも「なんかうまく使えていない」と感じている</span>
-    </div>
-    <div class="for-item">
-      <span class="for-mark">→</span>
-      <span>生成AIで何かを作りたいが、自分のスタイルをまだ言語化できていない</span>
-    </div>
-    <div class="for-item">
-      <span class="for-mark">→</span>
-      <span>経験や蓄積がある。それをAIでどう活かせるか模索している</span>
-    </div>
-    <div class="for-item">
-      <span class="for-mark">→</span>
-      <span>AIで何かを作るというより、AIを使って自分がどう変わるかに興味がある</span>
-    </div>
-    <div class="for-item">
-      <span class="for-mark">→</span>
-      <span>Claude Proを使っている、または使い始めようとしている</span>
+    <div class="prose fade">
+      <strong>しんどい、が正しい。</strong><br>
+      「なんとなく」から先が出てこない瞬間が来る。それがこの講座が機能しているサインだ。楽なままだったら何も変わっていない。詰まった瞬間から、思考が始まる。
     </div>
   </div>
 </section>
 
-<!-- SECTION 04: 形式 -->
+<!-- 03 -->
 <section class="section">
-  <div class="section-num">04 — 形式</div>
-  <h2 class="section-title fade-in">少人数・対面・体験型。</h2>
-
-  <div class="format-grid fade-in">
-    <div class="format-item">
-      <div class="format-label">形式</div>
-      <div class="format-value">対面・少人数</div>
-      <div class="format-note">月一開催・単発参加可</div>
-    </div>
-    <div class="format-item">
-      <div class="format-label">時間</div>
-      <div class="format-value">約2時間</div>
-      <div class="format-note">13:30 開場 ／ 14:00〜16:00</div>
-    </div>
-    <div class="format-item">
-      <div class="format-label">使用ツール</div>
-      <div class="format-value">Claude 中心</div>
-      <div class="format-note">生成ツールは参加者の環境に合わせる</div>
-    </div>
-    <div class="format-item">
-      <div class="format-label">場所</div>
-      <div class="format-value">金沢Rise ミーティングルームB</div>
-      <div class="format-note">金沢市堀川新町5-1 アミューズメントスクエア3F</div>
-    </div>
-  </div>
-
-  <div class="section-body fade-in">
-    プロンプトのテクニックは教えない。正解も用意していない。
-    あなたが持っているもの、やりたいことから始める。
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">03 — 誰に来てほしいか</span></div>
+    <h2 style="margin-bottom:24px" class="fade">テクニックより先に、<br>自分が何を求めているか知りたい人へ。</h2>
+    <ul class="wants fade">
+      <li>AIに興味はある。でも「なんかうまく使えていない」と感じている</li>
+      <li>生成AIで何かを作りたいが、自分のスタイルをまだ言語化できていない</li>
+      <li>経験や蓄積がある。それをAIでどう活かせるか模索している</li>
+      <li>AIで何かを作るというより、AIを使って自分がどう変わるかに興味がある</li>
+      <li>Claude Proを使っている、または使い始めようとしている</li>
+    </ul>
   </div>
 </section>
 
-<!-- SECTION 05: 開催概要 -->
+<!-- 04 -->
 <section class="section">
-  <div class="section-num">05 — 開催概要（次回）</div>
-  <h2 class="section-title fade-in">次回日程は調整中です。</h2>
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">04 — 形式</span></div>
+    <h2 class="fade">少人数・対面・体験型。</h2>
+    <div class="specs fade">
+      <div class="spec"><div class="l">形式</div><div class="v">対面・少人数</div><div class="note">月一開催・単発参加可</div></div>
+      <div class="spec"><div class="l">時間</div><div class="v">約2時間</div><div class="note">13:30 開場 ／ 14:00〜16:00</div></div>
+      <div class="spec"><div class="l">使用ツール</div><div class="v">Claude 中心</div><div class="note">生成ツールは参加者の環境に合わせる</div></div>
+      <div class="spec"><div class="l">場所</div><div class="v">金沢Rise ミーティングルームB</div><div class="note">金沢市堀川新町5-1 アミューズメントスクエア3F</div></div>
+    </div>
+    <div class="prose fade">プロンプトのテクニックは教えない。正解も用意していない。あなたが持っているもの、やりたいことから始める。</div>
+  </div>
+</section>
 
-  <div class="event-table fade-in">
-    <div class="event-row">
-      <div class="event-label">日時</div>
-      <div class="event-value">調整中<br><span class="event-note">決まり次第お知らせします ／ 13:30 開場・受付 ／ 14:00〜16:00（約2時間）</span></div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">場所</div>
-      <div class="event-value">金沢Rise ミーティングルームB<br><span class="event-note">金沢市堀川新町5-1 アミューズメントスクエア3F</span></div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">定員</div>
-      <div class="event-value">4〜5名</div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">参加費</div>
-      <div class="event-value">3,000円<br><span class="event-note">事前入金制</span></div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">持ち物</div>
-      <div class="event-value">スマートフォンかノートPC<br><span class="event-note">AIアカウントは無料のもので可</span></div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">支払い</div>
-      <div class="event-value">事前入金制（PayPay ／ 銀行振込）<br><span class="event-note">申込後に案内します</span></div>
-    </div>
-    <div class="event-row">
-      <div class="event-label">キャンセル</div>
-      <div class="event-value">前日まで全額返金<br><span class="event-note">当日キャンセルは返金なし</span></div>
+<!-- 05 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">05 — 開催概要（次回）</span></div>
+    <h2 style="margin-bottom:26px" class="fade">次回日程は調整中です。</h2>
+    <div class="event fade">
+      <div class="row"><div class="k">日時</div><div class="v">調整中<small>決まり次第お知らせします ／ 13:30 開場・受付 ／ 14:00〜16:00（約2時間）</small></div></div>
+      <div class="row"><div class="k">場所</div><div class="v">金沢Rise ミーティングルームB<small>金沢市堀川新町5-1 アミューズメントスクエア3F</small></div></div>
+      <div class="row"><div class="k">定員</div><div class="v">4〜5名</div></div>
+      <div class="row"><div class="k">参加費</div><div class="v">3,000円<small>事前入金制</small></div></div>
+      <div class="row"><div class="k">持ち物</div><div class="v">スマートフォンかノートPC<small>AIアカウントは無料のもので可</small></div></div>
+      <div class="row"><div class="k">支払い</div><div class="v">事前入金制（PayPay ／ 銀行振込）<small>申込後に案内します</small></div></div>
+      <div class="row"><div class="k">キャンセル</div><div class="v">前日まで全額返金<small>当日キャンセルは返金なし</small></div></div>
     </div>
   </div>
 </section>
 
-<!-- METHODOLOGY LINK -->
-<div class="method-link fade-in">
+<!-- METHODOLOGY -->
+<div class="method fade">
   <a href="workshop_methodology_v1.html">
-    <span class="card-label">Methodology</span>
-    <span class="card-title">方法論の骨格</span>
-    <span class="card-sub">何をするのか、何をしないのか。</span>
-    <span class="card-arrow">→</span>
+    <span class="l">Methodology</span>
+    <span class="t">方法論の骨格</span>
+    <span class="s">何をするのか、何をしないのか。</span>
+    <span class="arrow">→</span>
   </a>
 </div>
 
 <!-- CTA -->
-<div class="cta-section">
-  <h2 class="cta-title fade-in">興味があれば、まず連絡してください。</h2>
-  <p class="cta-sub fade-in">
-    フォームから申込後、支払い方法をご案内します。<br>
-    説明より先に、一度話しましょう。
-  </p>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfa9w-5t-PNrTjo4SQfcEUlycMLElslqVgqqhyV1fmqVA_IRQ/viewform" target="_blank" class="cta-contact fade-in">
-    申込フォームへ →
-  </a>
-  <p class="cta-note fade-in">問い合わせ：<a href="mailto:chosai@reso-ai.jp" style="color:inherit;text-decoration:none">chosai@reso-ai.jp</a></p>
-  <p class="cta-note fade-in">Resonance Project — 荒木 兆彩</p>
+<div class="cta">
+  <h2 class="fade">興味があれば、まず連絡してください。</h2>
+  <p class="sub fade">フォームから申込後、支払い方法をご案内します。<br>説明より先に、一度話しましょう。</p>
+  <div class="btn-row fade" style="justify-content:center">
+    <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfa9w-5t-PNrTjo4SQfcEUlycMLElslqVgqqhyV1fmqVA_IRQ/viewform" target="_blank" rel="noopener">申込フォームへ →</a>
+  </div>
+  <p class="note fade">問い合わせ：<a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a></p>
+  <p class="note fade">Resonance Project — 荒木 兆彩</p>
 </div>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-left">© 2025–2026 Resonance Project</div>
-  <div class="footer-right">
-    <a href="/about/overview.html">About →</a>
+<!-- ── SHARED FOOTER ── -->
+<footer class="site-footer">
+  <div class="row">
+    <div class="cr">Resonance / Continuity Project — 2025–2026</div>
+    <div class="links">
+      <a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a>
+      <a href="/about/overview.html">About →</a>
+    </div>
   </div>
 </footer>
 
 <script>
-  // Intersection Observer for fade-in
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+(function(){
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+})();
 </script>
-
 </body>
 </html>
