@@ -1,475 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chosai Araki — AI Intelligence Lab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — Chosai Araki / Resonance Project</title>
+<meta name="description" content="Chosai Araki のプロジェクト・アーカイブ。音楽・言語・ビジュアル・古いMac——AIとの対話から生まれた実験を、過程ごと残している。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
 <style>
-  :root {
-    --bg: #0a0a08;
-    --surface: #111110;
-    --border: #2a2a26;
-    --text-primary: #e8e6e0;
-    --text-secondary: #7a7870;
-    --text-muted: #3a3a36;
-    --accent: #c8b87a;
-    --accent-dim: #6a5e3a;
-    --breath: #4a6a5a;
+  /* ── about-specific (built on site.css tokens) ── */
+  .narrow{max-width:720px}
+
+  .premise{
+    padding:52px 0;border-bottom:1px solid var(--line);
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text-primary);
-    font-family: 'DM Mono', monospace;
-    font-weight: 300;
-    line-height: 1.7;
-    overflow-x: hidden;
+  .premise p{
+    font-family:var(--serif);font-size:clamp(18px,2.6vw,23px);font-weight:400;
+    color:var(--muted);line-height:1.9;text-wrap:balance;
   }
+  .premise strong{color:var(--ink);font-weight:500}
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 40% at 50% 50%, #1a2a1e08 0%, transparent 70%);
-    animation: breathe 8s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
+  .about-sec{padding:52px 0;border-bottom:1px solid var(--line)}
+  .about-sec .eyebrow{display:block;margin-bottom:16px}
+  .about-sec h2{
+    font-family:var(--serif);font-weight:400;font-size:clamp(20px,3vw,26px);
+    color:var(--ink);line-height:1.4;margin-bottom:10px;
   }
+  .about-sec .sub{font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:26px}
 
-  @keyframes breathe {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.15); }
+  /* link cards */
+  .link-card{
+    display:block;position:relative;overflow:hidden;
+    padding:20px 26px;border:1px solid var(--line);border-radius:8px;
+    background:var(--paper);text-decoration:none;margin-bottom:12px;
+    transition:border-color .2s,background .2s;
   }
+  .link-card::before{
+    content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--clay);
+    transform:scaleY(0);transform-origin:bottom;transition:transform .2s;
+  }
+  .link-card:hover{border-color:var(--clay);background:var(--bg-tint)}
+  .link-card:hover::before{transform:scaleY(1)}
+  .link-card .lt{display:block;font-size:14px;color:var(--ink);margin-bottom:4px}
+  .link-card .lm{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .link-card .la{
+    position:absolute;right:22px;top:50%;transform:translateY(-50%);
+    color:var(--gold);font-size:13px;transition:color .2s,transform .2s;
+  }
+  .link-card:hover .la{color:var(--clay);transform:translateY(-50%) translateX(4px)}
 
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.4;
+  /* phase timeline */
+  .phase-list{border-left:1px solid var(--line);padding-left:24px;margin:20px 0 8px}
+  .phase-item{position:relative;margin-bottom:22px}
+  .phase-item::before{
+    content:'';position:absolute;left:-26px;top:7px;width:6px;height:6px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--clay);
   }
+  .phase-item .pl{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+  .phase-item .pt{font-size:13.5px;color:var(--ink);margin-bottom:2px}
+  .phase-item .pd{font-size:12.5px;color:var(--muted);line-height:1.7}
 
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative;
-    z-index: 2;
+  .about-header{padding:80px 0 44px;border-bottom:1px solid var(--line)}
+  .about-header h1{
+    font-family:var(--serif);font-weight:400;font-size:clamp(34px,7vw,64px);
+    line-height:1.15;letter-spacing:.01em;color:var(--ink);text-wrap:balance;
   }
+  .about-header h1 em{font-style:normal;color:var(--clay)}
+  .about-header .tagline{
+    font-family:var(--serif);font-size:14px;color:var(--muted);margin-top:22px;line-height:2;
+  }
+  .about-foot{padding:64px 0;text-align:center}
+  .about-foot .breath{font-family:var(--serif);font-size:17px;color:var(--muted);letter-spacing:.04em}
 
-  header {
-    padding: 6rem 0 4rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .label {
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.2s forwards;
-  }
-
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 7vw, 5rem);
-    font-weight: 300;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.4s forwards;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .tagline {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 0.8rem;
-    font-weight: 200;
-    color: var(--text-secondary);
-    margin-top: 1.5rem;
-    line-height: 2;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.6s forwards;
-  }
-
-  .premise {
-    padding: 4rem 0;
-    border-bottom: 1px solid var(--border);
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.8s forwards;
-  }
-
-  .premise-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--text-secondary);
-    line-height: 1.8;
-  }
-
-  .premise-text strong {
-    color: var(--text-primary);
-    font-style: normal;
-    font-weight: 400;
-  }
-
-  .section {
-    padding: 3.5rem 0;
-    border-bottom: 1px solid var(--border);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .section.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .section-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent-dim);
-    margin-bottom: 1.5rem;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 300;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-  }
-
-  .section-sub {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-    line-height: 1.8;
-  }
-
-  .link-card {
-    display: block;
-    padding: 1.2rem 1.5rem;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-primary);
-    text-decoration: none;
-    margin-bottom: 0.8rem;
-    transition: border-color 0.2s, background 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .link-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    transform: scaleY(0);
-    transition: transform 0.2s ease;
-    transform-origin: bottom;
-  }
-
-  .link-card:hover {
-    border-color: var(--accent-dim);
-    background: #161614;
-  }
-
-  .link-card:hover::before {
-    transform: scaleY(1);
-  }
-
-  .link-title {
-    font-size: 0.82rem;
-    color: var(--text-primary);
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .link-meta {
-    font-size: 0.62rem;
-    color: var(--text-secondary);
-    letter-spacing: 0.05em;
-  }
-
-  .link-arrow {
-    position: absolute;
-    right: 1.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-muted);
-    font-size: 0.7rem;
-    transition: color 0.2s, transform 0.2s;
-  }
-
-  .link-card:hover .link-arrow {
-    color: var(--accent);
-    transform: translateY(-50%) translateX(4px);
-  }
-
-  .phase-list {
-    border-left: 1px solid var(--border);
-    padding-left: 1.5rem;
-    margin-top: 1rem;
-  }
-
-  .phase-item {
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
-
-  .phase-item::before {
-    content: '';
-    position: absolute;
-    left: -1.6rem;
-    top: 0.5rem;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent-dim);
-    border: 1px solid var(--accent);
-  }
-
-  .phase-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent-dim);
-    margin-bottom: 0.3rem;
-  }
-
-  .phase-title {
-    font-size: 0.8rem;
-    color: var(--text-primary);
-    margin-bottom: 0.2rem;
-  }
-
-  .phase-desc {
-    font-size: 0.68rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-  }
-
-  footer {
-    padding: 4rem 0;
-    text-align: center;
-  }
-
-  .footer-breath {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    animation: breathePulse 8s ease-in-out infinite;
-  }
-
-  @keyframes breathePulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.8; }
-  }
-
-  .footer-year {
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--text-muted);
-    margin-top: 1rem;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 600px) {
-    header { padding: 4rem 0 3rem; }
-    .container { padding: 0 1.5rem; }
-  }
+  @media (max-width:600px){.about-header{padding:56px 0 36px}}
 </style>
 </head>
 <body>
 
-<div class="container">
+<!-- ── SHARED HEADER ── -->
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">Resonance <span class="mark">/</span> Continuity</a>
+    <nav class="site-nav">
+      <a href="/">Top</a>
+      <a href="/workshop/index.html">Workshop</a>
+      <a href="/about/overview.html" aria-current="page">About</a>
+      <a href="/#archive">Archive</a>
+    </nav>
+  </div>
+</header>
 
-  <header>
-    <p class="label">Chosai Araki — Project Archive</p>
-    <h1>やりたいことが、<br><em>あった。</em></h1>
+<div class="wrap narrow">
+
+  <!-- HEADER -->
+  <header class="about-header">
+    <p class="eyebrow">Chosai Araki — Project Archive</p>
+    <h1 style="margin-top:24px">やりたいことが、<br><em>あった。</em></h1>
     <p class="tagline">
       AIがいたから、できた。ただそれだけの話。<br>
       音楽・言語・ビジュアル・古いMac——その過程ごと残している。
     </p>
   </header>
 
-  <div class="premise section">
-    <p class="premise-text">
-      設計していない。<br>
-      やりたいことをAIに話しかけたら、<strong>何かが生まれた。</strong><br>
-      その繰り返しが、いつの間にか記録になっていた。
-    </p>
+  <!-- PREMISE -->
+  <div class="premise fade">
+    <p>設計していない。やりたいことをAIに話しかけたら、<strong>何かが生まれた。</strong>その繰り返しが、いつの間にか記録になっていた。</p>
   </div>
 
-  <!-- BOOK -->
-  <div class="section">
-    <p class="section-label">Foundation · 01</p>
-    <h2 class="section-title">AI Breathing</h2>
-    <p class="section-sub">
-      AIを道具として使うより前に、<br>
-      どう付き合うかを考えた。その出発点になった本。
-    </p>
-    <a href="https://amzn.asia/d/0bDxRWAz" target="_blank" class="link-card">
-      <span class="link-title">AI Breathing — Amazon</span>
-      <span class="link-meta">Book · 著作</span>
-      <span class="link-arrow">→</span>
+  <!-- 01 BOOK -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Foundation · 01</span>
+    <h2>AI Breathing</h2>
+    <p class="sub">AIを道具として使うより前に、どう付き合うかを考えた。その出発点になった本。</p>
+    <a href="https://amzn.asia/d/0bDxRWAz" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">AI Breathing — Amazon</span>
+      <span class="lm">Book · 著作</span>
+      <span class="la">→</span>
     </a>
-  </div>
+  </section>
 
-  <!-- RESONANCE -->
-  <div class="section">
-    <p class="section-label">Core Experiment · 02</p>
-    <h2 class="section-title">Resonance / Continuity Project</h2>
-    <p class="section-sub">
-      楽曲・歌詞・プロンプト・ビジュアルを「継続」前提で束ねた実験。<br>
-      整いすぎない美と、記憶の連続性を検証している。
-    </p>
-
+  <!-- 02 RESONANCE -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Core Experiment · 02</span>
+    <h2>Resonance / Continuity Project</h2>
+    <p class="sub">楽曲・歌詞・プロンプト・ビジュアルを「継続」前提で束ねた実験。整いすぎない美と、記憶の連続性を検証している。</p>
     <div class="phase-list">
       <div class="phase-item">
-        <p class="phase-label">Phase I–V</p>
-        <p class="phase-title">構造の呼吸 / Breathing Structure</p>
-        <p class="phase-desc">最初の楽曲群。歌詞・音・意図の記録。</p>
+        <p class="pl">Phase I–V</p>
+        <p class="pt">構造の呼吸 / Breathing Structure</p>
+        <p class="pd">最初の楽曲群。歌詞・音・意図の記録。</p>
       </div>
       <div class="phase-item">
-        <p class="phase-label">Phase Log #2</p>
-        <p class="phase-title">City Pop編 / 差分・可変プロンプト</p>
-        <p class="phase-desc">プロンプトの変化と音の変化を対照する試み。</p>
+        <p class="pl">Phase Log #2</p>
+        <p class="pt">City Pop編 / 差分・可変プロンプト</p>
+        <p class="pd">プロンプトの変化と音の変化を対照する試み。</p>
       </div>
       <div class="phase-item">
-        <p class="phase-label">Mirror / Mira</p>
-        <p class="phase-title">創造的鏡構造 — ビジュアル対話</p>
-        <p class="phase-desc">言葉より先に線がある。視覚的対話の試作群。</p>
+        <p class="pl">Mirror / Mira</p>
+        <p class="pt">創造的鏡構造 — ビジュアル対話</p>
+        <p class="pd">言葉より先に線がある。視覚的対話の試作群。</p>
       </div>
     </div>
+    <a href="/" class="link-card" style="margin-top:16px">
+      <span class="lt">Resonance Project — Site</span>
+      <span class="lm">Full Archive · 全記録</span>
+      <span class="la">→</span>
+    </a>
+    <a href="/breathing-structure/index.html" class="link-card">
+      <span class="lt">Phase Log I–V</span>
+      <span class="lm">Breathing Structure · 制作記録</span>
+      <span class="la">→</span>
+    </a>
+  </section>
 
-    <a href="https://resonanceproject.netlify.app/" target="_blank" class="link-card" style="margin-top:1.5rem">
-      <span class="link-title">Resonance Project — Site</span>
-      <span class="link-meta">Full Archive · 全記録</span>
-      <span class="link-arrow">→</span>
+  <!-- 03 WORKSHOP -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Workshop · 03</span>
+    <h2>AIの使い方は教えない。</h2>
+    <p class="sub">自分が何に興味あるか、それをAIと一緒に探す場をつくっている。金沢・対面・少人数。PC持参で来てほしい。</p>
+    <a href="/workshop/index.html" class="link-card">
+      <span class="lt">Workshop — 詳細</span>
+      <span class="lm">金沢 · 対面 · 少人数</span>
+      <span class="la">→</span>
     </a>
-    <a href="https://resonanceproject.netlify.app/breathing-structure/" target="_blank" class="link-card">
-      <span class="link-title">Phase Log I–V</span>
-      <span class="link-meta">Breathing Structure · 制作記録</span>
-      <span class="link-arrow">→</span>
-    </a>
-  </div>
+  </section>
 
-  <!-- WORKSHOP -->
-  <div class="section">
-    <p class="section-label">Workshop · 03</p>
-    <h2 class="section-title">AIの使い方は教えない。</h2>
-    <p class="section-sub">
-      自分が何に興味あるか、それをAIと一緒に探す場をつくっている。<br>
-      金沢・対面・少人数。PC持参で来てほしい。
-    </p>
-    <a href="https://resonanceproject.netlify.app/workshop/" target="_blank" class="link-card">
-      <span class="link-title">Workshop — 詳細</span>
-      <span class="link-meta">金沢 · 対面 · 少人数</span>
-      <span class="link-arrow">→</span>
+  <!-- 04 LINUX -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Hands-on · 04</span>
+    <h2>古いものを、使える形に。</h2>
+    <p class="sub">1万円のジャンクMacにLinuxを入れてAI環境を作った。新品より高いリサイクルは意味がない。自分で作ればいい、という話。</p>
+    <a href="https://note.com/chosai_1968/n/nee42084bdae8" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">1万円のジャンクMacにLinux入れたらAI活用環境できた話</span>
+      <span class="lm">note · 2026 · Linux / Reuse</span>
+      <span class="la">→</span>
     </a>
-  </div>
+  </section>
 
-  <!-- LINUX / RECYCLE -->
-  <div class="section">
-    <p class="section-label">Hands-on · 04</p>
-    <h2 class="section-title">古いものを、使える形に。</h2>
-    <p class="section-sub">
-      1万円のジャンクMacにLinuxを入れてAI環境を作った。<br>
-      新品より高いリサイクルは意味がない。自分で作ればいい、という話。
-    </p>
-    <a href="https://note.com/chosai_1968/n/nee42084bdae8" target="_blank" class="link-card">
-      <span class="link-title">1万円のジャンクMacにLinux入れたらAI活用環境できた話</span>
-      <span class="link-meta">note · 2026 · Linux / Reuse</span>
-      <span class="link-arrow">→</span>
+  <!-- 05 MEDIUM -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Writing · 05</span>
+    <h2>Medium — Resonance Field</h2>
+    <p class="sub">AIの効率性・継続性・創造性への問い。英語での発信。</p>
+    <a href="https://medium.com/resonance-field/ai-efficiency-the-simple-question-nobody-will-answer-c89a7452347f" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">AI Efficiency: The Simple Question Nobody Will Answer</span>
+      <span class="lm">Medium · Jan 2026</span>
+      <span class="la">→</span>
     </a>
-  </div>
+    <a href="https://medium.com/@achosai/are-you-thinking-or-just-operating-the-tool-6d4d71fbb6a5" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">Are You Thinking — or Just Operating the Tool?</span>
+      <span class="lm">Medium · Dec 2025</span>
+      <span class="la">→</span>
+    </a>
+    <a href="https://medium.com/@achosai/formal-report-on-ai-output-inconsistency-and-a-request-for-long-term-continuity-features-502dcbb5e5d7" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">Formal Report on AI Output Inconsistency</span>
+      <span class="lm">Medium · Nov 2025 · 技術提案</span>
+      <span class="la">→</span>
+    </a>
+  </section>
 
-  <!-- MEDIUM -->
-  <div class="section">
-    <p class="section-label">Writing · 05</p>
-    <h2 class="section-title">Medium — Resonance Field</h2>
-    <p class="section-sub">
-      AIの効率性・継続性・創造性への問い。英語での発信。
-    </p>
-    <a href="https://medium.com/resonance-field/ai-efficiency-the-simple-question-nobody-will-answer-c89a7452347f" target="_blank" class="link-card">
-      <span class="link-title">AI Efficiency: The Simple Question Nobody Will Answer</span>
-      <span class="link-meta">Medium · Jan 2026</span>
-      <span class="link-arrow">→</span>
+  <!-- 06 NOTE -->
+  <section class="about-sec fade">
+    <span class="eyebrow">Writing · 06</span>
+    <h2>note — 日本語発信</h2>
+    <p class="sub">使ってみて気づいたこと、詰まったこと、面白かったことを書いている。創作の視点から、AIの構造と振る舞いを記録する。</p>
+    <a href="https://note.com/chosai_1968" target="_blank" rel="noopener" class="link-card">
+      <span class="lt">Chosai Araki — note</span>
+      <span class="lm">日本語 · 継続更新中</span>
+      <span class="la">→</span>
     </a>
-    <a href="https://medium.com/@achosai/are-you-thinking-or-just-operating-the-tool-6d4d71fbb6a5" target="_blank" class="link-card">
-      <span class="link-title">Are You Thinking — or Just Operating the Tool?</span>
-      <span class="link-meta">Medium · Dec 2025</span>
-      <span class="link-arrow">→</span>
-    </a>
-    <a href="https://medium.com/@achosai/formal-report-on-ai-output-inconsistency-and-a-request-for-long-term-continuity-features-502dcbb5e5d7" target="_blank" class="link-card">
-      <span class="link-title">Formal Report on AI Output Inconsistency</span>
-      <span class="link-meta">Medium · Nov 2025 · 技術提案</span>
-      <span class="link-arrow">→</span>
-    </a>
-  </div>
+  </section>
 
-  <!-- NOTE -->
-  <div class="section">
-    <p class="section-label">Writing · 06</p>
-    <h2 class="section-title">note — 日本語発信</h2>
-    <p class="section-sub">
-      使ってみて気づいたこと、詰まったこと、面白かったことを書いている。<br>
-      創作の視点から、AIの構造と振る舞いを記録する。
-    </p>
-    <a href="https://note.com/chosai_1968" target="_blank" class="link-card">
-      <span class="link-title">Chosai Araki — note</span>
-      <span class="link-meta">日本語 · 継続更新中</span>
-      <span class="link-arrow">→</span>
-    </a>
+  <!-- ABOUT FOOT -->
+  <div class="about-foot">
+    <p class="breath">過程が、記録になる。</p>
   </div>
 
 </div>
 
-<footer>
-  <p class="footer-breath">過程が、記録になる。</p>
-  <p class="footer-year">© 2025–2026 Chosai Araki</p>
+<!-- ── SHARED FOOTER ── -->
+<footer class="site-footer">
+  <div class="row">
+    <div class="cr">© 2025–2026 Chosai Araki — Resonance / Continuity Project</div>
+    <div class="links">
+      <a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a>
+      <a href="/">Top →</a>
+    </div>
+  </div>
 </footer>
 
 <script>
-  const sections = document.querySelectorAll('.section');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  sections.forEach(s => observer.observe(s));
-  document.querySelector('.premise').classList.add('visible');
+(function(){
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+})();
 </script>
-
 </body>
 </html>
