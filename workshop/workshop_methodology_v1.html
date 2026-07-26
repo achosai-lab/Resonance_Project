@@ -6,19 +6,22 @@
 <title>ワークショップ方法論の骨格 — Resonance Project</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0d0e11;
-    --ink-2:#14161b;
-    --panel:#171a20;
-    --line:#2a2e37;
+    /* 濃い章 — 温かい黒 × クレイ（family colors, dark chapter） */
+    --ink:#211c17;
+    --ink-2:#2b2620;
+    --panel:#2b2620;
+    --line:#3a342c;
     --gold:#c8a96a;
-    --gold-soft:#d8c197;
+    --gold-soft:#e6d6b8;
     --gold-dim:rgba(200,169,106,.18);
-    --text:#e7e3da;
-    --text-dim:#a39e93;
-    --text-faint:#6f6b62;
+    --clay:#cf7052;        /* 断定の差し色 */
+    --clay-line:#b06044;
+    --text:#eae4d9;
+    --text-dim:#a89f92;
+    --text-faint:#726a5e;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -35,79 +38,69 @@
     content:"";
     position:fixed;inset:0;
     background:
-      radial-gradient(900px 600px at 78% -10%, rgba(200,169,106,.07), transparent 60%),
-      radial-gradient(700px 500px at -5% 110%, rgba(200,169,106,.05), transparent 55%);
+      radial-gradient(900px 600px at 78% -10%, rgba(200,169,106,.06), transparent 60%),
+      radial-gradient(700px 500px at -5% 110%, rgba(207,112,82,.05), transparent 55%);
     pointer-events:none;z-index:0;
   }
+
+  /* ── shared nav (dark variant) ── */
+  .site-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(33,28,23,.82);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .site-header .bar{
+    max-width:760px;margin:0 auto;padding:15px 28px;
+    display:flex;align-items:center;gap:22px;
+  }
+  .brand{font-family:"Shippori Mincho",serif;font-size:15px;color:var(--text);
+    letter-spacing:.02em;white-space:nowrap;text-decoration:none}
+  .brand .mark{color:var(--clay)}
+  .site-nav{margin-left:auto;display:flex;gap:22px;align-items:center}
+  .site-nav a{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;
+    color:var(--text-dim);text-transform:uppercase;text-decoration:none;position:relative;padding:2px 0;
+  }
+  .site-nav a::after{content:'';position:absolute;left:0;bottom:-3px;width:0;height:1px;
+    background:var(--clay);transition:width .2s}
+  .site-nav a:hover{color:var(--text)}
+  .site-nav a:hover::after,.site-nav a[aria-current="page"]::after{width:100%}
+  .site-nav a[aria-current="page"]{color:var(--text)}
+
   .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 28px}
 
   /* header */
-  header{padding:94px 0 64px;border-bottom:1px solid var(--line)}
+  header.hero{padding:84px 0 64px;border-bottom:1px solid var(--line)}
   .eyebrow{
-    font-family:"Cormorant Garamond",serif;
-    font-style:italic;
-    color:var(--gold);
-    letter-spacing:.04em;
-    font-size:19px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--gold);letter-spacing:.04em;font-size:19px;
     opacity:0;animation:rise .9s .1s forwards;
   }
   h1{
-    font-weight:800;
-    font-size:clamp(34px,6.4vw,52px);
-    line-height:1.3;
-    margin:18px 0 26px;
-    letter-spacing:.01em;
+    font-weight:800;font-size:clamp(34px,6.4vw,52px);line-height:1.3;
+    margin:18px 0 26px;letter-spacing:.01em;
     opacity:0;animation:rise .9s .25s forwards;
   }
   h1 .br{display:block}
-  .sub{
-    color:var(--text-dim);
-    font-size:18px;
-    max-width:54ch;
-    opacity:0;animation:rise .9s .4s forwards;
-  }
+  .sub{color:var(--text-dim);font-size:18px;max-width:54ch;
+    opacity:0;animation:rise .9s .4s forwards}
   .sub b{color:var(--gold-soft);font-weight:600}
-  .meta{
-    margin-top:34px;
-    font-family:"Cormorant Garamond",serif;
-    color:var(--text-faint);
-    font-size:16px;
-    letter-spacing:.05em;
-    opacity:0;animation:rise .9s .55s forwards;
-  }
+  .meta{margin-top:34px;font-family:"Cormorant Garamond",serif;color:var(--text-faint);
+    font-size:16px;letter-spacing:.05em;opacity:0;animation:rise .9s .55s forwards}
 
   /* sections */
   section{padding:62px 0;border-bottom:1px solid var(--line)}
-  .tag{
-    font-family:"Cormorant Garamond",serif;
-    font-style:italic;
-    color:var(--gold);
-    font-size:18px;
-    letter-spacing:.05em;
-    display:flex;align-items:center;gap:14px;
-    margin-bottom:22px;
-  }
-  .tag::before{
-    content:"";width:34px;height:1px;background:var(--gold);opacity:.6;
-  }
-  h2{
-    font-weight:700;
-    font-size:clamp(24px,4.2vw,30px);
-    line-height:1.45;
-    margin-bottom:24px;
-    letter-spacing:.01em;
-  }
+  .tag{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);
+    font-size:18px;letter-spacing:.05em;display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .tag::before{content:"";width:34px;height:1px;background:var(--gold);opacity:.6}
+  h2{font-weight:700;font-size:clamp(24px,4.2vw,30px);line-height:1.45;margin-bottom:24px;letter-spacing:.01em}
   p{margin-bottom:20px;color:var(--text)}
-  p .beat{color:var(--gold-soft);font-weight:700}
+  p .beat{color:var(--clay);font-weight:700}
   .dim{color:var(--text-dim)}
   .lead{font-size:20px}
 
-  .declare{
-    font-size:clamp(22px,4vw,28px);
-    font-weight:600;
-    line-height:1.7;
-    color:var(--text);
-  }
+  .declare{font-size:clamp(22px,4vw,28px);font-weight:600;line-height:1.7;color:var(--text)}
   .declare .x{color:var(--text-faint);text-decoration:line-through;text-decoration-color:var(--gold-dim);text-decoration-thickness:2px}
   .declare .o{color:var(--gold-soft)}
 
@@ -115,54 +108,61 @@
   .cycle{margin:14px auto 30px;display:block;width:100%;max-width:520px}
   .cycle text{font-family:"Shippori Mincho",serif}
   .steps{list-style:none;counter-reset:s;margin-top:10px}
-  .steps li{
-    counter-increment:s;
-    position:relative;
-    padding:16px 0 16px 56px;
-    border-top:1px solid var(--line);
-  }
+  .steps li{counter-increment:s;position:relative;padding:16px 0 16px 56px;border-top:1px solid var(--line)}
   .steps li:last-child{border-bottom:1px solid var(--line)}
-  .steps li::before{
-    content:counter(s,decimal-leading-zero);
-    position:absolute;left:0;top:16px;
-    font-family:"Cormorant Garamond",serif;
-    font-size:22px;color:var(--gold);
-    letter-spacing:.02em;
-  }
+  .steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:16px;
+    font-family:"Cormorant Garamond",serif;font-size:22px;color:var(--gold);letter-spacing:.02em}
   .steps b{color:var(--gold-soft);font-weight:700}
   .steps .note{display:block;color:var(--text-dim);font-size:15.5px;margin-top:2px}
-  .loopback{
-    margin-top:18px;color:var(--text-faint);
-    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;
-    text-align:right;
-  }
+  .loopback{margin-top:18px;color:var(--text-faint);
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;text-align:right}
 
   /* boundary block */
-  .boundary{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:3px solid var(--gold);
-    padding:30px 30px;
-    margin:8px 0;
-  }
+  .boundary{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--clay-line);
+    padding:30px 30px;margin:8px 0}
   .boundary h3{font-weight:700;font-size:19px;margin-bottom:14px;color:var(--gold-soft)}
   .boundary p:last-child{margin-bottom:0}
 
   /* closing */
   .closing p{font-size:20px;line-height:2.05}
+
+  /* footer */
   footer{padding:56px 0 90px;color:var(--text-faint)}
   footer .rp{font-family:"Cormorant Garamond",serif;font-size:20px;color:var(--gold);letter-spacing:.04em}
   footer .small{font-size:14.5px;margin-top:8px;line-height:1.8}
+  footer .fnav{margin-top:22px;display:flex;gap:20px;flex-wrap:wrap}
+  footer .fnav a{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
+    color:var(--text-dim);text-decoration:none}
+  footer .fnav a:hover{color:var(--gold)}
 
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
   .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .eyebrow,h1,.sub,.meta{animation:none;opacity:1}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
 </style>
 </head>
 <body>
+
+<!-- ── SHARED HEADER (dark variant) ── -->
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">Resonance <span class="mark">/</span> Continuity</a>
+    <nav class="site-nav">
+      <a href="/">Top</a>
+      <a href="/workshop/index.html" aria-current="page">Workshop</a>
+      <a href="/about/overview.html">About</a>
+      <a href="/archive/">Archive</a>
+    </nav>
+  </div>
+</header>
+
 <div class="wrap">
 
-  <header>
+  <header class="hero">
     <div class="eyebrow">Resonance Project — Workshop</div>
     <h1><span class="br">何をするのか、</span><span class="br">何をしないのか。</span></h1>
     <p class="sub">プロンプトの技術を教える講座ではない。<br>AIを使って、<b>自分の中にあるまだ言葉になっていないもの</b>を、外に出すための場だ。</p>
@@ -189,28 +189,26 @@
           <path d="M0,0 L9,4.5 L0,9 Z" fill="#c8a96a"/>
         </marker>
       </defs>
-      <circle cx="180" cy="180" r="120" fill="none" stroke="#2a2e37" stroke-width="1.2"/>
-      <!-- rotating arc accents -->
+      <circle cx="180" cy="180" r="120" fill="none" stroke="#3a342c" stroke-width="1.2"/>
       <path d="M180 60 A120 120 0 0 1 283 122" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
       <path d="M283 238 A120 120 0 0 1 180 300" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
       <path d="M77 238 A120 120 0 0 1 77 122" fill="none" stroke="#c8a96a" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arrow)" opacity=".85"/>
-      <!-- nodes -->
-      <g fill="#d8c197" font-size="13" font-weight="700" text-anchor="middle" font-family="Shippori Mincho, serif">
+      <g fill="#e6d6b8" font-size="13" font-weight="700" text-anchor="middle" font-family="Shippori Mincho, serif">
         <text x="180" y="50">対話する</text>
         <text x="305" y="184">言葉にする</text>
         <text x="246" y="320">翻訳する</text>
         <text x="114" y="320">動かす</text>
         <text x="55" y="184">また対話</text>
       </g>
-      <g fill="#c8a96a">
+      <g fill="#cf7052">
         <circle cx="180" cy="60" r="4"/>
         <circle cx="300" cy="180" r="4"/>
         <circle cx="240" cy="284" r="4"/>
         <circle cx="120" cy="284" r="4"/>
         <circle cx="60" cy="180" r="4"/>
       </g>
-      <text x="180" y="176" text-anchor="middle" fill="#6f6b62" font-size="11" font-family="Cormorant Garamond, serif" font-style="italic">the loop</text>
-      <text x="180" y="196" text-anchor="middle" fill="#a39e93" font-size="12" font-family="Shippori Mincho, serif">回り続ける</text>
+      <text x="180" y="176" text-anchor="middle" fill="#726a5e" font-size="11" font-family="Cormorant Garamond, serif" font-style="italic">the loop</text>
+      <text x="180" y="196" text-anchor="middle" fill="#a89f92" font-size="12" font-family="Shippori Mincho, serif">回り続ける</text>
     </svg>
 
     <ol class="steps">
@@ -253,6 +251,11 @@
   <footer>
     <div class="rp">Resonance Project</div>
     <div class="small">代表 ／ 荒木兆彩　　金沢<br>reso-ai.jp</div>
+    <div class="fnav">
+      <a href="/workshop/index.html">← Workshop</a>
+      <a href="/">Top</a>
+      <a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a>
+    </div>
   </footer>
 
 </div>
