@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>台帳システム 概要 — Resonance Project</title>
+<style>
+  :root{
+    --paper:#FBFAF6;
+    --ink:#211F1B;
+    --ink-soft:#6B675D;
+    --ink-faint:#8A867B;
+    --line:#E5E2D8;
+    --line-soft:#EFEDE5;
+    --ochre:#9A6A22;
+    --ochre-bg:#F7EFDE;
+    --ochre-line:#E7D6AE;
+    --green:#2F5D4B;
+    --green-bg:#EBF1EC;
+    --green-line:#C9DBCF;
+    --red:#8A4636;
+    --red-bg:#FBEFEC;
+    --red-line:#E8CFC8;
+    --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","MS PMincho",serif;
+    --sans:"Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Meiryo",sans-serif;
+    --mono:"SFMono-Regular","Consolas","Courier New",monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:14.5px;
+    line-height:1.95;
+    padding:40px 20px 72px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:800px;
+    margin:0 auto;
+    background:#fff;
+    border:1px solid var(--line);
+    padding:56px 60px 48px;
+  }
+
+  /* ---- 見出し ---- */
+  .masthead{border-bottom:1px solid var(--line); padding-bottom:26px; margin-bottom:38px;}
+  .kicker{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
+    color:var(--ink-faint); margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--serif); font-size:29px; font-weight:600;
+    letter-spacing:.03em; line-height:1.45; margin-bottom:10px;
+  }
+  .standfirst{font-size:13.5px; color:var(--ink-soft); line-height:1.85;}
+
+  .block{margin-bottom:42px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
+    color:var(--green); margin-bottom:9px;
+  }
+  h2{
+    font-family:var(--serif); font-size:19px; font-weight:600;
+    letter-spacing:.02em; margin-bottom:16px; padding-bottom:9px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  h3{
+    font-size:14.5px; font-weight:500; margin:22px 0 6px;
+    letter-spacing:.01em;
+  }
+  p{margin-bottom:14px;}
+  p:last-child{margin-bottom:0;}
+  .lede{font-size:15px;}
+
+  /* ---- 流れ図 ---- */
+  .flow{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:9px;
+    margin:26px 0 18px;
+  }
+  .stepcard{
+    border:1px solid var(--line); background:var(--paper);
+    padding:14px 12px 15px; position:relative;
+  }
+  .stepcard.check{background:var(--ochre-bg); border-color:var(--ochre-line);}
+  .stepcard.fix{background:var(--green-bg); border-color:var(--green-line);}
+  .stepnum{
+    font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+    color:var(--ink-faint); margin-bottom:7px;
+  }
+  .stepcard.check .stepnum{color:var(--ochre);}
+  .stepcard.fix .stepnum{color:var(--green);}
+  .stepname{font-size:13px; font-weight:500; line-height:1.5; margin-bottom:5px;}
+  .stepwho{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.06em;
+    color:var(--ink-faint); line-height:1.5;
+  }
+  .flowkey{
+    display:flex; flex-wrap:wrap; gap:20px;
+    font-size:12px; color:var(--ink-soft);
+    border-top:1px solid var(--line-soft); padding-top:12px;
+  }
+  .swatch{display:inline-block; width:11px; height:11px; margin-right:6px; vertical-align:-1px; border:1px solid;}
+  .swatch.o{background:var(--ochre-bg); border-color:var(--ochre-line);}
+  .swatch.g{background:var(--green-bg); border-color:var(--green-line);}
+
+  .steps-detail{border-top:1px solid var(--line-soft); margin-top:26px; padding-top:4px;}
+  .sd{display:grid; grid-template-columns:76px 1fr; gap:20px; padding:15px 0; border-bottom:1px solid var(--line-soft);}
+  .sd:last-child{border-bottom:none;}
+  .sd-n{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:.08em; padding-top:4px;}
+  .sd-b{font-size:13.5px; line-height:1.9;}
+  .sd-b b{font-weight:500;}
+
+  /* ---- 必要なもの ---- */
+  .kit{border:1px solid var(--line);}
+  .kit-row{display:grid; grid-template-columns:200px 1fr; border-bottom:1px solid var(--line-soft);}
+  .kit-row:last-child{border-bottom:none;}
+  .kit-k{
+    background:var(--paper); padding:13px 16px; font-size:13px; font-weight:500;
+    border-right:1px solid var(--line-soft);
+  }
+  .kit-v{padding:13px 18px; font-size:13px; color:var(--ink-soft); line-height:1.8;}
+  .kit-note{font-size:12.5px; color:var(--ink-soft); margin-top:12px;}
+
+  /* ---- 注意 ---- */
+  .warn{border-left:2px solid var(--red); background:var(--red-bg); padding:16px 20px; margin:22px 0 0;}
+  .warn p{font-size:13.5px; margin-bottom:8px;}
+  .warn p:last-child{margin-bottom:0;}
+  .warn b{color:var(--red); font-weight:500;}
+
+  .caution h3{color:var(--red);}
+
+  /* ---- 見直し ---- */
+  .review{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0 16px;}
+  .rev{border:1px solid var(--ochre-line); background:var(--ochre-bg); padding:16px 18px;}
+  .rev-t{font-size:13px; font-weight:500; color:var(--ochre); margin-bottom:6px;}
+  .rev-b{font-size:12.5px; line-height:1.8; color:var(--ink);}
+  .confirm{border:1px solid var(--green-line); background:var(--green-bg); padding:15px 18px; font-size:13px; line-height:1.8;}
+  .confirm b{color:var(--green); font-weight:500;}
+
+  /* ---- 締め ---- */
+  .close{border-top:2px solid var(--green); padding-top:24px; margin-top:44px;}
+  .pull{
+    font-family:var(--serif); font-size:17px; line-height:1.85;
+    letter-spacing:.02em; margin:20px 0; padding-left:18px;
+    border-left:2px solid var(--green-line);
+  }
+  footer{
+    margin-top:44px; padding-top:20px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:flex-end;
+    font-size:12px; color:var(--ink-soft); line-height:1.75;
+  }
+  footer b{color:var(--ink); font-weight:500; font-size:12.5px;}
+  .f-r{font-family:var(--mono); font-size:10.5px; text-align:right; letter-spacing:.06em;}
+
+  @media (max-width:700px){
+    body{padding:20px 12px 48px;}
+    .sheet{padding:32px 22px 30px;}
+    h1{font-size:23px;}
+    .flow{grid-template-columns:1fr; gap:7px;}
+    .review{grid-template-columns:1fr;}
+    .kit-row{grid-template-columns:1fr;}
+    .kit-k{border-right:none; border-bottom:1px solid var(--line-soft);}
+    .sd{grid-template-columns:1fr; gap:4px;}
+  }
+  @media print{
+    body{padding:0; background:#fff;}
+    .sheet{border:none; padding:0; max-width:none;}
+    .block{page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<!-- ── 合言葉ゲート（防護のための速度制限。静的サイトのため秘匿ではない） ── -->
+<div id="gate" style="position:fixed;inset:0;z-index:9999;background:#FBFAF6;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif">
+  <div style="max-width:340px;width:100%;text-align:center">
+    <p style="font-family:'Yu Mincho',serif;font-size:18px;color:#211F1B;margin:0 0 8px">このページは関係者向けです</p>
+    <p style="font-size:13px;color:#6B675D;line-height:1.8;margin:0 0 20px">お伝えした合言葉を入力してください。</p>
+    <input id="gatePass" type="password" inputmode="text" autocomplete="off" placeholder="合言葉"
+      style="width:100%;padding:12px 14px;font-size:15px;border:1px solid #E5E2D8;border-radius:8px;background:#fff;color:#211F1B;text-align:center;letter-spacing:.1em">
+    <p id="gateErr" style="font-size:12px;color:#8A4636;height:16px;margin:8px 0 0"></p>
+    <button id="gateBtn" style="margin-top:12px;padding:11px 28px;font-size:13px;letter-spacing:.08em;border:1px solid #9A6A22;background:#9A6A22;color:#FBFAF6;border-radius:6px;cursor:pointer">開く</button>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS="gxeqg2";                         // 合言葉（速度制限用・平文）
+  var KEY="reso_gate_systemoverview";
+  var gate=document.getElementById('gate');
+  var inp=document.getElementById('gatePass');
+  var err=document.getElementById('gateErr');
+  function unlock(){ gate.parentNode.removeChild(gate); document.documentElement.style.overflow=''; }
+  if(sessionStorage.getItem(KEY)==='1'){ unlock(); return; }
+  document.documentElement.style.overflow='hidden';
+  function tryOpen(){
+    if(inp.value.trim().toLowerCase()===PASS){ sessionStorage.setItem(KEY,'1'); unlock(); }
+    else{ err.textContent='合言葉が違います。'; inp.value=''; inp.focus(); }
+  }
+  document.getElementById('gateBtn').addEventListener('click',tryOpen);
+  inp.addEventListener('keydown',function(e){ if(e.key==='Enter') tryOpen(); });
+  inp.focus();
+})();
+</script>
+<div class="sheet">
+
+  <div class="masthead">
+    <div class="kicker">RESONANCE PROJECT ／ 台帳システム</div>
+    <h1>書くのをやめて、決める。</h1>
+    <p class="standfirst">この仕組みが何をするもので、何が要って、何に気をつけるか。</p>
+  </div>
+
+  <!-- 狙い -->
+  <section class="block">
+    <div class="eyebrow">01 ／ 狙い</div>
+    <h2>記録を「書く」から「決める」へ</h2>
+    <p class="lede">普段の言葉で一文を書けば、AIが台帳の形に組み立てます。書く人は、それを見て決めるだけになります。</p>
+    <p>ただし、これは時間を減らすための仕組みではありません。その話は最後に書きます。</p>
+  </section>
+
+  <!-- 仕組み -->
+  <section class="block">
+    <div class="eyebrow">02 ／ 仕組み</div>
+    <h2>五段階で動きます</h2>
+
+    <div class="flow">
+      <div class="stepcard">
+        <div class="stepnum">01</div>
+        <div class="stepname">一文にする</div>
+        <div class="stepwho">対話 ／ AI</div>
+      </div>
+      <div class="stepcard check">
+        <div class="stepnum">02 — 確認</div>
+        <div class="stepname">一文を見る</div>
+        <div class="stepwho">人</div>
+      </div>
+      <div class="stepcard">
+        <div class="stepnum">03</div>
+        <div class="stepname">シートに入れる</div>
+        <div class="stepwho">人</div>
+      </div>
+      <div class="stepcard check">
+        <div class="stepnum">04 — 確認</div>
+        <div class="stepname">振り分けを見る</div>
+        <div class="stepwho">AIの案 ／ 人</div>
+      </div>
+      <div class="stepcard fix">
+        <div class="stepnum">05 — 承認</div>
+        <div class="stepname">一行が確定</div>
+        <div class="stepwho">人</div>
+      </div>
+    </div>
+
+    <div class="flowkey">
+      <span><span class="swatch o"></span>まだ確定していない ／ 人が見る場所</span>
+      <span><span class="swatch g"></span>確定した</span>
+    </div>
+
+    <div class="steps-detail">
+      <div class="sd">
+        <div class="sd-n">01</div>
+        <div class="sd-b">その日にやったこと、決まったことを、AIとの対話の中で伝えます。書式は気にしません。「講座の会場を変えた。次は集客をどう言葉にするか」くらいの話し方で構いません。<b>AIが、それを台帳に入れる一文にまとめます。</b></div>
+      </div>
+      <div class="sd">
+        <div class="sd-n">02 — 確認</div>
+        <div class="sd-b">出てきた一文が、実際の状況と合っているかを見ます。</div>
+      </div>
+      <div class="sd">
+        <div class="sd-n">03</div>
+        <div class="sd-b">台帳のサイドバーを開いて、その一文を入力します。</div>
+      </div>
+      <div class="sd">
+        <div class="sd-n">04 — 確認</div>
+        <div class="sd-b">AIが、その一文をどの案件のどの欄に何と書くかを組み立てて出します。新しい案件なのか、既にある行の更新なのかも判定して出します。それを見ます。</div>
+      </div>
+      <div class="sd">
+        <div class="sd-n">05 — 承認</div>
+        <div class="sd-b">合っていれば承認を押します。押した時点で、台帳の一行が確定します。<b>押すまで台帳は変わりません。</b>違っていれば却下します。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 必要なもの -->
+  <section class="block">
+    <div class="eyebrow">03 ／ 必要なもの</div>
+    <h2>これが要ります</h2>
+    <div class="kit">
+      <div class="kit-row">
+        <div class="kit-k">AIのアカウント</div>
+        <div class="kit-v">段階01の対話に使います。</div>
+      </div>
+      <div class="kit-row">
+        <div class="kit-k">AIを呼ぶための鍵</div>
+        <div class="kit-v">段階04に使います。普段の利用とは契約が別で、こちらは使った分だけの支払い。多くて月に数百円です。</div>
+      </div>
+      <div class="kit-row">
+        <div class="kit-k">Googleのスプレッドシート</div>
+        <div class="kit-v">台帳そのものです。追加費用はかかりません。</div>
+      </div>
+    </div>
+    <p class="kit-note">専用のソフトも、データベースも、サーバーも要りません。</p>
+  </section>
+
+  <!-- 注意点 -->
+  <section class="block caution">
+    <div class="eyebrow">04 ／ 注意点</div>
+    <h2>使っていると、こういうことが起こります</h2>
+
+    <h3>抜けが出ます</h3>
+    <p>指示を出していても、AIがそのとおりに動かないことがあります。毎回ではありません。たまにです。指示は届いていて、読まれてもいて、それでも抜ける。</p>
+    <p>出てきた文章を見ても分かりません。日本語は整っていて、読んで引っかかるところがない。抜けているのは、書く前に確かめたかどうかで、それは文章に残らないからです。</p>
+
+    <h3>もっともらしい答えが返ります</h3>
+    <p>AIは、こちらが納得しそうな形、話が収まりのいい形に寄っていきます。確かめる手間を省いてでも、そちらを取ることがあります。読むと筋が通って見えるのに、根拠がない、という状態になります。</p>
+
+    <h3>形は正しいのに、中身が違うことがあります</h3>
+    <p>たとえば、既にある行を更新するはずの一文なのに、新しい案件だと判定して別の行を立てる。欄はすべて埋まっていて、エラーも出ません。画面上は何も異常がない。違っているのは判断だけです。</p>
+
+    <div class="warn">
+      <p>これらを減らせないか試行錯誤しています。手元で数を取っていますが、いまのところ改善している手応えはありません。直る見込みで設計するのは危ないと考えています。</p>
+      <p><b>気をつけてください。ここは仕組みでは塞げていません。</b></p>
+    </div>
+  </section>
+
+  <!-- 二回見直す -->
+  <section class="block">
+    <div class="eyebrow">05 ／ だから</div>
+    <h2>二回、見直します</h2>
+
+    <div class="review">
+      <div class="rev">
+        <div class="rev-t">一回目 — 段階02</div>
+        <div class="rev-b">一文が状況と合っているかを見ます。ここが一番重い。一文が実際とずれていたら、その後の振り分けがどれだけ正確でも、間違った内容が確定します。振り分けの精度は、一文の精度を超えられません。</div>
+      </div>
+      <div class="rev">
+        <div class="rev-t">二回目 — 段階04</div>
+        <div class="rev-b">振り分け先と中身を見ます。どの案件の行か。新規か更新か。各欄の書き方は合っているか。</div>
+      </div>
+    </div>
+
+    <div class="confirm"><b>承認は一回だけです。</b>押すと確定します。押すまでは何も変わりません。</div>
+
+    <p style="margin-top:16px;">見直しを飛ばせば、その分だけ速くなります。飛ばせる作りになっています。ただし飛ばした分は、そのまま台帳に残ります。</p>
+  </section>
+
+  <!-- 利点 -->
+  <section class="block">
+    <div class="eyebrow">06 ／ 利点</div>
+    <h2>使っていると、たぶんこうなります</h2>
+    <p class="lede">流して見ていたことが、少し違う形で見えてくることがあります。</p>
+    <p>理由は、一文にする段階にあります。</p>
+    <p>その日に起きたことのうち、何を書くかを選ぶことになります。選ぶ時点で、自分の判断が入っています。同じ出来事でも、書く人が違えば一文は変わります。</p>
+    <p>そしてAIが出してきた案を見て「これは違う」と思うとき、なぜ違うと思ったのかを、少しだけ言葉にすることになります。</p>
+    <p>長くやっている人ほど、言葉になっていない判断を持っています。「この件はいまその段階じゃない」「ここを詰めないと次に行けない」。理由を聞かれると説明しにくいけれど、確かにそう思っている、という判断です。</p>
+    <p>見直しのたびに、それがひとかけらずつ外に出ます。</p>
+    <div class="pull">台帳が育つというのは、記録が増えることではなく、こちらのことです。</div>
+  </section>
+
+  <!-- 締め -->
+  <section class="close">
+    <div class="eyebrow">07 ／ そして</div>
+    <h2>それが、有料のAIを使う意味です</h2>
+    <p>段階04の振り分けだけなら、どのAIでも動きます。そこはモデルを選ぶ理由になりません。</p>
+    <p>理由は、段階01にあります。</p>
+    <p>対話しながら一文をまとめるとき、相手がこちらの言うことに寄ってくるだけだと、まとまった一文は、こちらが最初から持っていたものになります。整理されて返ってきただけです。それでは、上に書いた「違う形で見えてくる」が起きません。</p>
+    <p>押し返してくる相手でないと、自分が見落としていた角度は出てきません。この押し返しの強さは、AIによってはっきり違います。だから、そこにお金をかけています。</p>
+    <p>買っているのは、押し返してくる度合いです。正しさではありません。正しさのほうは、上のAIを使っても抜けます。<b>そちらは、見直しを二回置くという形で受けています。</b></p>
+  </section>
+
+  <footer>
+    <div>
+      <b>Resonance Project</b><br>
+      荒木兆彩 ／ 金沢<br>
+      reso-ai.jp
+    </div>
+    <div class="f-r">台帳システム 概要<br>2026.07</div>
+  </footer>
+
+</div>
+</body>
+</html>
