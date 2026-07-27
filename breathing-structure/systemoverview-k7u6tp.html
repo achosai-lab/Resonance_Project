@@ -9,8 +9,8 @@
   :root{
     --paper:#FBFAF6;
     --ink:#211F1B;
-    --ink-soft:#6B675D;
-    --ink-faint:#8A867B;
+    --ink-soft:#5F5B51;
+    --ink-faint:#807C71;
     --line:#E5E2D8;
     --line-soft:#EFEDE5;
     --ochre:#9A6A22;
@@ -21,7 +21,6 @@
     --green-line:#C9DBCF;
     --red:#8A4636;
     --red-bg:#FBEFEC;
-    --red-line:#E8CFC8;
     --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","MS PMincho",serif;
     --sans:"Hiragino Kaku Gothic ProN","Yu Gothic","YuGothic","Meiryo",sans-serif;
     --mono:"SFMono-Regular","Consolas","Courier New",monospace;
@@ -31,143 +30,159 @@
     background:var(--paper);
     color:var(--ink);
     font-family:var(--sans);
-    font-size:14.5px;
+    font-size:16px;
     line-height:1.95;
     padding:40px 20px 72px;
     -webkit-font-smoothing:antialiased;
   }
   .sheet{
-    max-width:800px;
+    max-width:840px;
     margin:0 auto;
     background:#fff;
     border:1px solid var(--line);
-    padding:56px 60px 48px;
+    padding:60px 62px 50px;
   }
 
   /* ---- 見出し ---- */
-  .masthead{border-bottom:1px solid var(--line); padding-bottom:26px; margin-bottom:38px;}
+  .masthead{border-bottom:1px solid var(--line); padding-bottom:28px; margin-bottom:44px;}
   .kicker{
-    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
-    color:var(--ink-faint); margin-bottom:14px;
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em;
+    color:var(--ink-faint); margin-bottom:16px;
   }
   h1{
-    font-family:var(--serif); font-size:29px; font-weight:600;
-    letter-spacing:.03em; line-height:1.45; margin-bottom:10px;
+    font-family:var(--serif); font-size:34px; font-weight:600;
+    letter-spacing:.03em; line-height:1.4; margin-bottom:14px;
   }
-  .standfirst{font-size:13.5px; color:var(--ink-soft); line-height:1.85;}
+  .standfirst{
+    font-family:var(--serif); font-size:17px; color:var(--ink-soft);
+    line-height:1.8; letter-spacing:.02em;
+  }
 
-  .block{margin-bottom:42px;}
+  .block{margin-bottom:48px;}
   .eyebrow{
-    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em;
-    color:var(--green); margin-bottom:9px;
+    font-family:var(--mono); font-size:14px; font-weight:500;
+    letter-spacing:.16em; color:var(--green); margin-bottom:10px;
   }
   h2{
-    font-family:var(--serif); font-size:19px; font-weight:600;
-    letter-spacing:.02em; margin-bottom:16px; padding-bottom:9px;
+    font-family:var(--serif); font-size:23px; font-weight:600;
+    letter-spacing:.02em; margin-bottom:18px; padding-bottom:11px;
     border-bottom:1px solid var(--line-soft);
   }
-  h3{
-    font-size:14.5px; font-weight:500; margin:22px 0 6px;
-    letter-spacing:.01em;
-  }
-  p{margin-bottom:14px;}
+  h3{font-size:17px; font-weight:500; margin:26px 0 7px; letter-spacing:.01em;}
+  p{margin-bottom:15px;}
   p:last-child{margin-bottom:0;}
-  .lede{font-size:15px;}
+  .lede{font-size:17px;}
 
   /* ---- 流れ図 ---- */
-  .flow{
-    display:grid; grid-template-columns:repeat(5,1fr); gap:9px;
-    margin:26px 0 18px;
-  }
-  .stepcard{
-    border:1px solid var(--line); background:var(--paper);
-    padding:14px 12px 15px; position:relative;
-  }
+  .flow{display:grid; grid-template-columns:repeat(5,1fr); gap:9px; margin:28px 0 18px;}
+  .stepcard{border:1px solid var(--line); background:var(--paper); padding:15px 13px 16px;}
   .stepcard.check{background:var(--ochre-bg); border-color:var(--ochre-line);}
   .stepcard.fix{background:var(--green-bg); border-color:var(--green-line);}
-  .stepnum{
-    font-family:var(--mono); font-size:10px; letter-spacing:.1em;
-    color:var(--ink-faint); margin-bottom:7px;
-  }
+  .stepnum{font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; color:var(--ink-faint); margin-bottom:8px;}
   .stepcard.check .stepnum{color:var(--ochre);}
   .stepcard.fix .stepnum{color:var(--green);}
-  .stepname{font-size:13px; font-weight:500; line-height:1.5; margin-bottom:5px;}
-  .stepwho{
-    font-family:var(--mono); font-size:9.5px; letter-spacing:.06em;
-    color:var(--ink-faint); line-height:1.5;
-  }
+  .stepname{font-size:15px; font-weight:500; line-height:1.5; margin-bottom:6px;}
+  .stepwho{font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--ink-faint); line-height:1.5;}
   .flowkey{
-    display:flex; flex-wrap:wrap; gap:20px;
-    font-size:12px; color:var(--ink-soft);
-    border-top:1px solid var(--line-soft); padding-top:12px;
+    display:flex; flex-wrap:wrap; gap:22px; font-size:13.5px; color:var(--ink-soft);
+    border-top:1px solid var(--line-soft); padding-top:13px;
   }
-  .swatch{display:inline-block; width:11px; height:11px; margin-right:6px; vertical-align:-1px; border:1px solid;}
+  .swatch{display:inline-block; width:12px; height:12px; margin-right:7px; vertical-align:-1px; border:1px solid;}
   .swatch.o{background:var(--ochre-bg); border-color:var(--ochre-line);}
   .swatch.g{background:var(--green-bg); border-color:var(--green-line);}
 
-  .steps-detail{border-top:1px solid var(--line-soft); margin-top:26px; padding-top:4px;}
-  .sd{display:grid; grid-template-columns:76px 1fr; gap:20px; padding:15px 0; border-bottom:1px solid var(--line-soft);}
+  .steps-detail{border-top:1px solid var(--line-soft); margin-top:28px; padding-top:4px;}
+  .sd{display:grid; grid-template-columns:96px 1fr; gap:22px; padding:16px 0; border-bottom:1px solid var(--line-soft);}
   .sd:last-child{border-bottom:none;}
-  .sd-n{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:.08em; padding-top:4px;}
-  .sd-b{font-size:13.5px; line-height:1.9;}
+  .sd-n{font-family:var(--mono); font-size:12.5px; color:var(--ink-faint); letter-spacing:.08em; padding-top:5px;}
+  .sd-b{font-size:15.5px; line-height:1.9;}
   .sd-b b{font-weight:500;}
 
   /* ---- 必要なもの ---- */
   .kit{border:1px solid var(--line);}
-  .kit-row{display:grid; grid-template-columns:200px 1fr; border-bottom:1px solid var(--line-soft);}
-  .kit-row:last-child{border-bottom:none;}
-  .kit-k{
-    background:var(--paper); padding:13px 16px; font-size:13px; font-weight:500;
-    border-right:1px solid var(--line-soft);
+  .kit-head{
+    display:grid; grid-template-columns:210px 190px 1fr;
+    background:var(--paper); border-bottom:1px solid var(--line);
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; color:var(--ink-faint);
   }
-  .kit-v{padding:13px 18px; font-size:13px; color:var(--ink-soft); line-height:1.8;}
-  .kit-note{font-size:12.5px; color:var(--ink-soft); margin-top:12px;}
+  .kit-head div{padding:10px 16px; border-right:1px solid var(--line-soft);}
+  .kit-head div:last-child{border-right:none;}
+  .kit-row{display:grid; grid-template-columns:210px 190px 1fr; border-bottom:1px solid var(--line-soft);}
+  .kit-row:last-child{border-bottom:none;}
+  .kit-row > div{padding:14px 16px; border-right:1px solid var(--line-soft); font-size:14.5px; line-height:1.8;}
+  .kit-row > div:last-child{border-right:none; color:var(--ink-soft);}
+  .kit-k{font-weight:500;}
+  .kit-c{font-family:var(--mono); font-size:13.5px !important; color:var(--green);}
+  .kit-note{font-size:14.5px; color:var(--ink-soft); margin-top:16px; line-height:1.85;}
 
   /* ---- 注意 ---- */
-  .warn{border-left:2px solid var(--red); background:var(--red-bg); padding:16px 20px; margin:22px 0 0;}
-  .warn p{font-size:13.5px; margin-bottom:8px;}
+  .warn{border-left:3px solid var(--red); background:var(--red-bg); padding:18px 22px; margin-top:26px;}
+  .warn p{font-size:15px; margin-bottom:9px;}
   .warn p:last-child{margin-bottom:0;}
   .warn b{color:var(--red); font-weight:500;}
-
   .caution h3{color:var(--red);}
+  .reading{margin-top:22px; border-top:1px solid var(--line-soft); padding-top:16px;}
+  .reading-label{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.12em;
+    color:var(--ink-faint); margin-bottom:10px;
+  }
+  .reading a{
+    display:block; text-decoration:none; color:inherit;
+    border-left:2px solid var(--line); padding:8px 0 8px 16px; margin-bottom:10px;
+  }
+  .reading a:last-child{margin-bottom:0;}
+  .reading a:hover{border-left-color:var(--green);}
+  .reading a:focus-visible{outline:2px solid var(--green); outline-offset:2px;}
+  .rd-t{display:block; font-size:14.5px; font-weight:500; color:var(--green); line-height:1.6;}
+  .rd-s{display:block; font-size:13.5px; color:var(--ink-soft); line-height:1.75; margin-top:2px;}
 
   /* ---- 見直し ---- */
-  .review{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0 16px;}
-  .rev{border:1px solid var(--ochre-line); background:var(--ochre-bg); padding:16px 18px;}
-  .rev-t{font-size:13px; font-weight:500; color:var(--ochre); margin-bottom:6px;}
-  .rev-b{font-size:12.5px; line-height:1.8; color:var(--ink);}
-  .confirm{border:1px solid var(--green-line); background:var(--green-bg); padding:15px 18px; font-size:13px; line-height:1.8;}
+  .review{display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:22px 0 17px;}
+  .rev{border:1px solid var(--ochre-line); background:var(--ochre-bg); padding:18px 20px;}
+  .rev-t{font-size:14.5px; font-weight:500; color:var(--ochre); margin-bottom:7px;}
+  .rev-b{font-size:14.5px; line-height:1.85;}
+  .confirm{border:1px solid var(--green-line); background:var(--green-bg); padding:16px 20px; font-size:15px; line-height:1.8;}
   .confirm b{color:var(--green); font-weight:500;}
 
   /* ---- 締め ---- */
-  .close{border-top:2px solid var(--green); padding-top:24px; margin-top:44px;}
+  .close{border-top:2px solid var(--green); padding-top:26px; margin-top:48px;}
+  .close b{font-weight:500;}
   .pull{
-    font-family:var(--serif); font-size:17px; line-height:1.85;
-    letter-spacing:.02em; margin:20px 0; padding-left:18px;
+    font-family:var(--serif); font-size:20px; line-height:1.85;
+    letter-spacing:.02em; margin:24px 0 0; padding-left:20px;
     border-left:2px solid var(--green-line);
   }
-  footer{
-    margin-top:44px; padding-top:20px; border-top:1px solid var(--line);
-    display:flex; justify-content:space-between; align-items:flex-end;
-    font-size:12px; color:var(--ink-soft); line-height:1.75;
+  .coda{
+    font-family:var(--serif); font-size:22px; font-weight:600;
+    line-height:1.75; letter-spacing:.03em;
+    margin-top:38px; padding-top:24px;
+    border-top:1px solid var(--line-soft);
   }
-  footer b{color:var(--ink); font-weight:500; font-size:12.5px;}
-  .f-r{font-family:var(--mono); font-size:10.5px; text-align:right; letter-spacing:.06em;}
+  footer{
+    margin-top:48px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:flex-end;
+    font-size:13.5px; color:var(--ink-soft); line-height:1.75;
+  }
+  footer b{color:var(--ink); font-weight:500; font-size:14px;}
+  .f-r{font-family:var(--mono); font-size:12px; text-align:right; letter-spacing:.06em;}
 
-  @media (max-width:700px){
-    body{padding:20px 12px 48px;}
-    .sheet{padding:32px 22px 30px;}
-    h1{font-size:23px;}
+  @media (max-width:760px){
+    body{padding:20px 12px 48px; font-size:15.5px;}
+    .sheet{padding:34px 22px 32px;}
+    h1{font-size:26px;}
+    .standfirst{font-size:16px;}
     .flow{grid-template-columns:1fr; gap:7px;}
     .review{grid-template-columns:1fr;}
+    .kit-head{display:none;}
     .kit-row{grid-template-columns:1fr;}
-    .kit-k{border-right:none; border-bottom:1px solid var(--line-soft);}
+    .kit-row > div{border-right:none; border-bottom:1px solid var(--line-soft);}
+    .kit-row > div:last-child{border-bottom:none;}
     .sd{grid-template-columns:1fr; gap:4px;}
   }
   @media print{
-    body{padding:0; background:#fff;}
+    body{padding:0; background:#fff; font-size:11pt;}
     .sheet{border:none; padding:0; max-width:none;}
-    .block{page-break-inside:avoid;}
+    .block, .close{page-break-inside:avoid;}
   }
 </style>
 </head>
@@ -176,7 +191,7 @@
 <div id="gate" style="position:fixed;inset:0;z-index:9999;background:#FBFAF6;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif">
   <div style="max-width:340px;width:100%;text-align:center">
     <p style="font-family:'Yu Mincho',serif;font-size:18px;color:#211F1B;margin:0 0 8px">このページは関係者向けです</p>
-    <p style="font-size:13px;color:#6B675D;line-height:1.8;margin:0 0 20px">お伝えした合言葉を入力してください。</p>
+    <p style="font-size:13px;color:#5F5B51;line-height:1.8;margin:0 0 20px">お伝えした合言葉を入力してください。</p>
     <input id="gatePass" type="password" inputmode="text" autocomplete="off" placeholder="合言葉"
       style="width:100%;padding:12px 14px;font-size:15px;border:1px solid #E5E2D8;border-radius:8px;background:#fff;color:#211F1B;text-align:center;letter-spacing:.1em">
     <p id="gateErr" style="font-size:12px;color:#8A4636;height:16px;margin:8px 0 0"></p>
@@ -207,10 +222,9 @@
   <div class="masthead">
     <div class="kicker">RESONANCE PROJECT ／ 台帳システム</div>
     <h1>書くのをやめて、決める。</h1>
-    <p class="standfirst">この仕組みが何をするもので、何が要って、何に気をつけるか。</p>
+    <p class="standfirst">AIは下書きまで。決めるところは、人のまま。</p>
   </div>
 
-  <!-- 狙い -->
   <section class="block">
     <div class="eyebrow">01 ／ 狙い</div>
     <h2>記録を「書く」から「決める」へ</h2>
@@ -218,7 +232,6 @@
     <p>ただし、これは時間を減らすための仕組みではありません。その話は最後に書きます。</p>
   </section>
 
-  <!-- 仕組み -->
   <section class="block">
     <div class="eyebrow">02 ／ 仕組み</div>
     <h2>五段階で動きます</h2>
@@ -227,22 +240,22 @@
       <div class="stepcard">
         <div class="stepnum">01</div>
         <div class="stepname">一文にする</div>
-        <div class="stepwho">対話 ／ AI</div>
+        <div class="stepwho">人とAI</div>
       </div>
       <div class="stepcard check">
         <div class="stepnum">02 — 確認</div>
-        <div class="stepname">一文を見る</div>
+        <div class="stepname">一文を確認</div>
         <div class="stepwho">人</div>
       </div>
       <div class="stepcard">
         <div class="stepnum">03</div>
-        <div class="stepname">シートに入れる</div>
+        <div class="stepname">入力欄に入れる</div>
         <div class="stepwho">人</div>
       </div>
       <div class="stepcard check">
         <div class="stepnum">04 — 確認</div>
-        <div class="stepname">振り分けを見る</div>
-        <div class="stepwho">AIの案 ／ 人</div>
+        <div class="stepname">振り分けを確認</div>
+        <div class="stepwho">台帳のAI ／ 人</div>
       </div>
       <div class="stepcard fix">
         <div class="stepnum">05 — 承認</div>
@@ -259,49 +272,53 @@
     <div class="steps-detail">
       <div class="sd">
         <div class="sd-n">01</div>
-        <div class="sd-b">その日にやったこと、決まったことを、AIとの対話の中で伝えます。書式は気にしません。「講座の会場を変えた。次は集客をどう言葉にするか」くらいの話し方で構いません。<b>AIが、それを台帳に入れる一文にまとめます。</b></div>
+        <div class="sd-b">その日にやったこと、決まったことを、AIとの対話の中で伝えます。書式は気にしません。「講座の会場を変えた。次は集客をどう言葉にするか」くらいの話し方で構いません。<b>AIと、それを台帳に入れる一文にまとめます。</b></div>
       </div>
       <div class="sd">
         <div class="sd-n">02 — 確認</div>
-        <div class="sd-b">出てきた一文が、実際の状況と合っているかを見ます。</div>
+        <div class="sd-b">まとめた一文が、実際の状況と合っているかを確認します。</div>
       </div>
       <div class="sd">
         <div class="sd-n">03</div>
-        <div class="sd-b">台帳のサイドバーを開いて、その一文を入力します。</div>
+        <div class="sd-b">台帳の入力欄に、その一文を入れます。</div>
       </div>
       <div class="sd">
         <div class="sd-n">04 — 確認</div>
-        <div class="sd-b">AIが、その一文をどの案件のどの欄に何と書くかを組み立てて出します。新しい案件なのか、既にある行の更新なのかも判定して出します。それを見ます。</div>
+        <div class="sd-b">台帳のAIが、その一文をどの案件のどの事なのか判断して提示します。それを確認します。</div>
       </div>
       <div class="sd">
         <div class="sd-n">05 — 承認</div>
-        <div class="sd-b">合っていれば承認を押します。押した時点で、台帳の一行が確定します。<b>押すまで台帳は変わりません。</b>違っていれば却下します。</div>
+        <div class="sd-b">問題なければ「承認」を、間違い・違和感があれば「却下」をおして再度判断させます。<b>承認するまで台帳は変わりません。</b></div>
       </div>
     </div>
   </section>
 
-  <!-- 必要なもの -->
   <section class="block">
     <div class="eyebrow">03 ／ 必要なもの</div>
     <h2>これが要ります</h2>
     <div class="kit">
+      <div class="kit-head">
+        <div>ITEM</div><div>COST</div><div>USE</div>
+      </div>
       <div class="kit-row">
-        <div class="kit-k">AIのアカウント</div>
-        <div class="kit-v">段階01の対話に使います。</div>
+        <div class="kit-k">AIの有料プラン</div>
+        <div class="kit-c">月額の契約</div>
+        <div>段階01。対話して一文にまとめるところに使います。ここを有料にしている理由は、最後に書きます。</div>
       </div>
       <div class="kit-row">
         <div class="kit-k">AIを呼ぶための鍵</div>
-        <div class="kit-v">段階04に使います。普段の利用とは契約が別で、こちらは使った分だけの支払い。多くて月に数百円です。</div>
+        <div class="kit-c">使った分だけ<br>多くて月に数百円</div>
+        <div>段階04。振り分けに使います。上の有料プランとは契約が別で、こちらは開発者向けの入口から取ります。</div>
       </div>
       <div class="kit-row">
-        <div class="kit-k">Googleのスプレッドシート</div>
-        <div class="kit-v">台帳そのものです。追加費用はかかりません。</div>
+        <div class="kit-k">Googleアカウントと<br>スプレッドシート</div>
+        <div class="kit-c">無料</div>
+        <div>台帳そのものです。いま使っているシートのまま動きます。</div>
       </div>
     </div>
     <p class="kit-note">専用のソフトも、データベースも、サーバーも要りません。</p>
   </section>
 
-  <!-- 注意点 -->
   <section class="block caution">
     <div class="eyebrow">04 ／ 注意点</div>
     <h2>使っていると、こういうことが起こります</h2>
@@ -317,12 +334,23 @@
     <p>たとえば、既にある行を更新するはずの一文なのに、新しい案件だと判定して別の行を立てる。欄はすべて埋まっていて、エラーも出ません。画面上は何も異常がない。違っているのは判断だけです。</p>
 
     <div class="warn">
-      <p>これらを減らせないか試行錯誤しています。手元で数を取っていますが、いまのところ改善している手応えはありません。直る見込みで設計するのは危ないと考えています。</p>
+      <p>これらを減らせないか試行錯誤しています。データを取って確認していますが、いまのところ改善している手応えはありません。直る見込みで設計するのは危ないと考えています。</p>
       <p><b>気をつけてください。ここは仕組みでは塞げていません。</b></p>
+    </div>
+
+    <div class="reading">
+      <div class="reading-label">この点について調べたこと</div>
+      <a href="https://note.com/chosai_1968/n/n9c9c7cd79ea9" target="_blank" rel="noopener">
+        <span class="rd-t">そのAI検査装置、校正証明書は付いてきましたか。</span>
+        <span class="rd-s">売る側も、制度側も、使う側も、AIの中身を確かめないまま進んでいる。その景色を調べた記録。</span>
+      </a>
+      <a href="https://note.com/chosai_1968/n/nc7b401490013" target="_blank" rel="noopener">
+        <span class="rd-t">AIに「お願いする」のは、作った側がとっくに諦めた方法だった。</span>
+        <span class="rd-s">形は縛れるようになった。確かめたかどうかは縛れない。なぜ塞げないのかを、作った側の資料から追ったもの。</span>
+      </a>
     </div>
   </section>
 
-  <!-- 二回見直す -->
   <section class="block">
     <div class="eyebrow">05 ／ だから</div>
     <h2>二回、見直します</h2>
@@ -330,20 +358,19 @@
     <div class="review">
       <div class="rev">
         <div class="rev-t">一回目 — 段階02</div>
-        <div class="rev-b">一文が状況と合っているかを見ます。ここが一番重い。一文が実際とずれていたら、その後の振り分けがどれだけ正確でも、間違った内容が確定します。振り分けの精度は、一文の精度を超えられません。</div>
+        <div class="rev-b">一文が状況と合っているかを確認します。ここが一番重い。一文が実際とずれていたら、その後の振り分けがどれだけ正確でも、間違った内容が確定します。振り分けの精度は、一文の精度を超えられません。</div>
       </div>
       <div class="rev">
         <div class="rev-t">二回目 — 段階04</div>
-        <div class="rev-b">振り分け先と中身を見ます。どの案件の行か。新規か更新か。各欄の書き方は合っているか。</div>
+        <div class="rev-b">振り分け先と中身を確認します。どの案件の行か。新規か更新か。各欄の書き方は合っているか。</div>
       </div>
     </div>
 
     <div class="confirm"><b>承認は一回だけです。</b>押すと確定します。押すまでは何も変わりません。</div>
 
-    <p style="margin-top:16px;">見直しを飛ばせば、その分だけ速くなります。飛ばせる作りになっています。ただし飛ばした分は、そのまま台帳に残ります。</p>
+    <p style="margin-top:17px;">見直しを飛ばせば、その分だけ速くなります。飛ばせる作りになっています。ただし飛ばした分は、そのまま台帳に残ります。</p>
   </section>
 
-  <!-- 利点 -->
   <section class="block">
     <div class="eyebrow">06 ／ 利点</div>
     <h2>使っていると、たぶんこうなります</h2>
@@ -356,7 +383,6 @@
     <div class="pull">台帳が育つというのは、記録が増えることではなく、こちらのことです。</div>
   </section>
 
-  <!-- 締め -->
   <section class="close">
     <div class="eyebrow">07 ／ そして</div>
     <h2>それが、有料のAIを使う意味です</h2>
@@ -365,6 +391,8 @@
     <p>対話しながら一文をまとめるとき、相手がこちらの言うことに寄ってくるだけだと、まとまった一文は、こちらが最初から持っていたものになります。整理されて返ってきただけです。それでは、上に書いた「違う形で見えてくる」が起きません。</p>
     <p>押し返してくる相手でないと、自分が見落としていた角度は出てきません。この押し返しの強さは、AIによってはっきり違います。だから、そこにお金をかけています。</p>
     <p>買っているのは、押し返してくる度合いです。正しさではありません。正しさのほうは、上のAIを使っても抜けます。<b>そちらは、見直しを二回置くという形で受けています。</b></p>
+
+    <p class="coda">速くはなりません。<br>それでも質はかわります。</p>
   </section>
 
   <footer>
