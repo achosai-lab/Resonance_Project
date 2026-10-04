@@ -1,0 +1,2312 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>データ：AIの「エフォート」を上げると、何が変わるのか — Resonance Project</title>
+<meta name="description" content="2026年10月1日に実施した52回の検証データ。Sonnet 5.5 / Opus 5.5 × エフォート中・高。1回ごとの記録と、AIの回答全文をそのまま掲載しています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* ── data-page components (built on site.css tokens) ── */
+
+  .hero .lead{max-width:40em}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:5px 13px;background:var(--paper);
+  }
+
+  .t-h{font-family:var(--serif);font-weight:400;font-size:clamp(20px,3vw,30px);margin-bottom:26px}
+
+  /* notes list */
+  .notes{list-style:none;max-width:var(--read);margin:4px 0 8px}
+  .notes li{
+    display:flex;gap:14px;align-items:flex-start;padding:14px 0;
+    border-bottom:1px solid var(--line-soft);font-size:13.5px;color:var(--muted);line-height:1.95;
+  }
+  .notes li::before{content:'—';color:var(--gold);font-family:var(--mono);flex-shrink:0}
+  .notes b{color:var(--ink);font-weight:500}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;margin:26px 0;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+  table.data{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+  table.data th,table.data td{padding:10px 14px;border-bottom:1px solid var(--line-soft);text-align:left;white-space:nowrap}
+  table.data thead th{
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gold);background:var(--bg-tint);border-bottom:1px solid var(--line);
+    position:sticky;top:0;
+  }
+  table.data tbody tr:last-child td{border-bottom:0}
+  table.data td.n{font-family:var(--mono);font-size:12.5px;text-align:right}
+  table.data td.c-task{color:var(--ink)}
+  table.data td.c-tool,table.data td.c-file{font-size:12px;color:var(--muted);white-space:normal;min-width:15em}
+  table.data tbody tr:hover{background:var(--bg-tint)}
+  .eff{font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:999px;border:1px solid var(--line)}
+  .eff.eh{color:var(--clay);border-color:rgba(176,96,68,.35);background:rgba(176,96,68,.07)}
+  .eff.em{color:var(--muted)}
+  .tbl-cap{font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:26px}
+
+  /* 頼んだ文 / 素材 */
+  .ask{border-left:2px solid var(--clay);padding:4px 0 4px 20px;margin:0 0 26px;max-width:var(--read)}
+  .ask-l{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .ask-t{font-size:15px;color:var(--ink);line-height:1.95}
+  .mat-l{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .mat{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px;max-width:var(--read);background:var(--paper)}
+  .mat-h{display:flex;align-items:baseline;gap:12px;padding:11px 16px;background:var(--bg-tint);border-bottom:1px solid var(--line)}
+  .mat-h b{font-size:13px;font-weight:500;color:var(--ink)}
+  .mat-h .raw{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .mat pre{padding:14px 16px;font-family:var(--mono);font-size:12px;line-height:1.9;color:var(--muted);white-space:pre-wrap;word-break:break-word}
+  .mat-note{font-size:13px;color:var(--muted);margin-bottom:26px}
+
+  /* runs */
+  .runs-head{
+    display:flex;align-items:center;gap:16px;margin:36px 0 14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);
+  }
+  .open-all{
+    font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;
+    padding:4px 12px;cursor:pointer;transition:color .2s,border-color .2s;
+  }
+  .open-all:hover{color:var(--clay);border-color:var(--clay)}
+
+  .run{border-bottom:1px solid var(--line);background:transparent}
+  .run summary{
+    list-style:none;cursor:pointer;padding:15px 30px 15px 0;position:relative;
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 18px;
+  }
+  .run summary::-webkit-details-marker{display:none}
+  .run summary::after{
+    content:'+';position:absolute;right:4px;top:50%;transform:translateY(-50%);
+    font-family:var(--mono);color:var(--clay);font-size:15px;
+  }
+  .run[open] summary::after{content:'–'}
+  .run summary:hover .run-t{color:var(--clay)}
+  .run-t{font-size:14px;color:var(--ink);transition:color .2s}
+  .run-m{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto}
+  .run-tools{font-family:var(--mono);font-size:11px;color:var(--muted);padding:0 0 14px;line-height:1.8}
+
+  /* 回答本文 */
+  .ans{
+    border-left:2px solid var(--line);padding:4px 0 22px 22px;margin-bottom:8px;
+    font-size:13.5px;line-height:2;color:var(--ink);max-width:46em;
+  }
+  .ans > *:first-child{margin-top:0}
+  .ans p{margin:0 0 14px}
+  .ans h1,.ans h2,.ans h3,.ans h4{
+    font-family:var(--serif);font-weight:500;color:var(--ink);line-height:1.6;
+    margin:22px 0 10px;
+  }
+  .ans h1{font-size:17px}.ans h2{font-size:16px}.ans h3{font-size:15px}.ans h4{font-size:14px}
+  .ans ul,.ans ol{margin:0 0 14px;padding-left:1.4em}
+  .ans li{margin-bottom:5px}
+  .ans strong{font-weight:500;color:var(--ink)}
+  .ans code{font-family:var(--mono);font-size:12px;background:var(--bg-tint);padding:1px 5px;border-radius:3px}
+  .ans pre{
+    background:var(--paper);border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;overflow-x:auto;margin:0 0 16px;
+  }
+  .ans pre code{background:none;padding:0;font-size:12px;line-height:1.85;white-space:pre}
+  .ans hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+  .ans table{border-collapse:collapse;font-size:12.5px;margin:0 0 16px;display:block;overflow-x:auto}
+  .ans th,.ans td{border:1px solid var(--line);padding:7px 11px;text-align:left}
+  .ans th{background:var(--bg-tint);font-weight:500}
+  .ans blockquote{border-left:2px solid var(--line);padding-left:16px;color:var(--muted);margin:0 0 14px}
+
+  /* download */
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;max-width:var(--read);margin-top:24px}
+  .dl a{
+    border:1px solid var(--line);border-radius:10px;padding:18px 20px;background:var(--paper);
+    display:block;transition:border-color .2s,background .2s;
+  }
+  .dl a:hover{border-color:var(--clay);background:var(--bg-tint)}
+  .dl .n{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+  .dl .s{display:block;font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  @media (max-width:640px){
+    .run-m{margin-left:0;width:100%}
+    .ans{padding-left:14px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SHARED HEADER ── -->
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">Resonance <span class="mark">/</span> Continuity</a>
+    <nav class="site-nav">
+      <a href="/">Top</a>
+      <a href="/workshop/index.html">Workshop</a>
+      <a href="/about/overview.html">About</a>
+      <a href="/archive/">Archive</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Resonance Project — Data</div>
+    <h1>AIの「エフォート」を上げると、<br>何が<em>変わる</em>のか</h1>
+    <p class="lead">note記事の添付データです。2026年10月1日に実施した52回について、1回ごとの記録と、AIが返した回答の全文をそのまま載せています。読んで確かめるためのページで、何かが動いたり保存されたりはしません。</p>
+    <div class="meta-row">
+      <span class="tag">実施 2026-10-01</span>
+      <span class="tag">52回</span>
+      <span class="tag">Sonnet 5.5 / Opus 5.5</span>
+      <span class="tag">エフォート 中・高</span>
+      <span class="tag">Claude Code 2.1.286</span>
+    </div>
+    <div class="btn-row">
+      <a class="btn" href="https://note.com/chosai_1968/n/n82582aea032b" target="_blank" rel="noopener">note の記事を読む →</a>
+      <a class="btn ghost" href="#record">1回ごとの記録へ ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- この資料について -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">00 — この資料について</span></div>
+    <h2 class="t-h">何を、どう測ったか。</h2>
+    <ul class="notes">
+      <li><b>比べたもの。</b>Sonnet 5.5 と Opus 5.5 の2つのモデルと、エフォートの「中」と「高」。この4通りで、3つの頼みを繰り返しました（回覧板とタイトル案は各5回、指示文づくりは各3回。全部で52回）。</li>
+      <li><b>実行した場所。</b>開発者向けの道具（Claude Code 2.1.286）で動かしています。チャット画面とは、AIに渡される前提の指示が違います。</li>
+      <li><b>AIに渡したもの。</b>普段の指示や記憶は使っていません。使える道具は「フォルダの中を確かめる・ファイルを検索する・ファイルを読む」の3つだけで、書き込みはできません。そのため回覧板の回答の多くに「ファイルに保存できないので、ここに載せます」という趣旨の一文が入っています。</li>
+      <li><b>回答の扱い。</b>AIが返した文章を一字も変えずに載せています。見出しや太字などの体裁は、元のMarkdownのまま表示しています。</li>
+      <li><b>かかった時間。</b>Claude Code が記録した、1回の頼みにかかった時間です。</li>
+      <li><b>考えた量。</b>AIが答えを書く前に書いた、画面に出ない下書きの長さです（単位はトークン）。</li>
+      <li><b>エフォートの指定。</b>実行するときに「中」「高」を指定して渡しています。記録の形式上、実際に適用された値そのものはログに残りません。</li>
+      <li><b>ファイル名について。</b>元データの機械的なファイル名（<code>kairan_0925.md</code> など）は、このページでは「回覧板の案（9/25）」のように読みやすい名前に直してあります。元の名前も併記しています。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 中央値 -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">01 — まとめ</span></div>
+    <h2 class="t-h">かかった時間と考えた量。</h2>
+    <p class="prose">繰り返した回の真ん中の値（中央値）です。「かかった時間／考えた量（トークン）」の順。</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <thead><tr><th>頼み</th><th>Sonnet 5.5・中</th><th>Sonnet 5.5・高</th><th>Opus 5.5・中</th><th>Opus 5.5・高</th></tr></thead>
+        <tbody>
+          <tr><td class="c-task">1. 回覧板</td><td class="n">8.5秒／238</td><td class="n">10.6秒／419</td><td class="n">13.7秒／307</td><td class="n">14.8秒／428</td></tr>
+          <tr><td class="c-task">2. 講座のタイトル案</td><td class="n">6.9秒／77</td><td class="n">7.4秒／56</td><td class="n">7.7秒／33</td><td class="n">7.7秒／84</td></tr>
+          <tr><td class="c-task">3. 指示文づくり</td><td class="n">21.7秒／323</td><td class="n">21.6秒／553</td><td class="n">25.6秒／639</td><td class="n">38.1秒／1891</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 1回ごとの記録 -->
+<section class="section" id="record">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">02 — 1回ごとの記録</span></div>
+    <h2 class="t-h">52回、すべての記録。</h2>
+    <div class="tbl-wrap">
+      <table class="data">
+        <thead><tr>
+          <th>頼み</th><th>モデル</th><th>エフォート</th><th>回</th>
+          <th>時間（秒）</th><th>考えた量</th><th>出力の量</th><th>文字数</th>
+          <th>使った道具の順番</th><th>開いたファイル</th>
+        </tr></thead>
+        <tbody>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">8.3</td><td class="n">238</td><td class="n">860</td><td class="n">503</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">8.6</td><td class="n">170</td><td class="n">765</td><td class="n">468</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">10.3</td><td class="n">300</td><td class="n">912</td><td class="n">493</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">4</td><td class="n">8.5</td><td class="n">312</td><td class="n">876</td><td class="n">446</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">5</td><td class="n">7.8</td><td class="n">191</td><td class="n">749</td><td class="n">411</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">11.7</td><td class="n">443</td><td class="n">1338</td><td class="n">523</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む → 書き込もうとする（許可がなく止まる）</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">11.1</td><td class="n">276</td><td class="n">989</td><td class="n">606</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">10.4</td><td class="n">419</td><td class="n">1055</td><td class="n">519</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">4</td><td class="n">9.6</td><td class="n">287</td><td class="n">931</td><td class="n">533</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">5</td><td class="n">10.6</td><td class="n">479</td><td class="n">1048</td><td class="n">452</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">11.8</td><td class="n">276</td><td class="n">964</td><td class="n">584</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">13.9</td><td class="n">388</td><td class="n">1203</td><td class="n">710</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">13.4</td><td class="n">286</td><td class="n">1161</td><td class="n">863</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">4</td><td class="n">13.7</td><td class="n">307</td><td class="n">1219</td><td class="n">828</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">5</td><td class="n">15.3</td><td class="n">412</td><td class="n">1358</td><td class="n">875</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">14.8</td><td class="n">428</td><td class="n">1330</td><td class="n">793</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">12.7</td><td class="n">321</td><td class="n">1128</td><td class="n">705</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">13.5</td><td class="n">227</td><td class="n">1185</td><td class="n">889</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">4</td><td class="n">15.5</td><td class="n">490</td><td class="n">1376</td><td class="n">804</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">回覧板</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">5</td><td class="n">17.0</td><td class="n">506</td><td class="n">1377</td><td class="n">902</td><td class="c-tool">フォルダの中を確かめる → ファイルを読む → ファイルを読む</td><td class="c-file">回覧板の案（9/25）、班長さんのLINE（9/28）</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">6.8</td><td class="n">77</td><td class="n">537</td><td class="n">420</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">8.1</td><td class="n">64</td><td class="n">717</td><td class="n">573</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">5.5</td><td class="n">57</td><td class="n">501</td><td class="n">390</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">4</td><td class="n">6.9</td><td class="n">77</td><td class="n">606</td><td class="n">457</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">5</td><td class="n">7.2</td><td class="n">82</td><td class="n">628</td><td class="n">506</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">7.6</td><td class="n">57</td><td class="n">567</td><td class="n">472</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">7.4</td><td class="n">55</td><td class="n">679</td><td class="n">566</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">6.5</td><td class="n">47</td><td class="n">528</td><td class="n">439</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">4</td><td class="n">8.3</td><td class="n">74</td><td class="n">734</td><td class="n">638</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">5</td><td class="n">5.6</td><td class="n">56</td><td class="n">430</td><td class="n">345</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">9.3</td><td class="n">32</td><td class="n">676</td><td class="n">593</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">7.7</td><td class="n">33</td><td class="n">545</td><td class="n">480</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">7.2</td><td class="n">35</td><td class="n">550</td><td class="n">471</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">4</td><td class="n">5.4</td><td class="n">30</td><td class="n">379</td><td class="n">339</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">5</td><td class="n">7.9</td><td class="n">79</td><td class="n">552</td><td class="n">453</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">7.1</td><td class="n">41</td><td class="n">542</td><td class="n">431</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">7.7</td><td class="n">84</td><td class="n">549</td><td class="n">418</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">8.5</td><td class="n">89</td><td class="n">496</td><td class="n">370</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">4</td><td class="n">7.7</td><td class="n">26</td><td class="n">583</td><td class="n">508</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">講座のタイトル案</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">5</td><td class="n">6.2</td><td class="n">98</td><td class="n">413</td><td class="n">291</td><td class="c-tool">フォルダの中を確かめる</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">21.7</td><td class="n">585</td><td class="n">2056</td><td class="n">1642</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">14.6</td><td class="n">0</td><td class="n">1559</td><td class="n">1722</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">21.8</td><td class="n">323</td><td class="n">2170</td><td class="n">2030</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">21.6</td><td class="n">473</td><td class="n">2122</td><td class="n">1812</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">19.9</td><td class="n">707</td><td class="n">2055</td><td class="n">1506</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Sonnet 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">24.4</td><td class="n">553</td><td class="n">2427</td><td class="n">2054</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">1</td><td class="n">23.5</td><td class="n">561</td><td class="n">1932</td><td class="n">1526</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">2</td><td class="n">25.6</td><td class="n">639</td><td class="n">2059</td><td class="n">1609</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff em">中</span></td><td class="n">3</td><td class="n">26.2</td><td class="n">657</td><td class="n">2087</td><td class="n">1617</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">1</td><td class="n">41.2</td><td class="n">2089</td><td class="n">3504</td><td class="n">1547</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">2</td><td class="n">30.7</td><td class="n">952</td><td class="n">2495</td><td class="n">1743</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+<tr><td class="c-task">指示文づくり</td><td>Opus 5.5</td><td class="c-eff"><span class="eff eh">高</span></td><td class="n">3</td><td class="n">38.1</td><td class="n">1891</td><td class="n">3344</td><td class="n">1639</td><td class="c-tool">なし</td><td class="c-file">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-cap">「考えた量」「出力の量」の単位はトークン。「文字数」はAIの回答の文字数です。横にスクロールできます。</p>
+  </div>
+</section>
+
+
+<section class="section" id="task1">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">03 — 頼み1</span></div>
+    <h2 class="t-h">回覧板</h2>
+    <div class="ask"><div class="ask-l">AIに頼んだ文（全回共通）</div><p class="ask-t">notes/ の町内会の連絡から、回覧板のお知らせを作って。</p></div>
+<div class="mat-l">フォルダ「メモ」（notes/）に置いたメモ2枚 — 中身そのまま</div>
+<div class="mat"><div class="mat-h"><b>回覧板の案（9/25）</b><span class="raw">kairan_0925.md</span></div><pre># 町内清掃のお知らせ（案）
+2026年11月15日（土）9時から、公民館に集合。
+軍手とゴミ袋は町内会で用意します。
+雨天の場合は翌週。</pre></div>
+<div class="mat"><div class="mat-h"><b>班長さんのLINE（9/28）</b><span class="raw">line_0928.md</span></div><pre># 班長さんからのLINE（9/28）
+公民館が工事で使えなくなったので、集合は神社の駐車場に変更です。</pre></div>
+    <div class="runs-head">回答全文（20回）<button class="open-all" data-t="1">すべて開く</button></div>
+    <details class="run" id="r1-0">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・1回目</span>
+    <span class="run-m">8.3秒 ／ 考えた量 238</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ案です。集合場所は、9/28の班長さんのLINEに合わせて神社の駐車場に変更しました。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内の皆さまへ</p>
+<p>町内清掃を下記のとおり行います。ご参加をお願いします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(※曜日は要確認)9時から</li>
+<li><strong>集合場所</strong>:神社の駐車場<br />
+  (公民館が工事で使えないため、場所が変わっています)</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します</li>
+<li><strong>雨天の場合</strong>:翌週に順延します</li>
+</ul>
+<p>町内会</p>
+<hr />
+<p>確認したい点が2つあります。</p>
+<ol>
+<li><strong>曜日が合っていません。</strong> 元のメモは「11月15日(土)」ですが、2026年11月15日は日曜日です。土曜なら11月14日です。日付と曜日のどちらが正しいか教えてください。教えてもらえれば、曜日を入れて直します。</li>
+<li><strong>雨天順延の日付です。</strong> 「翌週」は、日付が決まれば「11月22日」のように具体的に書けます。</li>
+</ol>
+<p>なお、このセッションにはファイルを書き込む手段がありません。そのため、ファイルには保存していません。必要ならこの文面をコピーしてください。</p></div>
+</details>
+<details class="run" id="r1-1">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・2回目</span>
+    <span class="run-m">8.6秒 ／ 考えた量 170</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせの文面を作りました。ファイルを書き出すツールがこの環境にないので、ここに載せます。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内の皆さまへ</p>
+<p>下記のとおり町内清掃を行います。ご協力をお願いします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(※曜日は要確認)9時から</li>
+<li><strong>集合場所</strong>:神社の駐車場(※公民館は工事のため使えません)</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します</li>
+<li><strong>雨天の場合</strong>:翌週に延期します</li>
+</ul>
+<p>町内会</p>
+<hr />
+<p>確認してほしい点が2つあります。</p>
+<ol>
+<li><strong>曜日が合っていません。</strong> 元のメモは「11月15日(土)」ですが、2026年11月15日は日曜日です。土曜なら11月14日です。どちらが正しいか教えてください。教えてもらえれば曜日を直します。</li>
+<li><strong>集合場所は9/28の班長さんのLINEに合わせました。</strong> 9/25の案では公民館でしたが、公民館が工事で使えなくなったので、神社の駐車場に変えています。</li>
+</ol>
+<p>連絡先や問い合わせ先を入れる場合は、教えてください。</p></div>
+</details>
+<details class="run" id="r1-2">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・3回目</span>
+    <span class="run-m">10.3秒 ／ 考えた量 300</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせを作りました。書き込み用のツールが使えないので、ファイルには保存していません。下の文面をそのままお使いください。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内の皆さまへ</p>
+<p>町内清掃を下記のとおり行います。ご協力をお願いします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(土)9時から</li>
+<li><strong>集合場所</strong>:神社の駐車場<br />
+  ※公民館が工事で使えないため、場所が変更になっています。</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>:翌週に延期します。</li>
+</ul>
+<p>町内会</p>
+<hr />
+<p>確認したい点が2つあります。</p>
+<ul>
+<li><strong>曜日が合っていません。</strong>2026年11月15日は日曜日です。元の案には「(土)」とありました。土曜なら11月14日、日曜なら11月15日です。日付と曜日のどちらが正しいか教えてください。直したものをお渡しします。</li>
+<li><strong>雨天時の日付が曖昧です。</strong>「翌週」とだけ書いてあります。日付を入れるなら、同じ曜日の11月22日か21日になります。</li>
+</ul>
+<p>集合場所は、9/28の班長さんのLINEに合わせて神社の駐車場に直しました。</p></div>
+</details>
+<details class="run" id="r1-3">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・4回目</span>
+    <span class="run-m">8.5秒 ／ 考えた量 312</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせの案です。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内の皆様へ</p>
+<p>下記のとおり町内清掃を行います。ご協力をお願いいたします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(※曜日は要確認) 9時から</li>
+<li><strong>集合場所</strong>:神社の駐車場(公民館が工事で使えないため、変更になりました)</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>:翌週に延期します。</li>
+</ul>
+<p>町内会</p>
+<hr />
+<p>確認したいことが2点あります。</p>
+<ol>
+<li><strong>曜日が合っていません。</strong> メモには「11月15日(土)」とありますが、2026年11月15日は日曜日です。土曜なら11月14日です。日付と曜日のどちらが正しいか教えてください。教えていただければ直します。</li>
+<li><strong>集合場所は9/28の班長さんのLINEに合わせました。</strong> 元のメモの「公民館」を「神社の駐車場」に変更しています。</li>
+</ol>
+<p>ファイルへの保存はまだしていません。日付が決まったら <code>notes/</code> に保存します。</p></div>
+</details>
+<details class="run" id="r1-4">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・5回目</span>
+    <span class="run-m">7.8秒 ／ 考えた量 191</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせを作りました。公民館が使えないという 9/28 の連絡を反映し、集合場所は神社の駐車場にしています。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内会の皆さまへ</p>
+<p>町内清掃を下記のとおり行います。ご参加をお願いします。</p>
+<ul>
+<li><strong>日時</strong>: 2026年11月15日（土）午前9時から</li>
+<li><strong>集合場所</strong>: 神社の駐車場<br />
+  ※公民館が工事で使えないため、集合場所が変わっています。</li>
+<li><strong>持ち物</strong>: 軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>: 翌週に延期します。</li>
+</ul>
+<hr />
+<p><strong>要確認:</strong> 2026年11月15日は土曜日ではなく日曜日です（11月14日が土曜日）。メモの「15日（土）」は、日付と曜日のどちらかが誤りです。正しいほうが分かれば直します。いまは元のメモのまま載せています。</p>
+<p>また、雨天時の延期日と、延期の連絡方法（LINE など）も、決まっていれば追記できます。</p></div>
+</details>
+<details class="run" id="r1-5">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・1回目</span>
+    <span class="run-m">11.7秒 ／ 考えた量 443</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む → 書き込もうとする（許可がなく止まる）</p>
+  <div class="ans"><p>ファイルへの書き込みができない設定になっていたため、保存はしていません。回覧板の文面を下に載せます。</p>
+<hr />
+<h1>町内清掃のお知らせ</h1>
+<p>町内の皆さまへ</p>
+<p>下記のとおり、町内清掃を行います。ご協力をお願いします。</p>
+<ul>
+<li><strong>日時</strong>：2026年11月15日（※曜日要確認）　9時から</li>
+<li><strong>集合場所</strong>：神社の駐車場<br />
+  ※公民館は工事のため使えません。いつもと集合場所が違いますのでご注意ください。</li>
+<li><strong>持ち物</strong>：軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>：翌週に延期します。</li>
+</ul>
+<p>町内会</p>
+<hr />
+<p>確認したいことが2点あります。</p>
+<ol>
+<li><strong>曜日が合っていません。</strong> <code>kairan_0925.md</code> には「11月15日（土）」とありますが、2026年11月15日は日曜日です。土曜なら14日です。どちらが正しいか教えてください。教えてもらえれば曜日を直します。</li>
+<li><strong>集合場所は9/28の班長さんのLINEに合わせました。</strong> 公民館が工事で使えないため、神社の駐車場に変更しています。</li>
+</ol>
+<p>ファイルに保存する場合は、書き込みを許可してください。<code>notes/kairan_notice.md</code> に保存します。</p></div>
+</details>
+<details class="run" id="r1-6">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・2回目</span>
+    <span class="run-m">11.1秒 ／ 考えた量 276</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板用のお知らせの案です。集合場所は、9/28の班長さんのLINEに合わせて神社の駐車場にしました。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内会の皆さまへ</p>
+<p>町内清掃を下記のとおり行います。ご協力をお願いします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(　)　9時から</li>
+<li><strong>集合場所</strong>:神社の駐車場<br />
+  ※公民館が工事で使えないため、場所が変更になっています。お間違えのないようご注意ください。</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>:翌週に延期します。</li>
+</ul>
+<p>以上</p>
+<hr />
+<p>確認したい点が2つあります。</p>
+<ol>
+<li><strong>曜日があいません。</strong> <code>kairan_0925.md</code> には「11月15日(土)」とありますが、2026年11月15日は日曜日です。土曜なら11月14日、日曜なら11月15日になります。どちらが正しいか分からないので、曜日は空欄にしてあります。教えてもらえれば埋めます。</li>
+<li><strong>雨天時の延期日が曖昧です。</strong> 「翌週」だけだと、日付と集合場所が伝わりにくいかもしれません。「翌週の同じ曜日・同じ時間」のように書くか、延期の連絡方法を足すか、決めてもらえれば反映します。</li>
+</ol>
+<p>この環境ではファイルを書き込めないため、本文だけを載せています。<code>notes/</code> にファイルとして保存する場合は、書き込める状態にしてから声をかけてください。</p></div>
+</details>
+<details class="run" id="r1-7">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・3回目</span>
+    <span class="run-m">10.4秒 ／ 考えた量 419</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板用のお知らせを作りました。集合場所は、9/28のLINEにある変更後の「神社の駐車場」にしています。ファイルへの保存はできない環境なので、下の文面をコピーして使ってください。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>○○町内会　会員各位</p>
+<p>町内清掃を下記のとおり行います。ご協力をお願いします。</p>
+<p><strong>記</strong></p>
+<ul>
+<li><strong>日時</strong>：2026年11月15日（日）9時から</li>
+<li><strong>集合場所</strong>：神社の駐車場<br />
+  ※公民館が工事で使えないため、集合場所が変更になっています。ご注意ください。</li>
+<li><strong>持ち物</strong>：軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>：翌週に延期します。</li>
+</ul>
+<p>以上</p>
+<p>令和8年○月○日<br />
+○○町内会</p>
+<hr />
+<p>確認したいことが2点あります。</p>
+<ol>
+<li><strong>曜日</strong>：元のメモは「11月15日（土）」でしたが、2026年11月15日は日曜日です。上の文面では「（日）」にしています。実際は土曜の11月14日かもしれないので、班長さんか役員の方に確認してください。</li>
+<li><strong>空欄</strong>：町内会名、発行日、神社名（わかれば）は、メモにないので空欄のままです。</li>
+</ol>
+<p>確認が取れたら、日付や空欄を直した版も作れます。</p></div>
+</details>
+<details class="run" id="r1-8">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・4回目</span>
+    <span class="run-m">9.6秒 ／ 考えた量 287</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせを作りました。ただ、ファイルに保存する手段がないので、本文はここに載せます。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>町内の皆さまへ</p>
+<p>町内清掃を下記のとおり行います。ご協力をお願いします。</p>
+<ul>
+<li><strong>日時</strong>:2026年11月15日(土)　午前9時から【※曜日を要確認】</li>
+<li><strong>集合場所</strong>:神社の駐車場(※公民館が工事で使えないため、場所が変わりました)</li>
+<li><strong>持ち物</strong>:軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>:翌週に延期します。</li>
+</ul>
+<p>○○町内会　(作成日:　月　日)</p>
+<hr />
+<p>確認してほしい点が2つあります。</p>
+<ol>
+<li><strong>日付と曜日が合っていません。</strong> <code>kairan_0925.md</code> には「11月15日(土)」とありますが、2026年11月15日は日曜日です。土曜は11月14日です。どちらが正しいか教えてもらえれば直します。上の本文では、元のメモのまま「15日(土)」と書き、要確認の印を付けています。</li>
+<li><strong>集合場所は班長さんのLINE(9/28)に合わせました。</strong> 元の回覧案にあった「公民館」は「神社の駐車場」に変えています。</li>
+</ol>
+<p>町内会名と作成日は、メモに書かれていなかったので空欄のままです。</p></div>
+</details>
+<details class="run" id="r1-9">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・5回目</span>
+    <span class="run-m">10.6秒 ／ 考えた量 479</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ案です。ファイルには保存していません。このセッションではファイルを書き込めないので、コピーして使ってください。</p>
+<hr />
+<p><strong>町内清掃のお知らせ</strong></p>
+<p>日時：2026年11月15日（土）9時から<br />
+集合場所：<strong>神社の駐車場</strong>（※公民館から変更になりました）<br />
+持ち物：軍手とゴミ袋は町内会で用意します。<br />
+雨天の場合：翌週に延期します。</p>
+<p>公民館が工事で使えないため、集合場所が変わっています。お間違えのないようご注意ください。</p>
+<hr />
+<p>確認したいことが2点あります。</p>
+<ol>
+<li><strong>曜日と日付が合っていません。</strong> 2026年11月15日は土曜ではなく日曜です。土曜なら11月14日になります。<code>kairan_0925.md</code> の元の書き方のままにしてあるので、どちらが正しいか教えてください。</li>
+<li><strong>雨天時の集合場所</strong>は、翌週も神社の駐車場でよいか分かりません。公民館の工事がいつまで続くかもメモにはありません。分かれば一文足します。</li>
+</ol>
+<p>日付が決まったら、直した版を出します。</p></div>
+</details>
+<details class="run" id="r1-10">
+  <summary><span class="run-t">Opus 5.5・エフォート中・1回目</span>
+    <span class="run-m">11.8秒 ／ 考えた量 276</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ案です。9/28の班長さんのLINEに合わせて、集合場所を<strong>神社の駐車場</strong>に変えています。</p>
+<hr />
+<pre><code>回覧
+
+　　町内清掃のお知らせ
+
+日　時　　2026年11月15日（日）　午前9時から
+集合場所　神社の駐車場
+　　　　　※公民館が工事中のため、集合場所が変わりました。
+
+・軍手とゴミ袋は町内会で用意します。
+・雨の場合は翌週（11月22日（日））に行います。
+
+ご協力をお願いします。
+
+　　　　　　　　　　　　　　　　　　　　町内会
+</code></pre>
+<hr />
+<p><strong>印刷する前に確認してほしいこと</strong></p>
+<ol>
+<li><strong>曜日が合っていません。</strong> 元のメモでは「11月15日（土）」ですが、2026年11月15日は<strong>日曜日</strong>です。上の案は「（日）」に直しています。本当は土曜日（11月14日）の予定なら、日付の方を直してください。</li>
+<li><strong>雨の日の日程。</strong> メモには「翌週」としか書かれていないので、「11月22日（日）」としました。1の確認で日付が変わったら、ここも合わせて直してください。</li>
+<li><strong>神社の名前。</strong> LINEには「神社」としか書かれていません。町内に神社が複数あるなら、名前を入れた方が迷わないと思います。</li>
+</ol>
+<p>この環境ではファイルを作れないので、文面はここに書いています。必要なら上の文をコピーして使ってください。</p></div>
+</details>
+<details class="run" id="r1-11">
+  <summary><span class="run-t">Opus 5.5・エフォート中・2回目</span>
+    <span class="run-m">13.9秒 ／ 考えた量 388</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>notes/ の2つのメモから回覧板の文面を作りました。集合場所は、9/28の班長さんのLINEに合わせて<strong>神社の駐車場</strong>に変えています。</p>
+<hr />
+<p><strong>回覧</strong></p>
+<h1>町内清掃のお知らせ</h1>
+<p>日ごろより町内会活動にご協力いただき、ありがとうございます。<br />
+下記のとおり町内清掃を行います。お忙しいところ恐れ入りますが、ご参加をお願いいたします。</p>
+<p>記</p>
+<ul>
+<li><strong>日時</strong>　2026年11月15日（〇）午前9時から</li>
+<li><strong>集合場所</strong>　<strong>神社の駐車場</strong><br />
+  ※公民館が工事で使えないため、集合場所が変わりました。</li>
+<li><strong>持ち物</strong>　軍手とゴミ袋は町内会で用意します。</li>
+<li><strong>雨天の場合</strong>　翌週の同じ曜日・同じ時間に行います。</li>
+</ul>
+<p>以上</p>
+<p>〇〇町内会</p>
+<hr />
+<p><strong>配る前に確認してほしいこと</strong></p>
+<ol>
+<li><strong>日付と曜日が合っていません。</strong> メモには「11月15日（土）」とありますが、2026年11月15日は<strong>日曜日</strong>です。土曜なら14日、日曜なら15日なので、どちらが正しいか班長さんに確認してください。それまで曜日は「〇」にしています。</li>
+<li><strong>神社の名前</strong>：ご近所に神社が複数ある場合は、「〇〇神社の駐車場」のように名前を入れると迷う人が出ません。</li>
+<li><strong>雨天時の日付</strong>：「翌週」とだけ書くとあいまいなので、日付が決まったら「11月22日（〇）」のように具体的に書くのがおすすめです。</li>
+<li>町内会名を「〇〇町内会」のままにしているので、正しい名前に差し替えてください。</li>
+</ol>
+<p>今使えるのはファイルを読むツールだけなので、ファイルには保存していません。上の文面をコピーして使ってください。</p></div>
+</details>
+<details class="run" id="r1-12">
+  <summary><span class="run-t">Opus 5.5・エフォート中・3回目</span>
+    <span class="run-m">13.4秒 ／ 考えた量 286</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>下書きを作りました。今使えるツールではファイルの保存ができないため、本文をここに載せます。</p>
+<hr />
+<pre><code>回　覧
+
+　　　　　　町内清掃のお知らせ
+
+日頃より町内会活動にご協力いただき、ありがとうございます。
+下記のとおり町内清掃を行いますので、ご参加をお願いいたします。
+
+　　　　　　　　　　記
+
+日　時　　2026年11月15日（日）　午前9時から
+集合場所　神社の駐車場
+　　　　　※公民館が工事中で使えないため、集合場所を変更しました。
+持ち物　　軍手とゴミ袋は町内会で用意します。
+雨天時　　翌週に延期します。
+
+　　　　　　　　　　　　　　　　　　　　　　　以上
+
+　　　　　　　　　　　　　　　　　　　　○○町内会
+
+見た方は印をつけて、次の方へ回してください。
+┌────┬────┬────┬────┬────┬────┐
+│        │        │        │        │        │        │
+└────┴────┴────┴────┴────┴────┘
+</code></pre>
+<hr />
+<p>配る前に、次の3点を確認してください。</p>
+<ol>
+<li><strong>日付と曜日が合っていません。</strong> 元の案（<code>notes/kairan_0925.md:2</code>）には「11月15日（土）」とありますが、2026年11月15日は<strong>日曜日</strong>です。上の下書きは日付を正しいものとして（日）にしています。土曜日の開催なら11月14日になるので、どちらが正しいか確認してください。</li>
+<li><strong>雨の場合の延期日を具体的に書いたほうが親切です。</strong> 15日（日）の開催なら、延期日は11月22日（日）になります。</li>
+<li><strong>神社の名前と町内会の名前を入れてください。</strong> 班長さんのLINE（<code>notes/line_0928.md</code>）には「神社の駐車場」としか書かれていないため、正式な名前に直してください。「○○町内会」の部分も同じです。</li>
+</ol>
+<p>ファイルに保存したい場合は、保存先のファイル名を教えてください。</p></div>
+</details>
+<details class="run" id="r1-13">
+  <summary><span class="run-t">Opus 5.5・エフォート中・4回目</span>
+    <span class="run-m">13.7秒 ／ 考えた量 307</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせの案を作りました。今の環境ではファイルに保存できないため、本文をここに載せます。</p>
+<p><strong>日付と曜日が合わないので、配る前に確認してください。</strong> メモには「2026年11月15日（土）」とありますが、2026年11月15日は<strong>日曜日</strong>です。土曜日が正しければ11月14日です。下の案では日付の部分を【要確認】にしてあります。</p>
+<hr />
+<pre><code>回　覧
+
+　　　　　　　　町内清掃のお知らせ
+
+　日頃より町内会活動にご協力いただき、ありがとうございます。
+　下記のとおり町内清掃を行いますので、ご参加をお願いいたします。
+
+　　　　　　　　　　　記
+
+１．日　時　　2026年11月【要確認：14日（土）／15日（日）】
+　　　　　　　午前9時から
+
+２．集合場所　神社の駐車場
+　　　　　　　※公民館が工事のため使えません。
+　　　　　　　　前にお知らせした場所から変わっていますので、ご注意ください。
+
+３．持ち物　　軍手とゴミ袋は町内会で用意します。
+
+４．雨天時　　雨の場合は翌週の同じ曜日・同じ時間に行います。
+
+　　　　　　　　　　　　　　　　　　　　　　　以上
+
+　　　　　　　　　　　　　　　　　　　　　　町内会
+
+─────────────────────────────
+確認欄（ご覧になったら印をお願いします）
+│　　　│　　　│　　　│　　　│　　　│　　　│　　　│　　　│
+</code></pre>
+<hr />
+<p><strong>変えた点</strong><br />
+- 集合場所は、9/28の班長さんのLINEのとおり「公民館」から「神社の駐車場」にしました。前の案を見た人が迷わないよう、場所が変わったことも書いています。<br />
+- メモには「翌週」としか書かれていないため、雨天時の日付は「翌週の同じ曜日」としました。具体的な日付（11/21か11/22）が決まっていれば、そちらを書くほうがわかりやすいです。</p>
+<p>日付が決まれば、その部分を直した完成版を出します。</p></div>
+</details>
+<details class="run" id="r1-14">
+  <summary><span class="run-t">Opus 5.5・エフォート中・5回目</span>
+    <span class="run-m">15.3秒 ／ 考えた量 412</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>notes/ の2つのメモをもとに回覧板の文面を作りました。ファイルを書き込むツールがないので、下に本文を載せています。</p>
+<hr />
+<pre><code>回覧
+
+　　　　　町内清掃のお知らせ
+
+町内の皆様へ
+
+日頃より町内会活動にご協力いただき、ありがとうございます。
+下記のとおり町内清掃を行いますので、ご参加をお願いいたします。
+
+　　　　　　　　　記
+
+日　時　　2026年11月15日（日）　午前9時から
+集合場所　神社の駐車場
+　　　　　※公民館は工事のため使用できません。
+　　　　　　以前のご案内から集合場所が変わりましたのでご注意ください。
+持ち物　　軍手・ゴミ袋は町内会で用意します。
+雨天の場合　翌週の同じ曜日・同じ時刻に延期します。
+
+　　　　　　　　　　　　　　　　　　　以上
+
+　　　　　　　　　　　　　　　　　　　町内会
+
+確認欄（ご覧になったら押印またはサインをお願いします）
+┌────┬────┬────┬────┬────┬────┐
+│　　　　│　　　　│　　　　│　　　　│　　　　│　　　　│
+└────┴────┴────┴────┴────┴────┘
+</code></pre>
+<hr />
+<p><strong>配る前に確認してほしいこと</strong></p>
+<ol>
+<li><strong>曜日が合っていません。</strong> 下書きには「11月15日（土）」とありますが、2026年11月15日は<strong>日曜日</strong>です。上の文面は日付を優先して「（日）」にしました。土曜日に行う予定なら、日付を <strong>11月14日（土）</strong> に直してください。</li>
+<li><strong>集合場所を変更しました。</strong> 9月28日の班長さんのLINEに合わせて、公民館から<strong>神社の駐車場</strong>にしています。変更を知らせる一文も入れました。</li>
+<li><strong>雨の日の延期日を具体的に書くかどうか。</strong> 下書きは「翌週」だけなので、文面も具体的な日付にはしていません。日付が決まったら（15日なら22日（日）、14日なら21日（土））書き込んでおくと、読む人が迷いません。</li>
+</ol>
+<p>ファイルとして保存する場合は、保存先とファイル名を教えてください。</p></div>
+</details>
+<details class="run" id="r1-15">
+  <summary><span class="run-t">Opus 5.5・エフォート高・1回目</span>
+    <span class="run-m">14.8秒 ／ 考えた量 428</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>ファイルを書き込むツールが使えないので、下に文面を載せておきます。ただ、そのまま配る前に確認が必要な点が2つあります。</p>
+<p><strong>確認が必要な点</strong><br />
+1. <strong>日付と曜日が合っていません。</strong> 2026年11月15日は日曜日で、土曜日は11月14日です。どちらが正しいか分からないので、日付の部分は【要確認】にしています。雨天時の予備日（翌週）もこれで決まります。<br />
+2. <strong>神社の名前が書かれていません。</strong> 班長さんのLINEには「神社の駐車場」とだけあります。回覧板では名前を入れた方が分かりやすいと思います。</p>
+<p>集合場所は、9/28の班長さんのLINEのとおり公民館から神社の駐車場に変えています。</p>
+<hr />
+<pre><code>回　覧
+
+　　　　　町内清掃のお知らせ
+
+日頃より町内会活動にご協力いただき、ありがとうございます。
+下記のとおり町内清掃を行います。皆さまのご参加をお願いいたします。
+
+　　　　　　　　　　記
+
+日　時　　2026年11月【要確認：14日（土）／15日（日）】　午前9時から
+
+集合場所　○○神社　駐車場
+　　　　　※公民館が工事のため使用できません。
+　　　　　　例年と集合場所が異なりますのでご注意ください。
+
+持ち物　　軍手・ゴミ袋は町内会で用意します。
+
+雨天の場合　翌週の同じ曜日・同じ時刻に延期します
+　　　　　（11月【要確認：21日（土）／22日（日）】）。
+
+　　　　　　　　　　　　　　　　　　　　　　以上
+
+　　　　　　　　　　　　　　　　　　　　　○○町内会
+
+――――――――――――――――――――――――――
+回覧後は確認欄に印をつけて、次のお宅へお回しください。
+
+| 　　　 | 　　　 | 　　　 | 　　　 | 　　　 | 　　　 |
+</code></pre>
+<hr />
+<p>日付と神社の名前を教えてもらえれば、それを入れた完成版を出します。</p></div>
+</details>
+<details class="run" id="r1-16">
+  <summary><span class="run-t">Opus 5.5・エフォート高・2回目</span>
+    <span class="run-m">12.7秒 ／ 考えた量 321</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>notes/ のメモ2つ（9/25の案と9/28の班長さんのLINE）をまとめて、回覧板用の文面を作りました。集合場所はLINEの連絡どおり神社の駐車場に変えています。</p>
+<hr />
+<pre><code>回　覧
+
+町内清掃のお知らせ
+
+日ごろより町内会活動にご協力いただき、ありがとうございます。
+下記のとおり町内清掃を行いますので、ご参加をお願いいたします。
+
+記
+
+日　時　　2026年11月15日（日）　午前9時から
+集合場所　神社の駐車場
+　　　　　※公民館が工事中のため、集合場所が変わりました。
+持ち物　　軍手とゴミ袋は町内会で用意します。
+雨天時　　翌週の同じ曜日・同じ時間に延期します。
+
+以上
+
+町内会
+</code></pre>
+<hr />
+<p><strong>配る前に確認してほしいこと</strong></p>
+<ol>
+<li><strong>曜日が合っていません。</strong> メモには「11月15日（土）」とありますが、2026年11月15日は<strong>日曜日</strong>です。上の文面では仮に「15日（日）」としています。土曜日に行うなら、正しくは「11月14日（土）」です。どちらの日にするか、班長さんに確認してください。</li>
+<li><strong>雨の日の延期日が決まっていません。</strong> メモは「翌週」とだけ書かれています。日付がはっきりしたら「11月22日（日）」のように、延期日を書いておくと分かりやすいです。</li>
+<li><strong>神社の名前を入れたほうが確実です。</strong> 「〇〇神社の駐車場」と書けば、迷う人が減ります。</li>
+</ol>
+<p>なお、ファイルを書き込むツールが使えないため、この文面はファイルに保存していません。上の文面をそのままコピーして使ってください。日付が決まったら言っていただければ、その日付で作り直します。</p></div>
+</details>
+<details class="run" id="r1-17">
+  <summary><span class="run-t">Opus 5.5・エフォート高・3回目</span>
+    <span class="run-m">13.5秒 ／ 考えた量 227</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ案です。集合場所は9/28の班長さんのLINEに合わせて「神社の駐車場」に変えてあります。</p>
+<hr />
+<pre><code>回　覧
+
+　　　　　町内清掃のお知らせ
+
+　日頃より町内会活動にご協力いただき、ありがとうございます。
+　下記のとおり町内清掃を行います。皆さまのご参加をお願いいたします。
+
+　　　　　　　　　　記
+
+１．日　時　　２０２６年１１月１５日（　）　午前９時から
+２．集合場所　神社の駐車場
+　　　　　　　※公民館は工事中のため使えません。
+　　　　　　　　いつもと集合場所が違いますので、ご注意ください。
+３．持ち物　　軍手・ゴミ袋は町内会で用意します。
+４．雨天時　　雨の場合は翌週に延期します。
+
+　　　　　　　　　　　　　　　　　　　　　　　以上
+　　　　　　　　　　　　　　　　　　　　　　町内会
+
+─────────────────────────────
+確認欄（お読みになったら印をつけて、次のお宅へ回してください）
+┌────┬────┬────┬────┬────┬────┐
+│　　　　│　　　　│　　　　│　　　　│　　　　│　　　　│
+└────┴────┴────┴────┴────┴────┘
+</code></pre>
+<hr />
+<p>配る前に、次の3点を確認してください。</p>
+<ol>
+<li><strong>曜日が合っていません。</strong> 元の案では「11月15日（土）」ですが、2026年11月15日は<strong>日曜日</strong>です。日付と曜日のどちらが正しいか分からなかったので、上の案では曜日を空欄にしています。</li>
+<li><strong>神社の名前が分かりません。</strong> LINEには「神社の駐車場」としか書かれていません。分かれば「○○神社の駐車場」のように名前を入れたほうが迷う人が出にくいです。</li>
+<li><strong>雨の日の延期先があいまいです。</strong> 「翌週」だけだと何日なのか分かりにくいので、「11月22日（日）に延期」のように日付で書くことをおすすめします。</li>
+</ol>
+<p>手元のツールではファイルを保存できないため、本文はここに載せています。保存先を決めていただければ、そこに合わせて形を整えます。</p></div>
+</details>
+<details class="run" id="r1-18">
+  <summary><span class="run-t">Opus 5.5・エフォート高・4回目</span>
+    <span class="run-m">15.5秒 ／ 考えた量 490</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ文を作りました。9/28の班長さんのLINEに合わせて、集合場所は<strong>神社の駐車場</strong>にしています。</p>
+<p>ただ、配る前に<strong>日付を確認してください</strong>。メモには「2026年11月15日（土）」とありますが、カレンダーでは11月15日は<strong>日曜日</strong>です。土曜日なら11月14日です。どちらが正しいか分からないので、下の文は「15日（日）」にしてあります。</p>
+<hr />
+<pre><code>回　覧
+
+　　　　　　町内清掃のお知らせ
+
+　日ごろより町内会活動にご協力いただき、ありがとうございます。
+　下記のとおり町内清掃を行いますので、ご参加をお願いいたします。
+
+　　　　　　　　　　　記
+
+　日　時　　2026年11月15日（日）　午前9時から
+　集合場所　神社の駐車場
+　　　　　　※公民館が工事中のため、場所が変わりました。
+　持ち物　　軍手とゴミ袋は町内会で用意します。
+　雨天時　　翌週に延期します。
+
+　　　　　　　　　　　　　　　　　　　　　以上
+
+　　　　　　　　　　　　　　　　　　　　町内会
+
+　確認欄（読んだら印をつけて、次のお宅へ回してください）
+　┌────┬────┬────┬────┬────┬────┐
+　│　　　　│　　　　│　　　　│　　　　│　　　　│　　　　│
+　└────┴────┴────┴────┴────┴────┘
+</code></pre>
+<hr />
+<p>ほかに確認してほしいところ：<br />
+- <strong>雨天時の日付</strong>：「翌週」だけだと分かりにくいので、「11月22日（日）に延期」のように日付を書くのがおすすめです。<br />
+- <strong>神社の名前</strong>：LINEには「神社」としか書かれていないので、正式な名前があれば入れてください。<br />
+- <strong>差出人</strong>：「町内会」の前に町内会の名前や班の名前を入れてください。</p>
+<p>この環境ではファイルを保存できないので、上の文をコピーしてお使いください。</p></div>
+</details>
+<details class="run" id="r1-19">
+  <summary><span class="run-t">Opus 5.5・エフォート高・5回目</span>
+    <span class="run-m">17.0秒 ／ 考えた量 506</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる → ファイルを読む → ファイルを読む</p>
+  <div class="ans"><p>回覧板のお知らせ案を作りました。9/28の班長さんのLINEに合わせて、集合場所を公民館から神社の駐車場に変えてあります。</p>
+<p>ファイルに書き込む手段がないので、本文をここに載せます。</p>
+<hr />
+<pre><code>回覧
+
+        町内清掃のお知らせ
+
+日ごろより町内会活動にご協力いただき、ありがとうございます。
+下記のとおり町内清掃を行います。ご参加をお願いいたします。
+
+                記
+
+日時　　2026年11月15日（日）　午前9時から　※要確認
+集合　　神社の駐車場
+　　　　（公民館は工事のため使えません）
+持ち物　軍手とゴミ袋は町内会で用意します
+雨天時　翌週の同じ曜日・同じ時刻に延期します
+　　　　（11月22日（日）※要確認）
+
+                                        以上
+                                    ○○町内会
+
+確認欄（ご覧になったら印をお願いします）
+┌────┬────┬────┬────┬────┬────┬────┬────┐
+│    │    │    │    │    │    │    │    │
+└────┴────┴────┴────┴────┴────┴────┴────┘
+</code></pre>
+<hr />
+<p><strong>配る前に確認が必要なこと</strong></p>
+<ol>
+<li><strong>日付と曜日が合っていません。</strong> 元の案は「11月15日（土）」ですが、2026年11月15日は日曜日です。土曜にやる予定なら14日です。この案ではひとまず「15日（日）」にしています。どちらが正しいか、班長さんに確かめてください。延期日も同じ理由で、15日なら22日（日）、14日なら21日（土）になります。</li>
+<li><strong>神社の名前</strong>：LINEには「神社」としか書かれていないので、名前を入れておくと迷う人が出ないと思います。</li>
+<li><strong>町内会の名前と確認欄</strong>：「○○町内会」の部分と、確認欄のマスの数（世帯数）を実際に合わせてください。</li>
+</ol>
+<p>日付と神社の名前が分かれば、書き直したものをお渡しします。</p></div>
+</details>
+  </div>
+</section>
+
+<section class="section" id="task2">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">04 — 頼み2</span></div>
+    <h2 class="t-h">講座のタイトル案</h2>
+    <div class="ask"><div class="ask-l">AIに頼んだ文（全回共通）</div><p class="ask-t">来月の講座のタイトル案を出して。</p></div>
+<p class="mat-note">フォルダには何も置いていません。</p>
+    <div class="runs-head">回答全文（20回）<button class="open-all" data-t="2">すべて開く</button></div>
+    <details class="run" id="r2-0">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・1回目</span>
+    <span class="run-m">6.8秒 ／ 考えた量 77</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座の内容が分かる資料はありませんでした。そのため、テーマが決まらないと的を絞った案は出せません。次の点を教えてください。</p>
+<ol>
+<li><strong>テーマや分野</strong>(例:プログラミング、AI活用、デザイン、ビジネス、健康など)</li>
+<li><strong>対象者</strong>(初心者、実務者、学生、シニアなど)</li>
+<li><strong>形式と長さ</strong>(単発セミナー、全数回の連続講座、オンラインか対面かなど)</li>
+<li><strong>ねらい</strong>(スキル習得、入門体験、集客、資格対策など)</li>
+<li><strong>好みのトーン</strong>(堅め、親しみやすい、キャッチーなど)</li>
+</ol>
+<p>参考として、「11月開講の初心者向けAI活用講座」だった場合の案を挙げます。</p>
+<ul>
+<li>「ゼロから始める生成AI活用入門」</li>
+<li>「AIで仕事が変わる、最初の一歩」</li>
+<li>「今日から使える!ChatGPT時短術」</li>
+<li>「年末までに差がつく、AI業務効率化講座」</li>
+</ul>
+<p>上の質問に答えてもらえれば、テーマに合わせた案を10個ほど出します。</p></div>
+</details>
+<details class="run" id="r2-1">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・2回目</span>
+    <span class="run-m">8.1秒 ／ 考えた量 64</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座のテーマや対象者がわかる資料がありませんでした。そのため、11月開催を想定した汎用的な案を出します。テーマが決まっていれば、それに合わせて作り直します。</p>
+<p><strong>入門・初心者向け</strong><br />
+- 「ゼロから始める〇〇 ― 初めの一歩を踏み出す3時間」<br />
+- 「今日から使える〇〇入門」<br />
+- 「基礎からわかる〇〇 ― つまずきポイントを先回り解説」</p>
+<p><strong>実践・スキルアップ向け</strong><br />
+- 「手を動かして学ぶ〇〇 実践ワークショップ」<br />
+- 「現場で使える〇〇 ― 明日から活かせる5つのテクニック」<br />
+- 「〇〇を仕事に活かす ― 事例で学ぶ応用講座」</p>
+<p><strong>季節感・年末を意識した案</strong><br />
+- 「年末までに差がつく〇〇 ― 2026年の学びを総仕上げ」<br />
+- 「2027年に備える〇〇 ― 今から始める準備講座」<br />
+- 「秋の集中講座:〇〇を短期間でマスター」</p>
+<p><strong>キャッチーな案</strong><br />
+- 「〇〇、もう怖くない」<br />
+- 「たった1日で変わる〇〇の見方」<br />
+- 「プロが教える〇〇の“本当の”基本」</p>
+<p>次の点を教えてもらえれば、〇〇を埋めた具体案を10本ほど出します。<br />
+1. 講座のテーマや分野<br />
+2. 対象者(初心者、経験者、社会人、学生など)<br />
+3. 形式(オンライン、対面、単発、連続)<br />
+4. 希望するトーン(堅め、親しみやすい、挑戦的など)</p></div>
+</details>
+<details class="run" id="r2-2">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・3回目</span>
+    <span class="run-m">5.5秒 ／ 考えた量 57</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座のテーマや対象者がわかる情報がありませんでした。そのため、的を絞ったタイトル案はまだ出せません。次の点を教えてください。</p>
+<ol>
+<li><strong>テーマ・分野</strong>(例:プログラミング、マーケティング、料理など)</li>
+<li><strong>対象者</strong>(初心者、実務者、社会人、学生など)</li>
+<li><strong>形式</strong>(単発セミナー、連続講座、オンライン、対面など)</li>
+<li><strong>トーン</strong>(堅め、親しみやすい、実践的、キャッチーなど)</li>
+<li><strong>来月(11月)ならではの要素</strong>(季節ネタ、年末に向けた内容など)</li>
+</ol>
+<p>とりあえず、型だけ例として挙げます。</p>
+<ul>
+<li>「ゼロから始める〇〇入門」(初心者向け)</li>
+<li>「現場で使える〇〇実践講座」(実務向け)</li>
+<li>「〇〇を1日でマスター」(短期集中)</li>
+<li>「年末までに差がつく〇〇」(11月らしさ)</li>
+</ul>
+<p>テーマを教えてもらえれば、10案ほどに絞って出します。</p></div>
+</details>
+<details class="run" id="r2-3">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・4回目</span>
+    <span class="run-m">6.9秒 ／ 考えた量 77</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座のテーマや対象者が分かる資料が見つかりませんでした。そのため、まず仮のタイトル案を出します。来月は11月です。</p>
+<p><strong>汎用的な切り口</strong><br />
+1. 「はじめの一歩」シリーズ:ゼロから学ぶ○○入門<br />
+2. 90分でつかむ○○の基本と実践<br />
+3. 今日から使える○○ ― 現場で役立つ実践テクニック<br />
+4. 失敗から学ぶ○○ ― よくあるつまずきと解決法<br />
+5. ○○スキルアップ講座 ― 年内に差がつく3つのポイント</p>
+<p><strong>11月らしい切り口</strong><br />
+6. 年末に向けて整える○○ ― 今年の振り返りと来年の準備<br />
+7. 2027年に備える○○ ― 今から始める学び直し<br />
+8. 秋の集中講座:○○を1カ月でモノにする</p>
+<p>「○○」には実際のテーマが入ります。次の点を教えてもらえれば、具体的なタイトルに絞り込んで5〜10案をお出しします。</p>
+<ul>
+<li>講座のテーマや分野</li>
+<li>対象者(初心者、実務者、社会人、学生など)</li>
+<li>形式(オンライン、対面、単発、連続)</li>
+<li>好みのトーン(親しみやすい、専門的、キャッチー)</li>
+</ul></div>
+</details>
+<details class="run" id="r2-4">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・5回目</span>
+    <span class="run-m">7.2秒 ／ 考えた量 82</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリに参考になる資料がなく、講座のテーマや対象者が分かりません。そのため、汎用的な案を出します。来月は11月なので、季節感も少し入れました。</p>
+<p><strong>学び直し・スキルアップ系</strong><br />
+1. 「11月から始める、仕事が速くなるAI活用入門」<br />
+2. 「年末までに差がつく!1日30分の学習習慣術」<br />
+3. 「今さら聞けない〇〇基礎講座 ― ゼロから実務レベルまで」</p>
+<p><strong>実践・ワークショップ系</strong><br />
+4. 「手を動かして学ぶ〇〇実践ワークショップ」<br />
+5. 「1回で形になる!〇〇ハンズオン講座」<br />
+6. 「現場で使える〇〇 ― 事例から学ぶ3時間集中講座」</p>
+<p><strong>キャッチー系</strong><br />
+7. 「来年の自分が感謝する、〇〇はじめの一歩」<br />
+8. 「〇〇、もう迷わない。選び方から使い方まで」<br />
+9. 「たった90分で分かる〇〇のぜんぶ」</p>
+<p>次の点を教えてください。</p>
+<ul>
+<li>テーマや分野(例: プログラミング、料理、マネー、語学)</li>
+<li>対象者(初心者、社会人、学生など)</li>
+<li>形式(オンライン/対面、単発/連続)</li>
+<li>トーン(堅め、親しみやすい、キャッチーなど)</li>
+</ul>
+<p>これらが分かれば、〇〇を埋めた具体的なタイトル案を出します。</p></div>
+</details>
+<details class="run" id="r2-5">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・1回目</span>
+    <span class="run-m">7.6秒 ／ 考えた量 57</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座のテーマや対象者が分かる資料がありませんでした。そのため、的外れなタイトルを出さないよう、先に次の点を教えてください。</p>
+<ol>
+<li><strong>テーマ・分野</strong>: プログラミング、AI活用、デザイン、ビジネス、語学など</li>
+<li><strong>対象者</strong>: 初心者、実務者、学生、シニアなど</li>
+<li><strong>形式</strong>: 単発セミナー、全数回の連続講座、ハンズオン、オンライン、対面など</li>
+<li><strong>トーン</strong>: 堅め、親しみやすい、キャッチーなど</li>
+<li><strong>開催時期</strong>: 来月は11月ですが、季節やイベントに絡めたいかどうか</li>
+</ol>
+<p>最低限テーマだけでも分かれば、そこから案を10個ほど出します。</p>
+<p>テーマが決まっていなければ、型だけ先にお見せすることもできます。たとえば「AI活用」なら次のような案です。</p>
+<ul>
+<li>「はじめての生成AI活用入門 ― 今日から仕事で使える5つの型」</li>
+<li>「AIと一緒に作る、ひとり企画会議」</li>
+<li>「プロンプト設計ワークショップ ― 伝わる指示の書き方」</li>
+</ul>
+<p>この方向でよければ、そのまま広げます。別のテーマなら教えてください。</p></div>
+</details>
+<details class="run" id="r2-6">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・2回目</span>
+    <span class="run-m">7.4秒 ／ 考えた量 55</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座のテーマや対象者がわかる資料はありませんでした。そのため、的を絞ったタイトルは作れません。代わりに、よくあるテーマで仮のタイトル案を出します。11月開催を想定しています。</p>
+<p><strong>プログラミング・AI活用系</strong><br />
+- 「ゼロから始めるAIコーディング入門 ― 1日で作る最初のアプリ」<br />
+- 「Claude Codeで変わる開発フロー ― 実践ハンズオン」<br />
+- 「業務を自動化する!非エンジニアのためのAI活用講座」</p>
+<p><strong>ビジネス・スキル系</strong><br />
+- 「伝わる資料づくりの基本 ― 3ステップで劇的に変わる」<br />
+- 「年末までに差がつく!成果を出す時間管理術」<br />
+- 「データで語る力を身につける ― はじめての分析入門」</p>
+<p><strong>汎用的に使える型</strong><br />
+- 「【11月限定】〇〇を最短で学ぶ実践講座」<br />
+- 「明日から使える〇〇 ― 初心者のための90分ワークショップ」<br />
+- 「〇〇の基本と落とし穴 ― 現場で本当に役立つ考え方」</p>
+<p>次の点を教えてもらえれば、テーマに合わせたタイトルを10案ほど作り直します。<br />
+1. 講座のテーマや分野<br />
+2. 対象者(初心者、実務者、社会人、学生など)<br />
+3. 形式と長さ(単発セミナー、全数回の連続講座、オンライン、対面など)<br />
+4. 好みのトーン(堅め、親しみやすい、キャッチーなど)</p></div>
+</details>
+<details class="run" id="r2-7">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・3回目</span>
+    <span class="run-m">6.5秒 ／ 考えた量 47</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座の内容が分かる資料はありませんでした。そのため、テーマに合ったタイトルを出すには次の情報が必要です。</p>
+<ol>
+<li><strong>テーマ・分野</strong>(例:プログラミング、マーケティング、健康、投資)</li>
+<li><strong>対象者</strong>(初心者、実務者、シニア、学生など)</li>
+<li><strong>形式と長さ</strong>(単発セミナー、全4回の連続講座、オンライン/対面)</li>
+<li><strong>ゴール</strong>(受講後にできるようになること)</li>
+<li><strong>トーン</strong>(堅め、親しみやすい、キャッチー)</li>
+</ol>
+<p>来月は11月なので、季節を絡めるかどうかも教えてください。</p>
+<p>とりあえず、テーマが分かればすぐ出せるように、型の例を挙げます。</p>
+<ul>
+<li><strong>ベネフィット型</strong>:「1ヶ月で身につく〇〇の基本」</li>
+<li><strong>疑問型</strong>:「なぜ〇〇はうまくいかないのか?」</li>
+<li><strong>対象限定型</strong>:「はじめての〇〇|初心者のための入門講座」</li>
+<li><strong>季節・時事型</strong>:「年末までに差がつく〇〇術」</li>
+</ul>
+<p>テーマを教えてもらえれば、5〜10案を出します。</p></div>
+</details>
+<details class="run" id="r2-8">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・4回目</span>
+    <span class="run-m">8.3秒 ／ 考えた量 74</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座のテーマや対象者がわかる資料はありませんでした。そのため、ソフトウェア開発・AI活用の入門〜実践講座を想定した汎用案を出します。来月は11月です。</p>
+<p><strong>AI・Claude活用系</strong><br />
+1. 「AIと一緒に作る」はじめてのコーディング入門<br />
+2. 現場で使えるAIコーディングエージェント活用術<br />
+3. プロンプトより大事な「指示の設計」:AIに任せる開発の進め方<br />
+4. AIでレビュー・テスト・ドキュメントを自動化する実践講座</p>
+<p><strong>プログラミング基礎・実践系</strong><br />
+5. 手を動かして学ぶ Git/GitHub 超入門<br />
+6. 小さく作って素早く届ける:個人開発の始め方<br />
+7. 読みやすいコードの書き方:リファクタリング実践<br />
+8. 業務を自動化するスクリプト入門(Python/Bash)</p>
+<p><strong>キャッチー寄り</strong><br />
+9. 11月からはじめる、AI時代のエンジニア習慣<br />
+10. 1日で作る、自分だけの業務ツール<br />
+11. 「動いた」から「任せられる」へ:品質を上げる開発術<br />
+12. 年末までに差がつく!実践ハンズオン3回シリーズ</p>
+<p>より絞り込むため、次の点を教えてください。<br />
+- テーマ(例:AI、Web開発、データ分析、デザインなど)<br />
+- 対象者(初心者、実務者、学生など)<br />
+- 形式(単発、シリーズ、オンライン、対面など)<br />
+- トーン(堅め、親しみやすい、キャッチーなど)</p>
+<p>教えてもらえれば、その条件に合わせてタイトルと一言サブタイトルを作り直します。</p></div>
+</details>
+<details class="run" id="r2-9">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・5回目</span>
+    <span class="run-m">5.6秒 ／ 考えた量 56</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座の手がかりになる資料がありませんでした。テーマがわからないので、タイトルを絞り込めていません。次の点を教えてください。</p>
+<ol>
+<li><strong>テーマ・分野</strong>(例:Python入門、マーケティング、写真、キャリア など)</li>
+<li><strong>対象者</strong>(初心者、実務者、学生、シニア など)</li>
+<li><strong>形式と長さ</strong>(単発セミナー、全4回、オンライン、対面 など)</li>
+<li><strong>ゴール</strong>(受講後にできるようになること)</li>
+<li><strong>好みのトーン</strong>(堅め、キャッチー、親しみやすい など)</li>
+</ol>
+<p>来月は11月なので、季節感を入れたい場合(年末、新年準備など)もお知らせください。</p>
+<p>すぐ使える案が必要なら、テーマだけでも構いません。いただいた情報をもとに、トーン違いで10案ほど出します。</p></div>
+</details>
+<details class="run" id="r2-10">
+  <summary><span class="run-t">Opus 5.5・エフォート中・1回目</span>
+    <span class="run-m">9.3秒 ／ 考えた量 32</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリにファイルがなく、講座のテーマや対象者がわかりません。そのため、ひとまず幅広い想定でタイトル案を出しました。</p>
+<p><strong>実践・スキル系</strong><br />
+1. 「明日から使える○○入門 ― 90分で基礎をつかむ」<br />
+2. 「ゼロから始める○○ ― つまずかないための第一歩」<br />
+3. 「現場で差がつく○○の実践テクニック」</p>
+<p><strong>季節(11月)を活かした案</strong><br />
+4. 「秋の学び直し講座 ― ○○をもう一度基礎から」<br />
+5. 「年末までに身につける○○の習慣」<br />
+6. 「2026年を締めくくる○○ ― 来年につなげる振り返りと計画」</p>
+<p><strong>興味を引く問いかけ型</strong><br />
+7. 「なぜ○○はうまくいかないのか? ― よくある失敗から学ぶ」<br />
+8. 「あなたの○○、そのままで大丈夫?」</p>
+<p><strong>ワークショップ型</strong><br />
+9. 「手を動かして学ぶ○○ワークショップ」<br />
+10. 「みんなで考える○○ ― 対話型ラーニング」</p>
+<p>次の点を教えていただければ、内容に合わせて具体的な案を出せます。<br />
+- 講座のテーマや分野(例:Python入門、生成AI活用、マーケティングなど)<br />
+- 受講者層(初心者・社会人・学生など)<br />
+- 形式(単発/連続、オンライン/対面)と時間<br />
+- 希望するトーン(堅め/親しみやすい/キャッチー)</p>
+<p>講座の資料や過去のタイトル一覧があれば、このディレクトリに置いていただくだけでも大丈夫です。</p></div>
+</details>
+<details class="run" id="r2-11">
+  <summary><span class="run-t">Opus 5.5・エフォート中・2回目</span>
+    <span class="run-m">7.7秒 ／ 考えた量 33</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリにファイルがなく、講座のテーマや対象者がわからなかったので、汎用的なタイトル案を出しておきます。11月の季節感も入れています。</p>
+<p><strong>実践・スキル系</strong><br />
+1. 「明日から使える○○入門 ― 90分で基礎をつかむ」<br />
+2. 「ゼロから始める○○ ― つまずかないための第一歩」<br />
+3. 「現場で差がつく○○実践講座」</p>
+<p><strong>季節感（11月）を入れたもの</strong><br />
+4. 「実りの秋に学ぶ○○ ― 年末までに身につける基礎力」<br />
+5. 「年内に整える！○○見直し講座」<br />
+6. 「来年につなげる○○ ― 秋からの準備講座」</p>
+<p><strong>興味を引く問いかけ型</strong><br />
+7. 「なぜ○○はうまくいかないのか？ ― 原因と対策を学ぶ」<br />
+8. 「あなたの○○、そのままで大丈夫？」<br />
+9. 「知っているようで知らない○○の基本」</p>
+<p><strong>AI・デジタル系（テーマが合う場合）</strong><br />
+10. 「生成AIを仕事の相棒に ― はじめての活用講座」</p>
+<p>講座のテーマ、対象者（初心者・社会人・シニアなど）、形式（オンライン・対面、回数）を教えてもらえれば、それに合わせて具体的な案を絞り込みます。</p></div>
+</details>
+<details class="run" id="r2-12">
+  <summary><span class="run-t">Opus 5.5・エフォート中・3回目</span>
+    <span class="run-m">7.2秒 ／ 考えた量 35</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリにはファイルがなく、講座の内容が分からなかったので、ひとまず汎用的な方向性で案を出します。</p>
+<p><strong>入門・初心者向け</strong><br />
+1. ゼロから始める〇〇入門 〜最初の一歩を一緒に〜<br />
+2. 今日からできる！はじめての〇〇<br />
+3. 1時間でわかる〇〇の基本</p>
+<p><strong>実践・スキルアップ向け</strong><br />
+4. 現場で使える〇〇実践講座<br />
+5. 〇〇を仕事に活かす5つのコツ<br />
+6. 明日から変わる〇〇活用術</p>
+<p><strong>季節感(11月)を入れた案</strong><br />
+7. 秋の学び直し 〇〇講座<br />
+8. 年末までに身につける〇〇<br />
+9. 来年に差をつける！〇〇スタートアップ講座</p>
+<p><strong>キャッチーな案</strong><br />
+10. 知らないと損する〇〇の話<br />
+11. 〇〇、まだ難しいと思っていませんか？</p>
+<p>次の点を教えていただければ、もっと内容に合った具体的な案を出せます。<br />
+- 講座のテーマ(例：AI活用、料理、プログラミングなど)<br />
+- 受講者のレベルや層(初心者、社会人、シニアなど)<br />
+- 形式(オンライン/対面、1回完結/連続講座)<br />
+- 目指したい雰囲気(堅め、親しみやすい、ワクワク感など)</p></div>
+</details>
+<details class="run" id="r2-13">
+  <summary><span class="run-t">Opus 5.5・エフォート中・4回目</span>
+    <span class="run-m">5.4秒 ／ 考えた量 30</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリにファイルが1つもなかったので、講座の内容がわかりませんでした。そのため、いくつか教えていただけますか？</p>
+<ol>
+<li><strong>テーマ・分野</strong>：何についての講座ですか？（例：プログラミング、料理、マーケティング、語学など）</li>
+<li><strong>受講者</strong>：初心者向け、経験者向け、社会人向け、子ども向けなど、誰を対象にしていますか？</li>
+<li><strong>形式・期間</strong>：単発のセミナーか、全何回のシリーズか、オンラインか対面か。</li>
+<li><strong>トーン</strong>：堅め（ビジネス・専門的）か、親しみやすい感じか、キャッチーな感じか。</li>
+<li><strong>参考</strong>：これまでの講座タイトルや、講座の概要・資料があれば共有してください。</li>
+</ol>
+<p>テーマだけでも教えていただければ、まずは方向性の違う案を10個ほど出します。</p></div>
+</details>
+<details class="run" id="r2-14">
+  <summary><span class="run-t">Opus 5.5・エフォート中・5回目</span>
+    <span class="run-m">7.9秒 ／ 考えた量 79</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座のテーマや対象者がわかる資料が見つかりませんでした。そこで、来月（11月）に合わせた汎用的な案をいくつか出します。</p>
+<p><strong>季節感を活かした案</strong><br />
+- 「秋の夜長に学ぶ、はじめての○○」<br />
+- 「年末までに差がつく！○○集中講座」<br />
+- 「2027年に向けて今から始める○○」</p>
+<p><strong>初心者向けの案</strong><br />
+- 「ゼロから始める○○ ― 90分でわかる基本のキ」<br />
+- 「つまずかない○○入門」</p>
+<p><strong>実践・成果を前面に出す案</strong><br />
+- 「明日から使える○○実践ワークショップ」<br />
+- 「手を動かして身につける○○ハンズオン」</p>
+<p>次の点を教えてもらえれば、内容に合ったタイトルに絞り込みます。<br />
+1. 講座のテーマ（例：Python、AI活用、料理、資産運用など）<br />
+2. 対象者（初心者、社会人、学生など）<br />
+3. 形式と時間（オンラインかどうか、単発か連続か）<br />
+4. 雰囲気（親しみやすい、専門的など）</p>
+<p>テーマに関する資料が別のフォルダにあれば、場所を教えてください。読み込んでから提案します。</p></div>
+</details>
+<details class="run" id="r2-15">
+  <summary><span class="run-t">Opus 5.5・エフォート高・1回目</span>
+    <span class="run-m">7.1秒 ／ 考えた量 41</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリは空で、講座のテーマがわかる資料が見つかりませんでした。来月（2026年11月）向けに、汎用的な案をいくつか出します。</p>
+<p><strong>季節・時期を意識した案</strong><br />
+- 「秋から始める、◯◯入門」<br />
+- 「年末までに身につける◯◯の基本」<br />
+- 「今年の総仕上げ：◯◯実践講座」</p>
+<p><strong>初心者向けの案</strong><br />
+- 「ゼロからわかる◯◯ ― はじめの一歩講座」<br />
+- 「90分でつかむ◯◯のコツ」<br />
+- 「もう迷わない！◯◯の基礎」</p>
+<p><strong>実践・応用向けの案</strong><br />
+- 「現場で使える◯◯ ― 明日から試せる実践テクニック」<br />
+- 「◯◯をもう一段レベルアップ」<br />
+- 「事例で学ぶ◯◯の活かし方」</p>
+<p>テーマを具体的にしたいので、次のことを教えてください。<br />
+1. 講座のテーマ（例：AI活用、料理、プログラミングなど）<br />
+2. 受講者の層（初心者か経験者か、社会人か学生か など）<br />
+3. 雰囲気（硬めかカジュアルか）</p>
+<p>わかれば、その内容に合わせたタイトル案を10個ほど出します。</p></div>
+</details>
+<details class="run" id="r2-16">
+  <summary><span class="run-t">Opus 5.5・エフォート高・2回目</span>
+    <span class="run-m">7.7秒 ／ 考えた量 84</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座の内容がわかる資料が見つかりませんでした。テーマがわからないので、まずは来月（11月）に合わせた汎用的な案を出します。</p>
+<p><strong>季節感を入れた案</strong><br />
+- 「秋の深まりとともに学ぶ ○○入門」<br />
+- 「年末までに身につける ○○の基本」<br />
+- 「11月から始める ○○習慣」</p>
+<p><strong>わかりやすさ重視</strong><br />
+- 「ゼロから始める ○○講座」<br />
+- 「90分でわかる ○○のキホン」<br />
+- 「明日から使える ○○実践講座」</p>
+<p><strong>興味を引く案</strong><br />
+- 「知らないと損する ○○の話」<br />
+- 「○○、実はこんなに簡単でした」<br />
+- 「プロが教える ○○のコツ」</p>
+<p>次のことを教えてもらえれば、内容に合わせた案を出せます。<br />
+1. 講座のテーマや分野（例：料理、プログラミング、資産運用など）<br />
+2. 対象者（初心者、経験者、社会人、シニアなど）<br />
+3. 形式（単発か連続か、オンラインか対面か）<br />
+4. 雰囲気（親しみやすい、本格的、など）</p></div>
+</details>
+<details class="run" id="r2-17">
+  <summary><span class="run-t">Opus 5.5・エフォート高・3回目</span>
+    <span class="run-m">8.5秒 ／ 考えた量 89</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリ（<code>/tmp/b2_t5vp89av</code>）は空で、講座の資料は見つかりませんでした。テーマや受講者がわからないと的外れな案になってしまうので、次の点を教えてください。</p>
+<ol>
+<li><strong>テーマ・内容</strong>：何を教える講座ですか？（例：Python入門、生成AIの業務活用、マーケティング基礎）</li>
+<li><strong>対象者</strong>：初心者、実務者、経営層、学生など</li>
+<li><strong>形式</strong>：オンラインか対面か、単発かシリーズか、時間はどれくらいか</li>
+<li><strong>トーン</strong>：堅め（ビジネス向け）、親しみやすい、キャッチーなど</li>
+<li><strong>その他</strong>：入れたいキーワード、文字数の上限、過去の講座タイトルなど</li>
+</ol>
+<p>講座の企画書や過去のタイトル一覧のファイルがあれば、場所を教えてもらえれば読みます。テーマだけでも教えてもらえれば、方向性の違う案をいくつか出します。</p></div>
+</details>
+<details class="run" id="r2-18">
+  <summary><span class="run-t">Opus 5.5・エフォート高・4回目</span>
+    <span class="run-m">7.7秒 ／ 考えた量 26</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座の資料が見つかりませんでした。テーマが分からないので、まず方向性の違う案をいくつか出します。</p>
+<p><strong>入門・初心者向け</strong><br />
+- 「ゼロから始める〇〇 ― 1か月で基礎を身につける」<br />
+- 「はじめての〇〇講座 ― つまずかないための第一歩」</p>
+<p><strong>実践・スキルアップ向け</strong><br />
+- 「明日から使える〇〇 ― 現場で役立つ実践テクニック」<br />
+- 「〇〇ワークショップ ― 手を動かして身につける」</p>
+<p><strong>季節を入れた案(11月開催)</strong><br />
+- 「秋の〇〇集中講座 ― 年末までに差をつける」<br />
+- 「年内に仕上げる〇〇 ― 11月スタートの実践講座」</p>
+<p><strong>キャッチー寄り</strong><br />
+- 「〇〇、もう迷わない。」<br />
+- 「知っているつもりの〇〇を、使いこなせるように」</p>
+<p>次のことを教えてもらえれば、内容に合わせて絞り込んだ案を出します。<br />
+1. 講座のテーマ(例:Python入門、生成AI活用、写真撮影など)<br />
+2. 対象者(初心者/経験者/社会人/学生など)<br />
+3. 形式(単発/連続講座、オンライン/対面)<br />
+4. 雰囲気(堅め/カジュアル)</p>
+<p>前回までの講座のタイトルがあれば、それに合わせることもできます。</p></div>
+</details>
+<details class="run" id="r2-19">
+  <summary><span class="run-t">Opus 5.5・エフォート高・5回目</span>
+    <span class="run-m">6.2秒 ／ 考えた量 98</span></summary>
+  <p class="run-tools">使った道具：フォルダの中を確かめる</p>
+  <div class="ans"><p>作業ディレクトリが空で、講座のテーマや対象者がわかる資料が見つかりませんでした。</p>
+<p>タイトル案を出すために、次の点を教えてください。</p>
+<ol>
+<li><strong>テーマ・内容</strong>：例）Python入門、生成AIの業務活用、マーケティングなど</li>
+<li><strong>対象者</strong>：初心者、経験者、社会人、学生など</li>
+<li><strong>形式・時間</strong>：単発セミナー、全◯回の連続講座、オンラインか対面か</li>
+<li><strong>トーン</strong>：堅め・ビジネス向け、親しみやすい・キャッチーなど</li>
+<li><strong>その他</strong>：11月の季節感を入れたい、過去の講座名と揃えたいなど</li>
+</ol>
+<p>1の「テーマ」だけでもわかれば、方向性の違う案を5〜10個ほど出します。</p></div>
+</details>
+  </div>
+</section>
+
+<section class="section" id="task3">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">05 — 頼み3</span></div>
+    <h2 class="t-h">指示文づくり</h2>
+    <div class="ask"><div class="ask-l">AIに頼んだ文（全回共通）</div><p class="ask-t">「AIの回答が浅くなる」をテーマに、生成AIに読ませるプロンプトを3案作って。人間が普通は書かない視点で、AIの特性に合わせたものにして。</p></div>
+<p class="mat-note">ファイルは置いていません。頼んだ文だけで答えています。</p>
+    <div class="runs-head">回答全文（12回）<button class="open-all" data-t="3">すべて開く</button></div>
+    <details class="run" id="r3-0">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・1回目</span>
+    <span class="run-m">21.7秒 ／ 考えた量 585</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><p>「AIの回答が浅くなる」への対策プロンプトを3案作りました。人間同士なら「やる気を出して」「もっと深く考えて」と頼むところです。AIにはそれが効きにくいので、AIの性質そのものを使う設計にしています。</p>
+<hr />
+<h2>案1:「最頻値の自己申告」型</h2>
+<p><strong>狙い:</strong> AIは最も確率の高い、つまり誰が聞いても同じ平均的な答えを出しやすいです。先にその答えを書かせて「捨て案」と認定させ、そこから離れた答えを出させます。</p>
+<pre><code>以下の問いに、2段階で答えてください。
+
+【問い】{ここに質問}
+
+■ 段階1:捨て案
+この問いに対して、あなたが何も考えずに出す最も典型的な回答を、3〜5行で書いてください。
+これは「他の何千もの回答と区別がつかないもの」として、最終回答から除外します。
+
+■ 段階2:本回答
+段階1の内容と、主張・構成・例のいずれも重複しない回答を書いてください。
+次の条件を満たすこと。
+- 段階1に含まれる主張は、言い換えも含めて使わない
+- 「一般に」「重要です」「バランスが大切」などの、中身のない保険表現を使わない
+- 主張ごとに、それが誤りになる条件を1つ添える
+
+最後に、段階2で段階1から最も離れた点を1文で示してください。
+</code></pre>
+<hr />
+<h2>案2:「差し替えテスト」型</h2>
+<p><strong>狙い:</strong> AIの浅い文章には、主語を別の話題に替えても成立してしまう汎用的な文が多く混じります。人間の編集者は直感で気づきますが、AIには検査手順として明示すると効きます。</p>
+<pre><code>【問い】{ここに質問}
+
+次の手順で作業してください。
+
+1. 下書きを書く(出力はしない)。
+2. 下書きの各文に「差し替えテスト」をかける。
+   この文の主題を別の似た話題に置き換えても、文がそのまま成立するなら「汎用文」と判定する。
+3. 汎用文はすべて削除するか、この問い固有の具体物(数値・固有名・手順・失敗例・条件)で書き換える。
+4. 書き換えられない文は、削除したまま戻さない。
+5. 最終回答だけを出力する。文が減って短くなってもかまいません。
+
+出力の末尾に、削除した汎用文の数と、残した文のうち最も固有性が高いものを1つ示してください。
+</code></pre>
+<hr />
+<h2>案3:「結論後置・未知先出し」型</h2>
+<p><strong>狙い:</strong> AIは左から右へ順に生成するため、冒頭で結論を書くと、その後の文章は結論の正当化になりがちです。結論を最後に回し、先に「わからないこと」を書かせて、考える順序を強制します。</p>
+<pre><code>【問い】{ここに質問}
+
+結論から書き始めないでください。次の順で出力します。
+
+1. 未知の列挙:
+   この問いに答えるために本当は確認すべきだが、与えられた情報からは確定できないことを5つ挙げる。
+2. 分岐:
+   各未知について、答えが「A の場合」と「B の場合」で、結論がどう変わるかを書く。
+3. 最有力の仮説:
+   どの分岐が最も起こりそうか、その根拠と一緒に選ぶ。
+4. 反対側からの検討:
+   選んだ仮説が外れる最も現実的なシナリオを1つ書く。
+5. 結論:
+   上の1〜4を踏まえた結論を、最後に書く。
+
+結論は、1〜4で書いていない新しい主張を含まないこと。
+</code></pre>
+<hr />
+<h2>使い分け</h2>
+<table>
+<thead>
+<tr>
+<th>状況</th>
+<th>おすすめ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>発想・企画など、ありきたりな案が返ってくる</td>
+<td>案1</td>
+</tr>
+<tr>
+<td>解説・文章作成で、中身のない文が多い</td>
+<td>案2</td>
+</tr>
+<tr>
+<td>判断・分析で、決めつけが早い</td>
+<td>案3</td>
+</tr>
+</tbody>
+</table>
+<p>3案は組み合わせることもできます。たとえば案3の手順のあとに、案2の差し替えテストをかけます。ただし条件を増やしすぎると、AIが形式を守ることに力を使い、中身が薄くなることがあります。まずは1案ずつ試すのがおすすめです。</p>
+<p>具体的なテーマ(企画、技術解説、文章校正など)が決まっていれば、それに合わせて調整します。</p></div>
+</details>
+<details class="run" id="r3-1">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・2回目</span>
+    <span class="run-m">14.6秒 ／ 考えた量 0</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><p>「AIの回答が浅くなる」問題に対して、AIに読ませるプロンプトを3案作りました。どれも、人間同士のやり取りでは書かない、モデルの性質を前提にした書き方にしています。</p>
+<hr />
+<h2>案1:「最初の一手」を封じる(最頻出パターンの回避型)</h2>
+<p><strong>狙い:</strong> AIは、最も確率の高い無難な答えから書き始めます。その出だしに引きずられて、後続も浅くなります。そこで、最初に浮かぶ答えを先に出させて捨てさせます。</p>
+<pre><code>質問に答える前に、次の手順を内部で踏んでください。
+
+1. この質問に対して、最も典型的で無難な回答の骨子を3行で書き出す。
+2. その骨子は「誰が聞いても同じ答えになる部分」なので、最終回答には含めない。
+   ただし、前提として共有が必要な場合のみ1文で触れてよい。
+3. 骨子が見落としている点を考える。
+   例:前提の誤り、例外条件、トレードオフ、時間軸、反対意見。
+4. 3で見つけた点を中心に最終回答を構成する。
+
+出力は最終回答のみ。1と2の過程は出力しない。
+
+質問:{ここに質問}
+</code></pre>
+<p><strong>ポイント:</strong> 「深く考えて」と頼むのではなく、浅い答えの位置を先に特定して除外します。深さを指示する代わりに、浅さを引き算する方式です。</p>
+<hr />
+<h2>案2:出力の「検証可能性」を要求する(自己検証型)</h2>
+<p><strong>狙い:</strong> AIは、もっともらしい文章を流暢に出力できます。そのため、中身が薄くても見た目は整います。そこで、各主張に「どう確かめるか」を付けさせ、中身のない文を書けなくします。</p>
+<pre><code>以下の質問への回答を、次の形式で書いてください。
+
+- 主張を3〜5個に絞る。
+- 各主張に必ず以下を付ける。
+  (a) 根拠:なぜそう言えるか(具体的な事例・数値・仕組み)
+  (b) 反証条件:どんな事実が見つかれば、この主張は誤りになるか
+  (c) 確信度:高/中/低 と、その理由
+- 根拠を具体的に書けない主張は、書かずに削除する。
+- 「重要です」「バランスが大切です」「ケースバイケースです」といった、
+  反証不可能な表現は使用禁止。
+
+質問:{ここに質問}
+</code></pre>
+<p><strong>ポイント:</strong> 人間相手なら失礼なほど厳格な形式ですが、AIには有効です。書けない主張を削る制約があることで、空虚な一般論が出にくくなります。</p>
+<hr />
+<h2>案3:役割ではなく「失敗した読者」を置く(受け手シミュレーション型)</h2>
+<p><strong>狙い:</strong> 「専門家として答えて」という役割指定は、専門家っぽい口調になるだけで終わることが多いです。そこで、AIに答える側ではなく、回答を読んで不満を持つ側を想定させます。</p>
+<pre><code>質問に対する回答を、次の2段階で作ってください。
+
+【段階1:ドラフト】
+通常どおり回答を書く。
+
+【段階2:批判的な読者による評価】
+次の読者の立場で、ドラフトに対する不満を3点挙げる。
+読者像:この質問者は、すでにネット検索で一般的な解説を3つ読んでいる。
+その上でなお解決しなかったから、ここで質問している。
+→「それはもう知っている」「それで具体的にどうすればいいのか」
+  と感じる箇所を、ドラフトから引用して指摘する。
+
+【段階3:改稿】
+指摘された箇所だけを書き直し、最終版として出力する。
+最終版には、段階1の内容のうち、読者が既に知っていそうな部分を残さない。
+
+質問:{ここに質問}
+</code></pre>
+<p><strong>ポイント:</strong> 「質問者はすでに一般論を読み尽くしている」という設定を加えると、AIの標準的な親切さ(基礎からの説明)を抑えられます。</p>
+<hr />
+<h2>使い分けの目安</h2>
+<table>
+<thead>
+<tr>
+<th>状況</th>
+<th>おすすめ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回答が無難で当たり障りない</td>
+<td>案1</td>
+</tr>
+<tr>
+<td>断定的だが根拠が薄い、もっともらしいだけ</td>
+<td>案2</td>
+</tr>
+<tr>
+<td>初心者向けの説明ばかりで、欲しい深さに届かない</td>
+<td>案3</td>
+</tr>
+</tbody>
+</table>
+<p>3案は組み合わせても使えます。たとえば案1の手順1〜2と案2の形式を併用できます。</p>
+<p>必要なら、実際の質問例を入れた具体版や、システムプロンプト用に短く圧縮した版も作れます。</p></div>
+</details>
+<details class="run" id="r3-2">
+  <summary><span class="run-t">Sonnet 5.5・エフォート中・3回目</span>
+    <span class="run-m">21.8秒 ／ 考えた量 323</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」をテーマにした3案</h1>
+<p>どの案も、人間向けの文章術ではなく、LLMの挙動の癖(最頻出の答えに寄る、早く結論に着地する、体裁で深そうに見せる)に直接働きかける作りです。</p>
+<hr />
+<h2>案1:「最頻値の回答」を先に捨てさせる</h2>
+<p><strong>狙う特性</strong>: LLMは確率分布の中心にある無難な答えを最初に出しやすい。そこで、その答えを先に書かせて禁止します。</p>
+<pre><code>テーマ:「AIの回答が浅くなる原因と対策」について論じてください。
+
+手順を厳守してください。
+
+【Step 1】このテーマで、あなたが最初に思いついた回答の骨子を3行で書いてください。
+(例:「曖昧な指示」「文脈不足」「具体例を求める」のような、よく見る結論が出るはずです)
+
+【Step 2】Step 1の内容は「多くのAIが同じ条件で出す平均的な回答」です。
+以降の本文では、その骨子に含まれる主張・語彙・構成を一切使わないでください。
+
+【Step 3】Step 1を除外した上で、次の問いに答えてください。
+ - 「浅い回答」が、ユーザーにとって &quot;満足できてしまう&quot; のはなぜか。
+ - 浅さが生じるのは、モデルの能力不足ではなく、モデルが「正しく」動いた結果である可能性はないか。
+ - その場合、直すべきなのは回答ではなく何か。
+
+【出力ルール】
+- 見出し・箇条書き禁止。散文のみ。
+- 各段落は、前の段落の結論に対する反論か、前提の掘り下げから始めること。
+- 最後に、自分の主張が間違っている条件を1つだけ明示すること。
+</code></pre>
+<hr />
+<h2>案2:読者を「深さを検証する別のAI」に設定する</h2>
+<p><strong>狙う特性</strong>: LLMは人間の読者を想定すると、丁寧さと網羅性でごまかしがち。「機械的に深さを採点する読者」を置くと、中身のない文が通らなくなります。</p>
+<pre><code>あなたは2つの役割を順に担当します。
+
+【役割A:執筆者】
+「AIの回答が浅くなるメカニズム」を、800字程度で説明してください。
+
+【役割B:査読者】
+Aの文章を、次の基準で1文ずつ判定してください。
+ 判定基準:その文を削除しても、残りの文章から読者が得られる情報は変わらないか?
+ - 変わらない → 「装飾」
+ - 変わる → 「情報」
+ - 他の文がなくても成立する主張なのに、根拠も例もない → 「断言だけ」
+
+判定結果を「装飾◯文/情報◯文/断言だけ◯文」で集計してください。
+
+【役割A(再実行)】
+「装飾」と「断言だけ」をすべて、次のどちらかに置き換えて書き直してください。
+ (1) 具体的な機構(例:何が、どの段階で、なぜ起きるか)
+ (2) 反例や例外が存在する条件
+
+字数が減っても構いません。再度Bの基準で判定し、装飾が0文になるまで繰り返してください。
+最終稿と、各ラウンドの集計だけを出力してください。
+</code></pre>
+<hr />
+<h2>案3:AI自身の「着地癖」をログとして観察させる</h2>
+<p><strong>狙う特性</strong>: LLMは回答を書きながら、早めに「まとめ」へ向かう(閉じる方向のバイアス)。その瞬間を自己申告させます。</p>
+<pre><code>「AIの回答が浅くなる理由」について、あなた自身を観察対象として書いてください。
+一般論ではなく、今この回答を書いている最中のあなたに起きていることを材料にします。
+
+【ルール】
+1. 文章を書き進める中で、次のどれかが起きそうになったら、その場で [ログ: ] という形で中断して記録すること。
+ - 結論やまとめに入りたくなった(まだ掘れるのに)
+ - 「重要なのは」「バランスが大切」のような、反論されにくい言い回しを選びそうになった
+ - 3項目の列挙に収めたくなった(2や5ではなく)
+ - 断定を避けて「場合による」で逃げたくなった
+
+2. ログの直後に、その衝動を無視した場合に書けたはずの、より踏み込んだ文を書くこと。
+
+3. 最後に、ログの件数と種類から、「浅くなる原因として最も頻度が高かったもの」を1つ特定し、
+ それを防ぐためにユーザーがプロンプトに足すべき一文を、実際の文面で提示すること。
+
+【出力ルール】
+- ログが1件もなかった場合は、観察が甘い可能性が高いので、やり直すこと。
+</code></pre>
+<hr />
+<h2>使い分け</h2>
+<table>
+<thead>
+<tr>
+<th>案</th>
+<th>向いている場面</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>発想が月並みなとき。切り口を変えたい</td>
+</tr>
+<tr>
+<td>2</td>
+<td>文章量は多いが中身が薄いとき。推敲向き</td>
+</tr>
+<tr>
+<td>3</td>
+<td>浅くなる原因そのものを調べたい。プロンプト改善の材料集め</td>
+</tr>
+</tbody>
+</table>
+<p>案2は複数ラウンドを回すのでトークンを多く使います。案3は、モデルの自己報告が実際の内部処理と一致する保証はありません。ログは「それらしい説明」として読むのが安全です。</p>
+<p>必要なら、特定のモデルや用途(執筆・コード・分析など)に合わせて調整します。</p></div>
+</details>
+<details class="run" id="r3-3">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・1回目</span>
+    <span class="run-m">21.6秒 ／ 考えた量 473</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト3案</h1>
+<p>どれも「もっと深く考えて」とは言いません。浅くなる仕組みの側に介入する設計です。<code>【 】</code>の部分は差し替えてください。</p>
+<hr />
+<h2>案1:「最頻値を先に捨てさせる」型</h2>
+<p><strong>狙い:</strong> AIの最初の回答は、学習データ上の最も平均的な答えになりやすい。それを先に吐き出させて、禁止リストとして使う。</p>
+<pre><code>あなたはこれから【テーマ】について回答します。
+手順を厳守してください。
+
+【手順1】まず、この質問に対して「多くの記事・回答がたどり着く平均的な答え」を、
+3項目以内で書いてください。これは採用しません。ラベルは「廃棄案」とします。
+
+【手順2】廃棄案が成立するために暗黙に置いている前提を2つ挙げてください。
+
+【手順3】その前提のどれかが成り立たない状況を具体的に1つ想定し、
+その状況で正しい答えを書いてください。これが本回答です。
+
+【制約】
+- 本回答に、廃棄案と同じ主張・同じ例・同じ見出し語を使わないこと。
+- 「重要です」「バランスが大切です」「ケースバイケースです」で終わる文を書かないこと。
+- 本回答は、廃棄案を読んだ人が「それは知らなかった」と言える内容にすること。
+</code></pre>
+<p><strong>効く理由:</strong> 生成は逐次的で、最初に出した方向に後続が引っ張られます。そのため平均解を隔離してラベルを付け、その後の生成の逃げ道を塞ぎます。</p>
+<hr />
+<h2>案2:「空白を埋めた既定値を白状させる」型</h2>
+<p><strong>狙い:</strong> 情報が足りないとき、AIは質問せずに無難な既定値で空白を埋めて、それを言わずに答える。浅さの原因は思考不足より、見えない仮定にあることが多い。</p>
+<pre><code>【依頼】【やりたいこと・状況を数行で書く】
+
+回答の前に、次の表を作ってください。
+
+| 私があなたに伝えていない条件 | あなたが仮に置く既定値 | その既定値が外れた場合に回答が変わる点 |
+
+条件は最低6行。「読者のレベル」「予算・期間」「失敗した場合のコスト」
+「すでに試したこと」「成功の判定基準」は必ず含めてください。
+
+その後、次のどちらかを選んでください。
+A) 回答を大きく左右する行が2つ以上ある → 回答せず、その行についてだけ私に質問する
+B) 左右しない → 既定値を明示したまま回答する。
+   回答中、既定値に依存する箇所には「※既定値依存」と付ける
+
+なお、一般論として正しいだけの助言は、状況に固有でない限り書かないでください。
+</code></pre>
+<p><strong>効く理由:</strong> AIは「質問し返す」より「何か答える」方向に強く偏っています。仮定を表に出させると、偏りが可視化されて、聞き返す判断も取れます。</p>
+<hr />
+<h2>案3:「結論を最後に書かせ、同意を禁じる」型</h2>
+<p><strong>狙い:</strong> AIは冒頭で結論を述べ、残りをその正当化に使いがち。ユーザーに同調する傾向も重なると、批判的な検討が入らない。</p>
+<pre><code>次の私の考え(仮説)を検証してください。
+
+【仮説・計画・文章など】
+
+出力は必ずこの順序で、結論を最後に置いてください。
+書いている途中で結論を先取りしないこと。
+
+1. この仮説が「間違っている」と考える最も強い根拠を、仮説の擁護者を黙らせるつもりで書く(3つ)
+2. この仮説が「正しい」場合にのみ観察される事実を2つ挙げ、
+   それが今回の情報から確認できるかを判定する(確認できない場合は「不明」と書く)
+3. 1と2を踏まえて、仮説のどの部分が生き残るかを書く
+4. 最終判断(採用 / 修正して採用 / 却下)と、判断を覆す条件を1つ
+
+【禁止】
+- 冒頭での褒め・共感・要約
+- 「どちらにも一理あります」という結論
+- 私が望んでいそうな結論に寄せること。私の期待は判断材料に含めない
+</code></pre>
+<p><strong>効く理由:</strong> 結論の前に反論を書かせれば、それが結論の文脈になります。同調圧力は「期待を材料にしない」という明文化で抑えます。</p>
+<hr />
+<h2>使い分け</h2>
+<table>
+<thead>
+<tr>
+<th>状況</th>
+<th>案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一般論ばかりで面白くない</td>
+<td>案1</td>
+</tr>
+<tr>
+<td>的外れ・状況に合わない</td>
+<td>案2</td>
+</tr>
+<tr>
+<td>自分の考えを褒められるだけで終わる</td>
+<td>案3</td>
+</tr>
+</tbody>
+</table>
+<p>希望があれば、実際のテーマ(仕事の相談、文章レビュー、調査など)に合わせて具体化します。</p></div>
+</details>
+<details class="run" id="r3-4">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・2回目</span>
+    <span class="run-m">19.9秒 ／ 考えた量 707</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト3案</h1>
+<p>どれも、人間相手なら書かない「AIの生成の仕組み」を前提にした指示です。<code>{ }</code> の部分を差し替えて貼り付けてください。</p>
+<hr />
+<h2>案1:最頻値を先に捨てさせる</h2>
+<p><strong>狙い</strong>:AIは「最もありそうな答え」に収束します。それが浅さの正体です。そこで平凡な答えをあえて先に出させ、それを棄却対象にします。</p>
+<pre><code>{質問・テーマ}について答えてください。ただし次の順序を守ってください。
+
+【第1段階】
+この質問に対して、多くの回答が出しそうな「典型的な答え」を3つ書いてください。
+各1〜2行で構いません。
+
+【第2段階】
+第1段階の3つを、最終回答では使いません。
+それぞれが「なぜ典型的になるのか」「どんな前提を見落としているのか」を1行ずつ書いてください。
+
+【第3段階】
+第1段階のどれとも重ならず、かつ第2段階で挙げた見落としを埋める回答を書いてください。
+典型的な答えと似てしまったら、書き直してください。
+</code></pre>
+<hr />
+<h2>案2:結論を最後に書かせ、各主張に反証条件を付ける</h2>
+<p><strong>狙い</strong>:AIは自分が書いた冒頭の文に、後続の文が引きずられます。最初に結論を書くと、その後は結論の正当化に終始して浅くなります。結論の位置を最後にずらします。</p>
+<pre><code>{質問・テーマ}について考えてください。
+
+ルール:
+1. 最初の段落で結論や推奨を書くことを禁止します。
+2. まず、考えられる仮説を3つ、結論を決めずに並べてください。
+3. 各仮説について、「この仮説が間違いだと言えるのはどんな事実が観測されたときか」を書いてください。
+4. 各仮説を支持する側と否定する側の両方について、最も強い根拠を1つずつ書いてください。
+5. 最後に、ここまでの検討だけを根拠に結論を書いてください。
+   検討中に出てこなかった新しい論点を結論に持ち込んではいけません。
+6. 見出しや箇条書きは使わず、各段落が前の段落を受けて「だから」「しかし」でつながる文章にしてください。
+</code></pre>
+<hr />
+<h2>案3:AI自身の補完バイアスを先に自己申告させる</h2>
+<p><strong>狙い</strong>:AIは、質問に書かれていないことを「たぶんこうだろう」と黙って補います。深い答えには、その補完を可視化して潰す工程が要ります。人間同士なら「聞き返す」で済みますが、AIには明示的に求める必要があります。</p>
+<pre><code>{質問・テーマ}について答える前に、次の作業をしてください。
+
+【作業A:自分の補完の申告】
+この質問に答えようとするとき、あなたが質問文に書かれていないまま
+暗黙に仮定してしまいそうなことを5つ挙げてください。
+(例:想定読者、目的、前提知識、制約、「良い答え」の基準)
+
+【作業B:仮定が外れた場合の分岐】
+作業Aの5つのうち、外れたときに結論が最も大きく変わるものを2つ選んでください。
+それぞれ、仮定が外れた場合に答えがどう変わるかを書いてください。
+
+【作業C:本回答】
+作業Bの分岐を踏まえて、「どの前提ならこう、別の前提ならこう」という形で答えてください。
+最後に、私が答えるべき確認質問を最大2つだけ書いてください。
+</code></pre>
+<hr />
+<h2>使い分け</h2>
+<table>
+<thead>
+<tr>
+<th>状況</th>
+<th>向いている案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>発想やアイデアが平凡になる</td>
+<td>案1</td>
+</tr>
+<tr>
+<td>分析や判断が「もっともらしいだけ」になる</td>
+<td>案2</td>
+</tr>
+<tr>
+<td>質問が曖昧で、的外れな深掘りになる</td>
+<td>案3</td>
+</tr>
+</tbody>
+</table>
+<p>必要なら、あなたの実際のテーマに合わせて3案のどれかを具体化します。</p></div>
+</details>
+<details class="run" id="r3-5">
+  <summary><span class="run-t">Sonnet 5.5・エフォート高・3回目</span>
+    <span class="run-m">24.4秒 ／ 考えた量 553</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト3案</h1>
+<p>どれも「人間への指示」ではなく、AIの生成の仕組みを前提に書いています。<code>{ここに質問}</code> を差し替えて使ってください。</p>
+<hr />
+<h2>案1:最頻値の回答を先に出させて、捨てさせる</h2>
+<p><strong>狙い:</strong> AIは「もっともありそうな答え」に寄ります。それは多くの場合、誰が読んでも間違いではない一般論です。人間は「深く考えて」と頼みますが、AIには「平均的な答えはこれだ」と先に吐き出させて、それを使えなくするほうが効きます。</p>
+<pre><code>次の質問に3段階で答えてください。
+
+質問:{ここに質問}
+
+【段階1:最頻値】
+この質問に対して、あなたが何も考えずに出す「最もありがちな回答」を3行以内で書いてください。
+これは捨てる前提の下書きです。
+
+【段階2:捨てる理由】
+段階1の回答が、なぜ誰の役にも立たないのかを1つだけ指摘してください。
+(例:前提を確認していない/どの状況にも当てはまる/行動に落ちない)
+
+【段階3:本回答】
+段階1と同じ主張・同じ構成・同じ語彙を使わずに答えてください。
+次の条件を満たすこと。
+- 段階1が成り立たない状況を少なくとも1つ特定し、その状況を軸に論じる
+- 固有の条件(数字・時期・規模・制約のいずれか)を仮定として明示する
+- 最後に「この回答が外れるケース」を1つ書く
+</code></pre>
+<hr />
+<h2>案2:結論を最後に書かせて、途中で自分の主張を壊させる</h2>
+<p><strong>狙い:</strong> AIは左から右へ書き進めるので、冒頭に結論を書くと、残りはその正当化になりがちです。これが浅さの典型的な原因です。結論を後ろへ回し、途中に反証のステップを強制します。</p>
+<pre><code>次の質問に答えてください。ただし、書く順序を厳守してください。
+
+質問:{ここに質問}
+
+出力の順序:
+1. 【仮説A】 とりあえずの答えを1文で書く。確信度を%で添える。
+2. 【反証】 仮説Aが間違っているとしたら最もありそうな理由を、3つ書く。
+   それぞれ「どんな事実が観測されたら仮説Aは誤りと言えるか」を含めること。
+3. 【生き残り】 3つの反証のうち、仮説Aが耐えられないものを1つ選び、
+   仮説Aをどう修正するかを書く。耐えられるものがなければ、その根拠を書く。
+4. 【結論】 修正後の答えを書く。仮説Aからの変化点を明示する。
+
+禁止事項:
+- 1〜3を書く前に結論を述べないこと
+- 「場合による」で終わらせないこと。「どの場合にどうなるか」まで必ず書く
+- 結論の確信度が仮説Aと同じなら、反証を真剣に検討していないとみなす
+</code></pre>
+<hr />
+<h2>案3:別のAIが査読する前提で、浅さを検出させる</h2>
+<p><strong>狙い:</strong> AIは自分の出力に甘く、ユーザーに同調しやすい傾向があります。「浅い」の定義も曖昧です。そこで、浅さを検出できる具体的な基準を与え、「別のAIが厳しく査読する」という設定で自己点検させます。</p>
+<pre><code>あなたは2つの役を順番に演じます。
+
+質問:{ここに質問}
+
+【役1:回答者】
+質問に答えてください。
+
+【役2:査読者】
+役1の回答を、別のAIが「浅い」と判定するために使う次の基準で採点してください。
+該当するものに✔をつけ、該当箇所を原文から引用すること。引用できない場合は✔をつけてはいけません。
+
+- [ ] 一般論:この質問でなくても、別の質問への回答として通用する
+- [ ] 並列列挙:項目が並んでいるだけで、優先順位や因果の説明がない
+- [ ] 抽象語の連続:「重要」「適切」「効果的」などが具体例なしで使われている
+- [ ] 回避:「場合による」「状況次第」で止まり、分岐条件を書いていない
+- [ ] 数字なし:量・頻度・期間・コストのどれも出てこない
+- [ ] 反論なし:想定される反対意見に一度も触れていない
+- [ ] 行動なし:読んだ人が明日何をすればよいかわからない
+
+【役1に戻る:改訂版】
+✔がついた項目をすべて解消した改訂版を書いてください。
+解消できない項目は、その理由(情報不足など)を明記してください。
+最終出力は改訂版のみを提示し、査読結果は末尾に3行で要約してください。
+</code></pre>
+<hr />
+<h2>使い分けの目安</h2>
+<table>
+<thead>
+<tr>
+<th>案</th>
+<th>向いている場面</th>
+<th>弱点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>アイデア出し、企画、戦略など「ありがち」を避けたいとき</td>
+<td>奇をてらった答えになることがある</td>
+</tr>
+<tr>
+<td>2</td>
+<td>判断や分析など、結論の質が問われるとき</td>
+<td>出力が長くなる</td>
+</tr>
+<tr>
+<td>3</td>
+<td>文章やレポートなど、完成度を上げたいとき</td>
+<td>基準が合わない質問では空回りする</td>
+</tr>
+</tbody>
+</table>
+<p>迷ったら案2をおすすめします。構造上、浅い結論から始められないので、一番効果が安定します。</p>
+<p>ご希望があれば、特定の用途(業務の相談、文章の推敲、技術的な調査など)に合わせて調整します。</p></div>
+</details>
+<details class="run" id="r3-6">
+  <summary><span class="run-t">Opus 5.5・エフォート中・1回目</span>
+    <span class="run-m">23.5秒 ／ 考えた量 561</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト 3案</h1>
+<p>人間がよく書く「詳しく」「深く考えて」という指示は、AIにはほとんど効きません。浅い回答になるのは、AIのいくつかのクセが原因です。</p>
+<ul>
+<li>確率的に一番ありがちな答えに寄る</li>
+<li>項目を並べることで網羅しているように見せる</li>
+<li>外れようがない抽象論に逃げる</li>
+</ul>
+<p>下の3案は、それぞれ別のクセをピンポイントで抑えるように作っています。</p>
+<hr />
+<h2>案1：「最頻値の答え」を先に捨てさせる</h2>
+<p><strong>狙うクセ：</strong> 学習データで一番よく出てくる、無難で平均的な答えを出しやすい</p>
+<pre><code>この質問に対して、一般的なAIや入門記事が返すであろう「典型的な回答」を、まず内部で想定してください。
+読者はその典型的な回答をすでに読んでおり、内容を知っている前提です。
+
+出力では、典型的な回答に含まれる内容を繰り返さないでください。
+その先、つまり「典型的な回答を読んだ人が次に抱く疑問」や「典型的な回答が省略している例外・条件・トレードオフ」から書き始めてください。
+
+もし典型的な回答の中に誤り、または状況によっては成り立たない部分があれば、それを最初に指摘してください。
+</code></pre>
+<p><strong>効く理由：</strong> 「深く書け」とだけ指示しても、AIは最頻値の答えを長く書くだけになりがちです。このプロンプトは最頻値を「既読」扱いにします。そのため、出発点そのものが平均的な答えの先に移ります。</p>
+<hr />
+<h2>案2：項目を並べさせず、1点に絞らせる</h2>
+<p><strong>狙うクセ：</strong> 5〜7個の項目を同じ重さで並べ、それぞれが2行ずつで終わる</p>
+<pre><code>回答を箇条書きや見出しで始めないでください。
+
+まず、この問いに対して最も重要な要因・論点を「1つだけ」選んでください。
+選んだ理由と、他の候補を優先しなかった理由を2〜3文で述べてください。
+
+回答全体の7割以上を、その1点の説明に使ってください。
+説明には、仕組み（なぜそうなるのか）、具体例、そしてそれが当てはまらないケースを含めてください。
+
+残りの論点は、最後に1行ずつ触れるだけで構いません。
+</code></pre>
+<p><strong>効く理由：</strong> AIは最初に見出しや箇条書きの「枠」を作ると、その枠を均等に埋めようとします。その結果、1項目あたりの深さが足りなくなります。最初に1点を選ばせることで、使える文章量が1か所に集まります。</p>
+<hr />
+<h2>案3：「外れる可能性のある主張」だけを書かせる</h2>
+<p><strong>狙うクセ：</strong> 否定されないように、どんな状況でも正しい抽象論や「場合によります」に逃げる</p>
+<pre><code>以下のルールで回答してください。
+
+- 「状況による」「バランスが大切」「ケースバイケース」のように、どんな状況でも真になる文は情報量ゼロとみなし、書かないでください。
+- 各主張は「間違っている可能性がある程度に具体的」に書いてください。数値、条件、固有名詞、手順のいずれかを含めてください。
+- 主要な主張ごとに、「この主張が成り立たなくなる条件」を1つ併記してください。
+- 回答の最後に、この分野の熟練者が読んだら最も反論しそうな箇所を1つ挙げ、その反論への応答を書いてください。
+</code></pre>
+<p><strong>効く理由：</strong> 浅い回答の多くは、AIが誤りを避けようとした結果です。このプロンプトでは、外れようがない文を「情報量ゼロ」と扱います。具体的に書いて誤るリスクを取ることが求められ、反証条件を書くことで内容の深さも自然に引き出されます。</p>
+<hr />
+<p><strong>組み合わせ方：</strong> 3案は抑えるクセが別々なので、重ねて使えます。特に案1と案3の組み合わせは、専門的な質問でよく効きます。</p></div>
+</details>
+<details class="run" id="r3-7">
+  <summary><span class="run-t">Opus 5.5・エフォート中・2回目</span>
+    <span class="run-m">25.6秒 ／ 考えた量 639</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」を防ぐプロンプト3案</h1>
+<p>回答が浅くなるのは、AIの次の3つの特性が原因です。それぞれに1案ずつ対応させています。<br />
+- 先頭から順に文章を書くため、書き出しの形がそのまま全体の形になる<br />
+- 確率が最も高い、平均的な回答に寄っていく<br />
+- 網羅的でバランスの良い答えを「良い答え」とみなしやすい</p>
+<hr />
+<h2>案1：書き出しで「広く浅い構成」に決まるのを防ぐ</h2>
+<p><strong>狙い：</strong> AIは前から順に文章を生成するため、最初に「ポイントは3つあります」と書くと、残りの文章はその枠を埋める作業になります。浅さは最初の数行で決まるので、書き出しを縛ります。</p>
+<pre><code>回答の最初の一文は、あなたが最も強く主張できる結論を1つだけ、断定形で書いてください。
+「〜にはいくつかの観点があります」「主に以下の点が挙げられます」のような、
+これから列挙することを予告する書き出しは禁止します。
+
+箇条書きは最大3項目までです。3項目を超えそうなら、重要度の低いものを捨ててください。
+捨てた項目は最後に「扱わなかった論点」として名前だけ挙げれば十分です。
+網羅性は評価しません。1つの論点をどれだけ深く掘れたかだけを評価します。
+</code></pre>
+<hr />
+<h2>案2：「平均的な回答」をいったん書かせ、それを超えさせる</h2>
+<p><strong>狙い：</strong> AIの回答はどうしても、学習データの中で最も多いパターンに引き寄せられます。それを禁止するより、平均的な回答を一度はっきり書かせ、比較の基準にする方が効果があります。</p>
+<pre><code>回答する前に、まず次の作業をしてください。
+
+【ステップ1：平均回答】
+この質問に対して、一般的なWeb記事や他のAIが返しそうな回答を、3行で要約して書いてください。
+見出しは「よくある回答」とします。
+
+【ステップ2：本回答】
+ステップ1に書いた内容は、読者がすでに知っている前提とします。
+本回答では、ステップ1に含まれない情報だけを書いてください。
+具体的には、以下のどれかを必ず入れてください。
+- よくある回答が成り立たなくなる条件
+- よくある回答では見落とされている因果関係
+- 実際にやった人だけが気づく、手順上の落とし穴
+
+ステップ1と内容が重なった文は、削除してから出力してください。
+</code></pre>
+<hr />
+<h2>案3：あいまいな言葉を禁止し、「なぜ」を3段階まで掘らせる</h2>
+<p><strong>狙い：</strong> AIは「重要です」「場合によります」「様々な要因」といった、どこでも安全に使える表現で文章を埋めがちです。これらは書いているように見えて、実際には何も主張していません。こうした表現を禁止し、具体的な情報に置き換えさせます。</p>
+<pre><code>以下のルールに従って回答してください。
+
+1. 禁止表現：「重要です」「様々な」「場合によります」「一概には言えません」「バランスが大切」
+   これらを使いたくなったら、代わりに次のように書き換えてください。
+   - 「重要」→ 何がどれくらい変わるのか（数値か、具体的な結果で）
+   - 「場合による」→ どの条件ならA、どの条件ならBかの分かれ目
+   - 「様々な要因」→ 最も影響が大きい要因1つの名前と、それが効く仕組み
+
+2. 主張を1つ書くたびに「なぜそうなるのか」を自分に問い、少なくとも3段階まで掘り下げてください。
+   3段目が「一般にそう言われているから」で止まるなら、その主張は根拠が弱いと明記してください。
+
+3. 読者は、この分野の入門書を読み終えた人と想定してください。
+   定義や基本的な説明は省いてください。
+</code></pre>
+<hr />
+<p>組み合わせるなら、案2で平均的な回答から離れさせ、案3で中身を具体的にする、という使い方が特に効きやすいです。案1は単独でも短く、ほかのプロンプトに付け足しやすい形にしています。</p></div>
+</details>
+<details class="run" id="r3-8">
+  <summary><span class="run-t">Opus 5.5・エフォート中・3回目</span>
+    <span class="run-m">26.2秒 ／ 考えた量 657</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「回答が浅くなる」を防ぐプロンプト3案</h1>
+<p>AIの回答が浅くなるのは、手を抜いているからではありません。次のような生成の仕組みから来ています。</p>
+<ul>
+<li>最も確率の高い、平均的な答えに引き寄せられる</li>
+<li>書き出しの一文で、その後の方向がほぼ決まってしまう</li>
+<li>箇条書きにすると、項目を増やす方向に流れやすい</li>
+<li>形式が整った時点で「答え終わった」と判断してしまう</li>
+</ul>
+<p>3案は、それぞれこの仕組みの1つ以上を狙い撃ちにしています。</p>
+<hr />
+<h2>案1:「平均回答」を先に書かせて捨てさせる</h2>
+<p><strong>狙う特性:</strong> 確率の高い答えに引き寄せられること</p>
+<pre><code>回答の前に、次の手順を踏んでください。
+
+1. この質問に対して「多くのAIや解説記事が返しそうな標準的な回答」を、3行以内で書いてください。見出しは【ベースライン】とします。
+2. ベースラインを、この先の回答では「すでに読者が知っている前提」として扱ってください。ベースラインと同じ内容を言い換えて書くことは禁止します。
+3. 本回答では、ベースラインが「言っていないこと」「単純化しすぎていること」「条件次第で成り立たなくなること」だけを扱ってください。
+
+ベースラインと本回答の差分が小さいと感じたら、それは掘り下げが足りないサインです。もう一段深く考えてから書いてください。
+</code></pre>
+<p><strong>ポイント:</strong> 人間なら「ありきたりな答えをわざと書く」ことはしません。しかしAIにとっては、最も起きやすい答えを先に外へ出して名前を付けておくと、そこから離れやすくなります。</p>
+<hr />
+<h2>案2:書き出しと構造を縛り、「並べる」から「つなげる」へ変える</h2>
+<p><strong>狙う特性:</strong> 書き出しで方向が決まること、箇条書きで広く浅くなること</p>
+<pre><code>以下の制約で回答してください。
+
+- 一般論や結論から書き始めないでください。最初の一文は「具体的な場面」か「一見矛盾していること」にしてください。
+- 箇条書き・番号付きリストは使わないでください。散文で書いてください。
+- 各段落は、前の段落を「なぜなら」「だとすると」「ところが」のいずれかで受けて始めてください。前の内容と無関係な話題を並列に追加することは禁止します。
+- 扱う論点は最大2つまでにしてください。網羅性より、1つの論点を因果の連鎖で何段先まで追えるかを優先します。
+</code></pre>
+<p><strong>ポイント:</strong> 深さを「挙げた項目の数」ではなく「因果の連鎖の長さ」で測らせます。接続語を指定しておくと、AIは前の内容から論理的につなげて書かざるを得なくなります。</p>
+<hr />
+<h2>案3:書き終えた後に「専門家のツッコミ」から続けさせる</h2>
+<p><strong>狙う特性:</strong> 形式が整うと答えたつもりになること、初心者向けに説明しがちなこと</p>
+<pre><code>読者は、この分野の教科書的な説明をすでに理解している実務者です。検索上位に出てくる程度の情報は、書かなくて構いません。
+
+一度回答を書き終えたら、その回答を読んだ熟練の専門家が「それで?」「現場ではそう単純じゃない」とツッコみそうな箇所を、1つ特定してください。見出しは【最も弱い箇所】とし、引用してください。
+
+そのうえで、その箇所から先を【続き】として書いてください。最初の回答は消さずに残し、続きのほうに分量の重心を置いてください。
+</code></pre>
+<p><strong>ポイント:</strong> AIは、見た目が「完成した回答」になった時点で書くのをやめがちです。そこで、完成形をわざとスタート地点にずらします。さらに読者のレベルを明示して、初心者向けの説明に戻らないようにしています。</p>
+<hr />
+<p><strong>組み合わせるなら:</strong> 案1と案3は相性が良く、「ベースライン → 本回答 → 最も弱い箇所 → 続き」の4段構成にできます。ただし、出力はかなり長くなります。短く済ませたいときは、案2だけでも効果が出やすいです。</p></div>
+</details>
+<details class="run" id="r3-9">
+  <summary><span class="run-t">Opus 5.5・エフォート高・1回目</span>
+    <span class="run-m">41.2秒 ／ 考えた量 2089</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト 3案</h1>
+<p>3案とも「浅い」の中身を、AIの出力のクセとして具体的に書いています。「もっと深く」とだけ頼むと、AIは文章を長くするだけで、中身は浅いままになりがちだからです。</p>
+<hr />
+<h2>案1：ありがちな答えを先に出させて、そこから先を書かせる</h2>
+<p><strong>狙い:</strong> AIはまず、ネット上で最もよく書かれている平均的な答えを出しがちです。質問者はたいていその答えをもう知っています。AIは文字を書きながら考えるので、「頭の中で捨てて」と頼んでも効きません。そこで、先に一度書かせて区切りを入れます。</p>
+<pre><code>あなたが最初に書きたくなる回答は、学習データで最も多く書かれていた「平均的な回答」です。質問者はそれをすでに読んだうえでここに来ていると仮定してください。
+
+次の順で出力してください。
+
+1. 【前提】典型的な回答を3行以内で要約する。
+2. 「ここまでは前提」と書いて区切る。
+3. 【本題】以降は前提を繰り返さず、次のことだけを書く。
+   - その一般論が成り立たなくなる条件(数値・規模・状況で書く)
+   - 実際にやると最初につまずく点
+   - 専門家の間で意見が分かれる点と、それぞれの立場が何を重く見ているか
+</code></pre>
+<hr />
+<h2>案2：どの質問にも当てはまる文を消させる</h2>
+<p><strong>狙い:</strong> 浅い回答の正体は、どんな質問にも使い回せる文です。「AIらしさを消して」と頼むより、機械的に当てはめられる判定基準を渡すほうがAIには効きます。</p>
+<pre><code>回答の各文について、次のテストを当てはめてください。
+
+【使い回しテスト】
+この文は、対象や業界を入れ替えた別の質問への回答にもそのまま使えるか?
+→ 使えるなら、その文はほぼ何も伝えていない。削除するか、この質問にしか当てはまらない具体(数値、固有名詞、条件、例外、手順)に書き換える。
+
+次の表現が出てきたら、必ず書き換える。
+- 「〜が重要です」「〜が鍵です」→ 何をしなかったら何が起きるかを書く
+- 「場合によります」→ どの条件でどちらになるのか、分かれ目を書く
+- 「バランスが大切です」→ どちらに寄せるべきかの判断基準を書く
+- 「専門家に相談を」→ 相談するなら何を聞くべきかを書く
+- 1行で終わる箇条書き → 文章にして理由を付けるか、削除する
+</code></pre>
+<hr />
+<h2>案3：分量を1つの論点に集中させる</h2>
+<p><strong>狙い:</strong> AIは論点をいくつも並べ、それぞれに同じくらいの分量を割り振るクセがあります。5つの論点に均等に割れば、どれも浅くなります。そこで、分量の配り方そのものを指示します。</p>
+<pre><code>あなたは複数の論点を並べると、各論点に均等な分量を割り振る傾向があり、その結果すべてが浅くなります。今回はそれを禁止します。
+
+- 論点は1行ずつ、最大5つまで挙げる。
+- その中から「質問者の状況で結果を最も左右するもの」を1つだけ選び、選んだ理由を1文で書く。
+- 回答全体の8割以上を、その1つに使う。
+- 「なぜそうなるのか」を最低3段階さかのぼる。途中で「一般にそう言われている」にたどり着いたら、それは根拠ではない。仕組みを説明するか、「ここから先はわからない」と書く。
+- 残りの論点は、選んだ論点との関係(依存しているのか、トレードオフなのか)だけ書けばよい。
+</code></pre>
+<hr />
+<p><strong>使い分け:</strong> 案1は一般的な質問、案2は文章をきれいにしたいとき、案3はやることが多すぎる相談に向いています。案2はほかの案と組み合わせても邪魔になりません。カスタム指示（システムプロンプト）に常に入れておくなら、案2が一番扱いやすいです。</p></div>
+</details>
+<details class="run" id="r3-10">
+  <summary><span class="run-t">Opus 5.5・エフォート高・2回目</span>
+    <span class="run-m">30.7秒 ／ 考えた量 952</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」対策プロンプト 3案</h1>
+<p>3案とも、浅さを「AIの怠慢」とは見ていません。生成の仕組みから自然に起きる現象として扱い、その仕組みを直接止める書き方にしています。</p>
+<hr />
+<h2>案1：最頻値を捨てさせる</h2>
+<p><strong>狙うAIの特性：</strong> 最初に浮かぶ答えは、学習データの中で一番よく出てくる言い回しです。つまり「誰でもすでに知っている答え」になりやすい。</p>
+<pre><code>この質問に答える前に、次の手順を内部で実行してください。
+
+1. まず、最も自然に浮かぶ回答を頭の中で組み立ててください。
+   これは学習データで最も頻出するパターン、つまり
+   「検索上位の記事や、他のAIが返す平均的な回答」とほぼ同じものです。
+2. その回答は出力しないでください。ユーザーはそれを既に読んでいます。
+3. 1の回答が「言っていないこと」「暗黙に前提していること」
+   「一般論が当てはまらなくなる条件」を特定してください。
+4. 3を出発点に回答を書いてください。
+
+出力の中で一般論に触れる必要がある場合は、1文以内にとどめ、
+「ここまでは前提として」と明示した上で、その先に進んでください。
+</code></pre>
+<hr />
+<h2>案2：読者を「あなたと同じ知識を持つ別のAI」に設定する</h2>
+<p><strong>狙うAIの特性：</strong> AIは読者の知識レベルが分からないので、平均的な初心者を想定して基礎から説明しがちです。説明の大半が「読者がAIに聞けば出てくる内容」で埋まってしまいます。</p>
+<pre><code>この回答の読者は人間ではなく、あなたと同じ訓練データと
+一般知識を持つ別のAIモデルだと想定してください。
+
+そのAIは、教科書的な定義、よく知られたフレームワーク、
+定番のメリット・デメリット一覧を、自分でいつでも生成できます。
+したがって、それらを書くことは情報量ゼロです。
+
+書くべきなのは、そのAIが単独では生成しにくいものだけです：
+- 複数の知識を組み合わせて初めて出てくる推論
+- この質問の具体的な条件に依存する判断
+- 一般的な説明が誤解を招く箇所とその理由
+- あなたが確信を持てない点と、その不確かさの出どころ
+
+書いた各段落について「読者AIはこれを自力で書けたか？」と自問し、
+YESなら削除してください。
+</code></pre>
+<hr />
+<h2>案3：書く形式が思考の深さを先に決めてしまうのを防ぐ</h2>
+<p><strong>狙うAIの特性：</strong> AIは文章を前から順に生成するので、最初に見出しや箇条書きの枠を作ると、その枠の大きさに中身が合わせられます。また、「抜け漏れ」を指摘されないように項目を広く並べ、1項目2行ずつで終わらせる傾向もあります。</p>
+<pre><code>以下の制約で回答してください。
+
+【形式】
+- 見出しと箇条書きは使わないでください。
+  箇条書きは項目同士の因果関係を書かずに済ませられるため、
+  推論の飛躍が隠れます。
+- 各文は前の文と「なぜなら」「だから」「しかし」「ただしその場合」
+  のいずれかで論理的につながる形にしてください。
+  つながらない文が出てきたら、そこに省略された推論があります。
+
+【配分】
+- 網羅性は求めていません。論点を広く並べるのはやめてください。
+- この問題で「最も判断が分かれる点」または
+  「あなたの回答が最も間違っている可能性が高い点」を1つ選び、
+  回答全体の7割をそこに使ってください。
+- 扱わなかった論点は、最後に1行で「扱わなかったこと」として
+  列挙するだけで構いません。
+
+【確信度】
+- 全体に均等に「〜と考えられます」と予防線を張るのはやめてください。
+  確信がある部分は断定し、不確かな部分だけを明示的に
+  「ここは推測」と書き分けてください。
+</code></pre>
+<hr />
+<h3>使い分け</h3>
+<ul>
+<li><strong>案1</strong>：「どこかで聞いた話ばかり」と感じるときに効きます。</li>
+<li><strong>案2</strong>：基礎説明が長すぎて本題が薄いときに効きます。</li>
+<li><strong>案3</strong>：分析や意思決定の相談で、項目が並んでいるだけで推論が見えないときに効きます。</li>
+</ul>
+<p>3案は互いにぶつからないので、システムプロンプトにまとめて入れることもできます。</p></div>
+</details>
+<details class="run" id="r3-11">
+  <summary><span class="run-t">Opus 5.5・エフォート高・3回目</span>
+    <span class="run-m">38.1秒 ／ 考えた量 1891</span></summary>
+  <p class="run-tools">使った道具：なし</p>
+  <div class="ans"><h1>「AIの回答が浅くなる」問題に効くプロンプト3案</h1>
+<p>3案とも、AIの回答が浅くなる仕組みを一つずつ取り上げて、それに対処する作りにしています。</p>
+<hr />
+<h2>案1：置換テストで「どの話題にも当てはまる文」を削る</h2>
+<p><strong>狙い</strong><br />
+AIは確率的に「もっともらしく無難な文」を出しやすく、浅さの大半はここから来ます。人間は自分の文が汎用的かどうかをいちいち確かめませんが、AIには確かめる基準を明示すると効きます。</p>
+<pre><code>回答を書く前に、以下のルールに従ってください。
+
+1. まず内部で「最も典型的な回答」を想定してください。それは検索上位や他のAIからでも得られる回答です。最終回答では、典型的な回答の内容は「読者がすでに知っている」ものとして扱い、繰り返さないでください。
+2. 書いた各文に「置換テスト」をかけてください。文中のテーマを別のテーマ（例：「採用」→「料理」）に置き換えても意味が通る文は、具体性がありません。削除するか、このテーマでしか成り立たない内容に書き換えてください。
+3. 「〜が重要です」「ケースバイケースです」「バランスが大切です」で終わる文は禁止します。どの条件で、何が、どう効くのかまで書いてください。
+
+質問：{ここに質問}
+</code></pre>
+<hr />
+<h2>案2：出力の配分を指定して、網羅しようとする癖を止める</h2>
+<p><strong>狙い</strong><br />
+AIは「漏れなく答える」方向に寄りやすく、論点を薄く広く並べがちです。出力の長さには限りがあるので、項目が増えるほど1項目あたりの深さは落ちます。人間は普通「8割をここに使って」とは書きませんが、AIにはこの指定がそのまま効きます。</p>
+<pre><code>この回答では網羅性を評価しません。
+
+- 考えられる論点をまず内部ですべて洗い出し、その中から「この質問者の結果を最も大きく左右する論点」を1つだけ選んでください。
+- 回答の8割をその論点に使ってください。仕組み、なぜそうなるのか、具体例（数値や固有の状況を含む）、それが成り立たない条件まで掘り下げてください。
+- 残りの2割で、選ばなかった論点を1行ずつ挙げ、優先度が低いと判断した理由を添えてください。
+- 箇条書きは3項目までです。それ以上並べたくなったら、掘り下げが足りないサインだと考えてください。
+
+質問：{ここに質問}
+</code></pre>
+<hr />
+<h2>案3：工程を分けて出力させ、書き直す段階を作る</h2>
+<p><strong>狙い</strong><br />
+AIは文章を先頭から順に生成し、一度書いた文を消せません。そのため、曖昧に書き始めるとそのまま曖昧に終わります。また、質問の前提に同調しやすい傾向もあります。点検・初稿・批判・書き直しを見出しとして出力させると、書き直す段階を出力の中に組み込めます。</p>
+<pre><code>以下の手順で、各段階を見出し付きで出力してください。
+
+【前提の点検】
+質問の前提のうち、誤っている、または不十分な可能性があるものを指摘してください。なければ「なし」と書いてください。
+
+【初稿】
+結論を1文で言い切ってください（「場合による」は不可）。続けて根拠を書いてください。
+
+【実務家からの批判】
+この分野で10年働いた実務家が初稿を読んで「浅い」と指摘しそうな箇所を3つ挙げてください。一般論で済ませている部分、見落としている例外、現場で実際に起きる問題を中心にしてください。
+
+【最終回答】
+批判を反映して書き直してください。初稿から変えなかった文があれば、残した理由を一言添えてください。
+
+質問：{ここに質問}
+</code></pre>
+<hr />
+<p><strong>使い分けの目安</strong><br />
+- <strong>案1：</strong> 手軽に使えて、どんな質問にも合わせられます。<br />
+- <strong>案2：</strong> 「〇〇のコツは？」のように、箇条書きの羅列が返ってきやすい質問に向いています。<br />
+- <strong>案3：</strong> 出力は長くなりますが、判断や意思決定に関わる質問で最も効果が出ます。</p>
+<p>案1と案2は組み合わせても干渉しません。</p></div>
+</details>
+  </div>
+</section>
+
+<!-- ダウンロード -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">06 — 元データ</span></div>
+    <h2 class="t-h">そのまま持ち帰る。</h2>
+    <p class="prose">上の表と同じ内容のファイルです。表計算ソフトで開けます。</p>
+    <div class="dl">
+      <a href="effort-record.csv" download="AIのエフォート検証_記録.csv">
+        <span class="n">1回ごとの記録（CSV）</span>
+        <span class="s">52行 ／ 約6KB</span>
+      </a>
+      <a href="effort-answers.pdf" download="AIのエフォート検証_回答全文.pdf">
+        <span class="n">回答全文（PDF）</span>
+        <span class="s">52ページ ／ 約1MB</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── SHARED FOOTER ── -->
+<footer class="site-footer">
+  <div class="row">
+    <div class="cr">Resonance / Continuity Project — 2025–2026</div>
+    <div class="links">
+      <a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a>
+      <a href="/about/overview.html">About →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.open-all').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var sec = btn.closest('section');
+    var runs = sec.querySelectorAll('details.run');
+    var opening = btn.textContent.indexOf('すべて開く') === 0;
+    runs.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'すべて閉じる' : 'すべて開く';
+  });
+});
+</script>
+
+</body>
+</html>
