@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>動画 — Resonance Project</title>
+<meta name="description" content="note記事で紹介している動画をまとめたページです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  /* ── video-page components (built on site.css tokens) ── */
+
+  .hero .lead{max-width:40em}
+
+  .vids{display:grid;gap:44px;max-width:var(--read)}
+  .vid{scroll-margin-top:80px}
+  .vid-n{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--gold);margin-bottom:8px}
+  .vid-t{font-family:var(--serif);font-weight:500;font-size:clamp(17px,2.4vw,21px);line-height:1.6;margin-bottom:14px}
+  .vid video{
+    display:block;width:auto;max-width:100%;height:auto;max-height:78vh;border-radius:10px;
+    border:1px solid var(--line);background:var(--bg-tint);
+  }
+  .vid-c{font-size:13.5px;color:var(--muted);line-height:1.95;margin-top:12px}
+</style>
+</head>
+<body>
+
+<!-- ── SHARED HEADER ── -->
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">Resonance <span class="mark">/</span> Continuity</a>
+    <nav class="site-nav">
+      <a href="/">Top</a>
+      <a href="/workshop/index.html">Workshop</a>
+      <a href="/about/overview.html">About</a>
+      <a href="/archive/">Archive</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Resonance Project — Video</div>
+    <h1>note記事の<em>動画</em></h1>
+    <p class="lead">note記事で紹介している動画をまとめたページです。再生ボタンを押すと、このページの中で再生されます。</p>
+  </div>
+</section>
+
+<!-- ── VIDEOS ── -->
+<section class="section">
+  <div class="wrap">
+    <div class="vids">
+      <!-- 動画ごとに .vid を1つ（id="v1", "v2"… で note から個別にリンク可） -->
+      <article class="vid" id="v1">
+        <div class="vid-n">VIDEO 01</div>
+        <h2 class="vid-t">動画 1</h2>
+        <video src="pixai-1721509471831013355.mp4" controls playsinline preload="metadata"></video>
+      </article>
+      <article class="vid" id="v2">
+        <div class="vid-n">VIDEO 02</div>
+        <h2 class="vid-t">動画 2</h2>
+        <video src="pixai-1721783040590018747.mp4" controls playsinline preload="metadata"></video>
+      </article>
+      <article class="vid" id="v3">
+        <div class="vid-n">VIDEO 03</div>
+        <h2 class="vid-t">動画 3</h2>
+        <video src="pixai-1724661901663369805.mp4" controls playsinline preload="metadata"></video>
+      </article>
+      <article class="vid" id="v4">
+        <div class="vid-n">VIDEO 04</div>
+        <h2 class="vid-t">動画 4</h2>
+        <video src="Woman_crossing_arms_20261026223238.mp4" controls playsinline preload="metadata"></video>
+      </article>
+      <article class="vid" id="v5">
+        <div class="vid-n">VIDEO 05</div>
+        <h2 class="vid-t">動画 5</h2>
+        <video src="Woman_crossing_arms_1080p_20261026231343.mp4" controls playsinline preload="metadata"></video>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── SHARED FOOTER ── -->
+<footer class="site-footer">
+  <div class="row">
+    <div class="cr">Resonance / Continuity Project — 2025–2026</div>
+    <div class="links">
+      <a href="mailto:chosai@reso-ai.jp">chosai@reso-ai.jp</a>
+      <a href="/about/overview.html">About →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
